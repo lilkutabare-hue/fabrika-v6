@@ -1,0 +1,102 @@
+{
+ "v": 1,
+ "id": "TEST01",
+ "createdAt": "2026-10-08T12:00:00Z",
+ "items": [
+  {
+   "product": {
+    "id": "hood",
+    "code": "HD·01",
+    "name": "Худи"
+   },
+   "color": "grey",
+   "size": "M",
+   "gram": "340 г · начёс",
+   "qty": 2,
+   "unitPrice": 2990,
+   "prints": [
+    {
+     "method": "dtf",
+     "film": null,
+     "side": "front",
+     "place": "center",
+     "width_mm": 120,
+     "height_mm": 68,
+     "offset_mm": null,
+     "center": {
+      "x": 0.5,
+      "y": 0.42
+     },
+     "scale_pct": 34,
+     "allow_rotate": true,
+     "file": {
+      "id": "abc123",
+      "name": "logo.png",
+      "type": "image/png",
+      "px": [
+       1600,
+       900
+      ],
+      "hasAlpha": true,
+      "dpi": 339
+     },
+     "text": null,
+     "checks": [],
+     "priceFrom": 100
+    }
+   ]
+  },
+  {
+   "product": {
+    "id": "tee-os",
+    "code": "TS·01",
+    "name": "Футболка оверсайз"
+   },
+   "color": "sand",
+   "size": "L",
+   "gram": "260 г",
+   "qty": 3,
+   "unitPrice": 790,
+   "prints": [
+    {
+     "method": "flock",
+     "film": {
+      "k": "black",
+      "name": "Чёрный",
+      "hex": "#111111"
+     },
+     "side": "front",
+     "place": "chest",
+     "width_mm": null,
+     "height_mm": null,
+     "center": {
+      "x": 0.62,
+      "y": 0.34
+     },
+     "scale_pct": 14,
+     "allow_rotate": true,
+     "file": {
+      "id": "abc123",
+      "name": "logo.png",
+      "type": "image/png",
+      "px": [
+       1600,
+       900
+      ],
+      "hasAlpha": true,
+      "dpi": null
+     },
+     "text": null,
+     "checks": [],
+     "priceFrom": 150
+    }
+   ]
+  }
+ ],
+ "sewing": null,
+ "totals": {
+  "blanks": 8350,
+  "printFrom": 650
+ },
+ "contact": "@test"
+}

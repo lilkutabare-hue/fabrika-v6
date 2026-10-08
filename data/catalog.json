@@ -1,0 +1,337 @@
+{
+  "products": [
+    {
+      "id": "tee-cl",
+      "cat": "tshirt",
+      "code": "TS·02",
+      "colors": [
+        "white",
+        "black",
+        "grey",
+        "graph",
+        "milk"
+      ],
+      "grams": [
+        "230 г",
+        "250 г"
+      ],
+      "name": "Футболка классик",
+      "order": 0,
+      "price": 790,
+      "type": "tee",
+      "zone": [
+        0.35,
+        0.25,
+        0.3,
+        0.32
+      ]
+    },
+    {
+      "id": "hood",
+      "cat": "hoodie",
+      "code": "HD·01",
+      "colors": [
+        "white",
+        "milk",
+        "grey",
+        "graph",
+        "black",
+        "choco",
+        "khaki",
+        "rose"
+      ],
+      "grams": [
+        "340 г · начёс",
+        "380 г · без начёса"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Худи",
+      "order": 1,
+      "price": 2990,
+      "tag": "Хит",
+      "type": "hood"
+    },
+    {
+      "id": "tee-os",
+      "cat": "tshirt",
+      "code": "TS·01",
+      "colors": [
+        "white",
+        "milk",
+        "grey",
+        "graph",
+        "black",
+        "choco",
+        "khaki",
+        "rose"
+      ],
+      "grams": [
+        "220 г",
+        "260 г"
+      ],
+      "name": "Футболка оверсайз",
+      "order": 2,
+      "price": 790,
+      "tag": "Хит",
+      "type": "tee",
+      "zone": [
+        0.34,
+        0.25,
+        0.32,
+        0.34
+      ]
+    },
+    {
+      "id": "zhood",
+      "cat": "zhoodie",
+      "code": "ZH·01",
+      "colors": [
+        "black",
+        "graph",
+        "grey",
+        "milk",
+        "choco"
+      ],
+      "grams": [
+        "380 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Зип-худи",
+      "order": 3,
+      "price": 3290,
+      "tag": "New",
+      "type": "zhood"
+    },
+    {
+      "id": "long",
+      "cat": "longsleeve",
+      "code": "LS·01",
+      "colors": [
+        "white",
+        "black",
+        "grey",
+        "milk",
+        "khaki"
+      ],
+      "grams": [
+        "220 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Лонгслив",
+      "order": 4,
+      "price": 1190,
+      "tag": "",
+      "type": "long"
+    },
+    {
+      "id": "sweat",
+      "cat": "sweatshirt",
+      "code": "SW·01",
+      "colors": [
+        "white",
+        "milk",
+        "grey",
+        "graph",
+        "black",
+        "choco",
+        "khaki",
+        "rose"
+      ],
+      "grams": [
+        "440 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Свитшот",
+      "order": 5,
+      "price": 1990,
+      "tag": "",
+      "type": "sweat"
+    },
+    {
+      "id": "olymp",
+      "cat": "olympic",
+      "code": "OL·01",
+      "colors": [
+        "black",
+        "graph",
+        "choco",
+        "khaki"
+      ],
+      "grams": [
+        "380 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Олимпийка",
+      "order": 6,
+      "price": 2490,
+      "tag": "New",
+      "type": "olymp"
+    },
+    {
+      "id": "pants",
+      "cat": "sweatpant",
+      "code": "PT·01",
+      "colors": [
+        "black",
+        "graph",
+        "grey",
+        "milk",
+        "choco"
+      ],
+      "grams": [
+        "380 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Штаны",
+      "order": 7,
+      "price": 2490,
+      "tag": "",
+      "type": "pants"
+    },
+    {
+      "id": "shorts",
+      "cat": "shorts",
+      "code": "SH·01",
+      "colors": [
+        "black",
+        "grey",
+        "milk",
+        "graph"
+      ],
+      "grams": [
+        "340 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Шорты",
+      "order": 8,
+      "price": 1490,
+      "tag": "",
+      "type": "shorts"
+    },
+    {
+      "id": "top",
+      "cat": "top",
+      "code": "TP·01",
+      "colors": [
+        "white",
+        "black",
+        "milk",
+        "rose"
+      ],
+      "grams": [
+        "220 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Топ",
+      "order": 9,
+      "price": 690,
+      "tag": "",
+      "type": "top"
+    },
+    {
+      "id": "tee-wash",
+      "cat": "tshirt",
+      "code": "TS·03",
+      "colors": [
+        "graph",
+        "grey",
+        "choco"
+      ],
+      "grams": [
+        "230 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Футболка варёнка",
+      "order": 10,
+      "price": 990,
+      "tag": "Drop",
+      "type": "tee"
+    },
+    {
+      "id": "sweat-os",
+      "cat": "sweatshirt",
+      "code": "SW·02",
+      "colors": [
+        "black",
+        "grey",
+        "milk",
+        "khaki"
+      ],
+      "grams": [
+        "440 г"
+      ],
+      "hidden": false,
+      "media": null,
+      "name": "Свитшот оверсайз",
+      "order": 11,
+      "price": 2290,
+      "tag": "",
+      "type": "sweat"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#F4F3EF",
+      "k": "white",
+      "name": "Белый"
+    },
+    {
+      "hex": "#E6DDCD",
+      "k": "milk",
+      "name": "Молочный"
+    },
+    {
+      "hex": "#BEBCB7",
+      "k": "grey",
+      "name": "Серый меланж"
+    },
+    {
+      "hex": "#3F3F3D",
+      "k": "graph",
+      "name": "Графит"
+    },
+    {
+      "hex": "#1B1B1A",
+      "k": "black",
+      "name": "Чёрный"
+    },
+    {
+      "hex": "#5A3F30",
+      "k": "choco",
+      "name": "Шоколад"
+    },
+    {
+      "hex": "#6E6B50",
+      "k": "khaki",
+      "name": "Хаки"
+    },
+    {
+      "hex": "#D8B7A9",
+      "k": "rose",
+      "name": "Пудра"
+    }
+  ],
+  "settings": {
+    "bot": "",
+    "dtf": 100,
+    "emb": 200,
+    "manager": "trtmoscow",
+    "api": ""
+  },
+  "route": {
+    "address": "Москва, ул. Мневники, 1с11",
+    "hours": "",
+    "map": null,
+    "note": "",
+    "steps": []
+  }
+}

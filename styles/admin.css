@@ -1,0 +1,42 @@
+/* Админка (перенос из v5, только в артефакте и только владельцу). Формы в стиле сайта: без рамок, линии снизу. */
+.adm__tabs { margin: 4px 0 20px; }
+.adm__list { display: grid; }
+.arow { display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--tone-2); }
+.arow.off { opacity: .5; }
+.arow .th { width: 48px; height: 60px; background: var(--tone); position: relative; }
+.arow .th .gm { position: absolute; inset: 4px; width: auto; height: auto; }
+.arow small { display: block; color: var(--mute); }
+.arow .aact { display: flex; gap: 4px; }
+.arow .aact button { min-width: 32px; height: 32px; display: grid; place-items: center; font-size: var(--fs-s); color: var(--mute); }
+.arow .aact button:hover { color: var(--ink); }
+.arow .aact .ed { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; padding: 0 6px; }
+.adm__form { display: grid; gap: 16px; }
+.adm__form .f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.adm__form .seg { padding: 4px 0; }
+.chipc { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.chipc button { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; font-size: var(--fs-s); color: var(--mute); }
+.chipc button i { width: 12px; height: 12px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(11, 11, 11, .12); }
+.chipc button.on { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.mbox { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: start; }
+.mbox .pv1 { width: 96px; height: 116px; background: var(--tone); position: relative; display: grid; place-items: center; overflow: hidden; }
+.mbox .pv1 img { width: 100%; height: 100%; object-fit: contain; }
+.mbox .pv1 .gm { position: absolute; inset: 6px; width: auto; height: auto; }
+.mbox .bb { display: grid; gap: 8px; justify-items: start; }
+.mbox .bb input[type="file"] { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.btn--sm { height: 36px; padding: 0 16px; }
+.btn--red { background: #B3261E; }
+.tog { display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
+.tog input { width: 20px; height: 20px; accent-color: var(--ink); }
+.abar { display: flex; gap: 12px; flex-wrap: wrap; padding-top: 8px; }
+.hint { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); }
+.sech { font: 500 var(--fs-m) / 1.2 var(--disp); text-transform: uppercase; padding-top: 12px; }
+.ocard { display: grid; gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--tone-2); }
+.ocard.new { box-shadow: inset 3px 0 0 var(--sig); padding-left: 12px; }
+.ocard .oh { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: var(--fs-s); }
+.ocard pre { margin: 0; padding: 10px 12px; box-shadow: inset 0 0 0 1px var(--tone-2); font: 400 var(--fs-s) / var(--lh-s) var(--font); white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow: auto; }
+.ocard .of { display: flex; gap: 16px; }
+.prow2 { display: grid; grid-template-columns: 40px 1fr 1fr 32px; gap: 8px; align-items: center; padding: 4px 0; }
+.prow2 input[type="color"] { width: 32px; height: 32px; padding: 0; border: 0; background: none; }
+.prow2 input[type="text"] { min-height: 36px; border: 0; border-bottom: 1px solid var(--tone-2); font-size: var(--fs-s); }
+.adm__empty { padding: 32px 0; color: var(--mute); font-size: var(--fs-s); line-height: var(--lh-s); }
+.hdr__adm sup { color: var(--sig); }

@@ -1,0 +1,38 @@
+/* Бланки — на этапе 1 это статичная заглушка: заголовок и один ряд плиток 3:4 вплотную.
+   Категории, образцы цвета, наведение, карточка — этап 2 (план §7.5). */
+.blanks { padding: 56px 0 72px; }
+.blanks__head { padding: 0 var(--gutter) 20px; }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.tile { display: block; min-width: 0; }
+.tile__media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: var(--tone);
+  overflow: hidden;
+}
+.tile__media img,
+.tile__media svg {
+  position: absolute;
+  left: 8%; top: 8%;
+  width: 84%; height: 84%;
+  object-fit: contain;
+}
+.tile__cap {
+  padding: 10px var(--gutter) 0 var(--gutter);
+  font-size: var(--fs-s);
+  line-height: var(--lh-s);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tile__cap b { font-weight: 500; }
+
+@media (max-width: 1023px) {
+  .blanks { padding: 40px 0 48px; }
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .tile__cap { padding: 8px 12px 0; }
+}

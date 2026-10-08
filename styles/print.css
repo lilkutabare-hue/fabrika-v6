@@ -1,0 +1,219 @@
+/* Конструктор принта (план §7.7). Сетка стола — единственная сетка на сайте, только в режиме «С принтом». */
+.pv__scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(11, 11, 11, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 11, 11, .07) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+  opacity: 0;
+  transition: opacity var(--dur-big) var(--ease-big);
+  pointer-events: none;
+}
+.pv.is-print .pv__scene::before { opacity: 1; }
+
+/* Поле печати — вся вещь. Слой .zone обрезан маской по силуэту (ставит stage.js); .zone-ui — ручка и контур без обрезки.
+   В режиме «Чистый бланк» поля нет */
+.pv:not(.is-print) .zone, .pv:not(.is-print) .zone-ui, .pv:not(.is-print) .zone__empty { display: none; }
+.zone, .zone-ui { position: absolute; inset: 0; z-index: 2; }
+.zone-ui { pointer-events: none; z-index: 3; }
+.zone__axis { position: absolute; opacity: 0; transition: opacity var(--dur-state); }
+.zone__axis--x { top: 0; bottom: 0; left: 50%; width: 0; border-left: 1px dashed rgba(11, 11, 11, .3); }
+.zone__axis--y { left: 0; right: 0; top: 50%; height: 0; border-top: 1px dashed rgba(11, 11, 11, .3); }
+.zone-ui.is-dragging.is-cx .zone__axis--x, .zone-ui.is-dragging.is-cy .zone__axis--y { opacity: 1; }
+.pv__box.is-compare .zone { opacity: 0; }
+.pv__box.is-compare .zone-ui { opacity: 0; }
+.zone { transition: opacity var(--dur-state); }
+.zone__empty {
+  position: absolute;
+  left: 50%; top: 42%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(11, 11, 11, .12), 0 0 0 .5px rgba(11, 11, 11, .06);
+  font: 500 var(--fs-s) / 1 var(--font);
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pv__box.has-art .zone__empty { display: none; }
+.pv__box.is-over .zone__empty { background: #fff; }
+
+/* Макет: тело + копия вещи поверх (складки и тени читаются сквозь принт) */
+.art {
+  position: absolute;
+  cursor: grab;
+  touch-action: none;
+  overflow: hidden;
+}
+.art:active { cursor: grabbing; }
+.art.is-fresh { animation: artIn .45s var(--ease-out) both; }
+@keyframes artIn { from { opacity: 0; transform: scale(.98); } }
+.art__body { position: absolute; inset: 0; display: grid; place-items: center; }
+/* складки: карта смещения из рендера; во время движения выключены, чтобы не тормозить */
+.art__body.has-folds:not(.is-moving) { filter: url(#fold-f); }
+.art__shade {
+  position: absolute;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: .55;
+}
+/* тёмная ткань: копию вещи осветляем до серого, чтобы складки легли на принт, не убив его */
+.pv__box:not(.on-light) .art__shade { filter: grayscale(1) brightness(2.6) contrast(1.3); mix-blend-mode: multiply; opacity: .55; }
+.art__img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.on-light .art--asis .art__img { mix-blend-mode: multiply; }
+.art__sil {
+  width: 100%; height: 100%;
+  background: var(--film, #fff);
+  -webkit-mask: var(--mask) center / contain no-repeat;
+  mask: var(--mask) center / contain no-repeat;
+}
+.art--flock .art__sil { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .18)); background-image: radial-gradient(rgba(0, 0, 0, .06) 20%, transparent 22%); background-size: 3px 3px; }
+.art--glitter .art__sil {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, .95) 25%, transparent 30%),
+    radial-gradient(circle, rgba(0, 0, 0, .35) 20%, transparent 28%);
+  background-size: 4px 4px, 5px 5px;
+  background-position: 0 0, 2px 3px;
+}
+.art--reflective .art__sil {
+  background: linear-gradient(135deg, #b9bcc0 0%, #f3f4f5 45%, #a7abaf 55%, #e6e7e8 100%);
+  background-size: 260% 260%;
+  background-position: 100% 100%;
+  transition: background-position .5s var(--ease-out);
+}
+.art--reflective:hover .art__sil { background-position: 0 0; }
+.art--stitch .art__body { animation: stitchIn 1.2s steps(26) both; }
+@keyframes stitchIn { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.art--stitch .art__img { filter: contrast(1.06) saturate(.92); }
+.art--stitch .art__thread {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: var(--mask) center / contain no-repeat;
+  mask: var(--mask) center / contain no-repeat;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .22) 0 1px, rgba(0, 0, 0, .18) 1px 2px);
+  pointer-events: none;
+}
+.art--stitch .art__body { filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25)); }
+.art__sil, .art__img { -webkit-user-drag: none; user-select: none; }
+
+/* Контур и ручки — в необрезанном слое */
+.art-ui { position: absolute; outline: 1px dashed transparent; outline-offset: 4px; transition: outline-color var(--dur-state); }
+.zone-ui.is-dragging .art-ui, .pv__box:hover .art-ui { outline-color: rgba(11, 11, 11, .25); }
+.art__rotate {
+  position: absolute;
+  left: 50%; top: -30px;
+  width: 16px; height: 16px;
+  margin-left: -8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(11, 11, 11, .28), 0 0 0 .5px rgba(11, 11, 11, .12);
+  cursor: grab;
+  touch-action: none;
+  pointer-events: auto;
+  transition: transform var(--dur-press);
+}
+.art__rotate::before { content: ""; position: absolute; inset: -11px; }
+.art__rotate::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 14px; margin-left: -.5px; background: rgba(11, 11, 11, .25); }
+.zone-ui.is-rotating .art__rotate { transform: scale(1.15); }
+.art__handle {
+  position: absolute;
+  right: -9px; bottom: -9px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(11, 11, 11, .28), 0 0 0 .5px rgba(11, 11, 11, .12);
+  cursor: nwse-resize;
+  touch-action: none;
+  pointer-events: auto;
+  transition: transform var(--dur-press);
+}
+.art__handle::before { content: ""; position: absolute; inset: -10px; }   /* зона нажатия 38 px */
+.zone-ui.is-resizing .art__handle { transform: scale(1.15); }
+
+/* Макет лёг: вещь проседает на пару пикселей и возвращается (термопресс) */
+.gm.is-pressed { animation: press .45s var(--ease-out); }
+@keyframes press { 30% { transform: translateY(2px); } }
+
+/* Панель конструктора */
+.pt { display: grid; gap: 4px; }
+.pt__upload {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--tone-2);
+}
+.pt__upload b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pt__file { display: grid; gap: 2px; min-width: 0; font-size: var(--fs-s); line-height: var(--lh-s); }
+.pt__checks { display: grid; gap: 8px; padding: 10px 0 4px; font-size: var(--fs-s); line-height: var(--lh-s); }
+.pt__checks li { display: grid; grid-template-columns: 10px 1fr; gap: 10px; color: var(--ink); }
+.pt__checks li::before { content: ""; width: 6px; height: 6px; margin-top: 5px; border-radius: 50%; background: var(--mute); }
+.pt__checks li[data-level="warn"]::before { background: var(--sig); }
+.pt__methods { display: grid; gap: 0; }
+.pt__method {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 16px;
+  padding: 10px 0;
+  text-align: left;
+  color: var(--mute);
+  border-bottom: 1px solid var(--tone-2);
+  transition: color var(--dur-state);
+}
+.pt__method b { color: var(--ink); font-weight: 500; }
+.pt__method[aria-pressed="true"] { color: var(--ink); }
+.pt__method b::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(11, 11, 11, .25); vertical-align: 1px; transition: background var(--dur-state), box-shadow var(--dur-state); }
+.pt__method[aria-pressed="true"] b::before { background: var(--ink); box-shadow: none; }
+.pt__method .pt__for { grid-column: 1; font-size: var(--fs-s); }
+.pt__method .pt__from { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: var(--fs-s); white-space: nowrap; }
+.pt__range { -webkit-appearance: none; appearance: none; width: 100%; height: 32px; background: none; margin: 0; }
+.pt__range::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--tone-2); }
+.pt__range::-moz-range-track { height: 4px; border-radius: 2px; background: var(--tone-2); }
+.pt__range::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; margin-top: -10px; box-shadow: 0 1px 4px rgba(11, 11, 11, .28), 0 0 0 .5px rgba(11, 11, 11, .12); }
+.pt__range::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 4px rgba(11, 11, 11, .28), 0 0 0 .5px rgba(11, 11, 11, .12); }
+.pt__others { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
+.pt__others::-webkit-scrollbar { display: none; }
+.pt__others button { flex: none; width: 64px; height: 76px; border-radius: 12px; background: var(--tone-2); position: relative; opacity: .7; transition: opacity var(--dur-state); }
+.pt__others button[aria-pressed="true"], .pt__others button:hover { opacity: 1; }
+.pt__others .gm { position: absolute; inset: 6px; width: auto; height: auto; }
+.pt__film { --bg: var(--paper); margin-left: -8px; }
+.pt__hint { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); }
+.pt__cta { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pt__cta .link--quiet { color: var(--mute); }
+
+@media (max-width: 1023px) {
+  .pv.is-print .pv__scene { max-height: 50svh; }
+}
+
+/* Карточки методов: макет в каждом методе на цвете ткани */
+.mcards { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
+.mcards::-webkit-scrollbar { display: none; }
+.mcard { flex: none; width: 108px; display: grid; gap: 6px; text-align: left; padding: 6px; border-radius: 14px; transition: background var(--dur-state); }
+.mcard[aria-pressed="true"] { background: var(--tone-2); }
+.mcard__pic { display: block; position: relative; aspect-ratio: 1; border-radius: 10px; background: var(--fabric); overflow: hidden; }
+.mcard__pic .art { position: absolute; inset: 18%; cursor: default; overflow: visible; }
+.mcard__pic .art__body { display: grid; place-items: center; }
+.mcard b { font-weight: 500; font-size: var(--fs-s); line-height: 1.2; }
+.mcard small { color: var(--mute); font-size: 11px; line-height: 1.2; }
+
+/* Пресеты расположения как картинки: вещь и точка */
+.ppre { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
+.ppre::-webkit-scrollbar { display: none; }
+.ppre button { flex: none; width: 80px; display: grid; gap: 6px; padding: 6px; border-radius: 14px; text-align: center; transition: background var(--dur-state); }
+.ppre button[aria-pressed="true"] { background: var(--tone-2); }
+.ppre__g { position: relative; display: block; width: 100%; aspect-ratio: 1; }
+.ppre__g .gm { position: absolute; inset: 0; width: auto; height: auto; }
+.ppre__g i { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--sig); box-shadow: 0 0 0 2px #fff; }
+.ppre__n { font-size: 11px; line-height: 1.2; color: var(--ink); }
+.pt--more { display: grid; gap: 14px; }

@@ -1,0 +1,20 @@
+{
+  "_about": "Условия (план §7.11). Строка с value null или status hypothesis на сайт не выводится. Источник фактов: fabrika-context (карточка проекта от 12.08.2026, «не оферта») и сайт fabrika.market.",
+  "minQty": {
+    "blanks": { "value": 1, "unit": "шт", "status": "fact", "source": "сайт: бланки от 1 шт" },
+    "print": { "value": 1, "unit": "шт", "status": "fact", "source": "fabrika-context: нанесение от 1 шт" },
+    "sewing": { "value": null, "status": "hypothesis", "note": "минимальный тираж пошива под заказ — от владельца" }
+  },
+  "lead": {
+    "sample": { "value": "5–7 дней", "status": "fact", "source": "fabrika-context" },
+    "run": { "value": "от 14 дней", "status": "fact", "source": "fabrika-context" },
+    "stock": { "value": null, "status": "hypothesis", "note": "срок отправки из наличия — от владельца" }
+  },
+  "payment": {
+    "prepay": { "value": "50 %", "status": "fact", "source": "fabrika-context" },
+    "methods": { "value": null, "status": "hypothesis", "note": "способы оплаты — от владельца" }
+  },
+  "delivery": { "value": null, "status": "hypothesis", "note": "доставка — от владельца" },
+  "pickup": { "value": "Москва, ул. Мневники, 1с11", "status": "fact", "source": "catalog.json → route.address" },
+  "warranty": { "value": null, "status": "hypothesis", "note": "гарантии — текст от владельца" }
+}

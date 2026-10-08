@@ -1,0 +1,7 @@
+dist/
+shots/
+worker/inbox/
+worker/.env
+worker/*.log
+media/*-anim-*.webp
+.DS_Store

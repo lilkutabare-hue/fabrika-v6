@@ -1,0 +1,147 @@
+/* Карточка товара (план §7.6): слой на весь экран, слева сцена на тоне, справа белая панель 600 px. */
+.pv {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--panel-w);
+  visibility: hidden;
+  transition: visibility 0s linear var(--dur-out);
+}
+.pv.is-open { visibility: visible; transition: visibility 0s; }
+.pv__stage {
+  position: relative;
+  background: var(--tone);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  opacity: 0;
+  transition: opacity var(--dur-out) var(--ease-big);
+}
+.pv.is-open .pv__stage { opacity: 1; transition: opacity var(--dur-big) var(--ease-big); }
+.pv__scene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--hdr-h)) 6vw 24px;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+.pv__box { transform-origin: center; transition: transform .25s var(--ease-out); will-change: transform; }
+.pv__box.is-zoomed { cursor: grab; }
+.pv__tools {
+  position: absolute;
+  top: calc(var(--hdr-h) / 2 - 18px); left: var(--gutter);
+  z-index: 3;
+  display: flex; gap: 6px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(11, 11, 11, .12), 0 0 0 .5px rgba(11, 11, 11, .06);
+}
+.pv__tool { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: var(--ink); }
+.pv__tool svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pv__tool:disabled { opacity: .3; }
+.pv__tool--text { width: auto; padding: 0 12px; font: 500 var(--fs-s) / 1 var(--font); }
+.pv__tool--text:active { background: var(--ink); color: #fff; }
+.pv__box { position: relative; height: min(100%, 80vh); aspect-ratio: 1; max-width: 100%; max-height: 100%; }
+.pv__box .gm { position: absolute; inset: 0; }
+.pv__sides { justify-self: center; margin: 0 0 24px; z-index: 3; }
+.pv__sides:empty { display: none; }
+.pv__close {
+  position: absolute;
+  top: calc(var(--hdr-h) / 2 - 20px); left: var(--gutter);
+  z-index: 2;
+}
+@media (min-width: 1024px) { .pv__close { display: none; } }   /* на компьютере закрытие — в панели справа */
+.pv__panel {
+  position: relative;
+  background: var(--paper);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--gutter) calc(32px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(100%);
+  transition: transform var(--dur-out) var(--ease-big);
+}
+.pv.is-open .pv__panel { transform: none; transition: transform var(--dur-big) var(--ease-big); }
+.pv__panelhead { display: flex; align-items: center; justify-content: space-between; min-height: var(--hdr-h); }
+.pv__title { display: grid; gap: 6px; margin-bottom: 20px; }
+.pv__title h2 { font: 500 var(--fs-l) / var(--lh-l) var(--disp); }
+.pv__price { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.pv__price b { font-weight: 500; font-size: var(--fs-m); }
+.pv__tabs { margin: 0 0 24px; }
+.pv__tabs button { font-size: var(--fs-s); min-height: 34px; padding: 0 18px; }
+.pv__grp { display: grid; gap: 8px; padding: 14px 0; }
+.pv__grp > .pv__gh { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: var(--fs-s); color: var(--mute); }
+.pv__grp > .pv__gh b { color: var(--ink); font-weight: 500; }
+.pv__sw { --bg: var(--paper); margin-left: -8px; }
+.pv__desc { display: grid; gap: 10px; padding: 18px 0 8px; font-size: var(--fs-s); line-height: var(--lh-s); }
+.pv__desc div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; }
+.pv__desc span:first-child { color: var(--mute); }
+.pv__buy { display: flex; align-items: center; gap: 10px; padding: 16px 0; position: sticky; bottom: 0; background: var(--paper); margin-top: 8px; }
+.pv__buy .btn { flex: 1 1 auto; }
+.pv__buy .pv__more { flex: none; width: 48px; padding: 0; font-size: 22px; font-weight: 400; }
+.pv__subtabs { margin: -8px 0 16px; width: 100%; }
+.pv__subtabs button { flex: 1 1 0; text-align: center; }
+.pv__order {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--tone-2);
+  font-size: var(--fs-s);
+}
+.pv__order b { font-weight: 500; }
+.pv__code { font-size: var(--fs-s); color: var(--mute); }
+
+@media (max-width: 1023px) {
+  .pv {
+    display: block;
+    top: auto;
+    left: 0; right: 0; bottom: 0;
+    height: calc(100% - 24px);
+    border-radius: 20px 20px 0 0;
+    background: var(--paper);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(100%);
+    transition: transform var(--dur-out) var(--ease-big), visibility 0s linear var(--dur-out);
+  }
+  .pv.is-open { transform: none; transition: transform var(--dur-big) var(--ease-big), visibility 0s; }
+  .pv.is-dragging { transition: none; }
+  .pv__stage { opacity: 1; transition: none; min-height: 0; }
+  .pv__scene { padding: 36px 16px 8px; aspect-ratio: 1 / 1; max-height: 56svh; }
+  .pv.is-print .pv__scene { aspect-ratio: auto; height: 58svh; max-height: none; padding: 44px 12px 8px; }
+  .pv__tools { top: 10px; left: var(--gutter); }
+  .pv__sides { margin-bottom: 10px; }
+  .pv__buy { padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); }
+  .pv__box { height: 100%; }
+  .pv__sides { padding-bottom: 14px; }
+  .pv__close { top: 8px; left: auto; right: var(--gutter); }
+  .pv__panel { transform: none; transition: none; overflow: visible; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .pv__panelhead { display: none; }
+  .pv__title { padding-top: 16px; }
+  .pv__desc div { grid-template-columns: 100px 1fr; }
+  .pv::before {
+    content: "";
+    position: absolute;
+    top: 8px; left: 50%;
+    width: 36px; height: 4px;
+    border-radius: 2px;
+    background: rgba(11, 11, 11, .18);
+    transform: translateX(-50%);
+    z-index: 3;
+  }
+}
+
+/* Переход каталог → карточка: вещь из плитки вырастает до сцены */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .35s; }
+::view-transition-old(garment), ::view-transition-new(garment) { animation-duration: var(--dur-big); animation-timing-function: var(--ease-big); }
+::view-transition-image-pair(garment) { isolation: auto; }
+::view-transition-old(garment), ::view-transition-new(garment) { mix-blend-mode: normal; }

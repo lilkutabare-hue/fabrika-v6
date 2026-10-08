@@ -1,0 +1,53 @@
+/* Токены fabrika-v6. Три кегля на ширину: 12 / 16 / 32 на компьютере, 12 / 15 / 24 на телефоне. */
+:root {
+  --ink: #0B0B0B;
+  --paper: #FFFFFF;
+  --tone: #FFFFFF;           /* вещь лежит на белом, как и страница */
+  --tone-2: #ECECEA;          /* только тонкие линии-разделители строк */
+  --mute: #66665F;            /* 5.8:1 на белом */
+  --sig: #E8734A;             /* только активная зона печати и метка New */
+
+  --font: Onest, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --disp: Unbounded, var(--font);
+
+  --fs-s: 12px;
+  --fs-m: 16px;
+  --fs-l: 32px;
+  --lh-s: 1.35;
+  --lh-m: 1.5;
+  --lh-l: 1.15;
+
+  --hdr-h: 72px;
+  --hero-h: 90vh;
+  --gutter: 24px;
+  --panel-w: min(600px, 44vw);
+  --dock-space: 0px;
+  --sbw: 0px;                 /* ширина полосы прокрутки при замке */
+
+  --ease-big: cubic-bezier(.5, 0, 0, 1);
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --dur-big: .8s;
+  --dur-out: .55s;            /* уход на треть быстрее */
+  --dur-press: .14s;
+  --dur-state: .26s;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --fs-m: 15px;
+    --fs-l: 24px;
+    --hdr-h: 56px;
+    --hero-h: 85vh;
+    --gutter: 16px;
+    --dur-big: .45s;
+    --dur-out: .3s;
+    --dock-space: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@supports (height: 1svh) {
+  :root { --hero-h: 90svh; }
+  @media (max-width: 1023px) {
+    :root { --hero-h: 85svh; }
+  }
+}

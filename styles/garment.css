@@ -1,0 +1,32 @@
+/* Сцена вещи (garment.js): рендер или эскиз; слои для смены цвета и анимированного кадра. */
+.gm { position: relative; width: 100%; height: 100%; }
+.gm__img, .gm > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0;
+  transition: opacity var(--dur-state) var(--ease-out);
+}
+.gm__img.is-on, .gm > svg.is-on { opacity: 1; }
+.gm__img--anim { transition-duration: .2s; }
+.gm.is-flipping { transform: scaleX(0); transition: transform .2s ease-in; }
+.gm { transition: transform .2s ease-out; }
+
+/* Эскиз — 3:4 в квадрате: ужимаем до масштаба рендеров (вещь ≈ 80 % холста) */
+.gm[data-kind="sketch"] > svg { inset: 10%; width: 80%; height: 80%; }
+
+/* Эскизы: тихое покачивание, рассинхронизированное через --sway-delay */
+.gm > svg .body { transform-origin: 50% 8%; }
+.is-live .gm > svg .body { animation: sway 7s ease-in-out infinite; animation-delay: var(--sway-delay, 0s); }
+@keyframes sway {
+  0%, 100% { transform: rotate(-.5deg); }
+  50% { transform: rotate(.5deg); }
+}
+/* Молния: закрыта, бегунок наверху; на наведении расстёгивается сверху на треть */
+.gm > svg .zl, .gm > svg .zr, .gm > svg .pull { transition: transform .6s var(--ease-big); transform-origin: 50% 100%; }
+.gm.is-unzipped > svg .zl { transform: rotate(-7deg) translateX(-3px); transform-origin: 160px 440px; }
+.gm.is-unzipped > svg .zr { transform: rotate(7deg) translateX(3px); transform-origin: 240px 440px; }
+.gm.is-unzipped > svg .pull { transform: translateY(118px); }

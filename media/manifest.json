@@ -1,0 +1,1599 @@
+{
+ "generated": "2026-10-07T19:01:34",
+ "colors": {
+  "black": {
+   "name": "Чёрный",
+   "status": "fact"
+  },
+  "white": {
+   "name": "Белый",
+   "status": "fact"
+  },
+  "grey": {
+   "name": "Серый меланж",
+   "status": "fact"
+  },
+  "milk": {
+   "name": "Молочный",
+   "status": "hypothesis",
+   "note": "на рендере кремовый/экрю"
+  },
+  "sand": {
+   "name": "Песочный",
+   "status": "hypothesis"
+  },
+  "taupe": {
+   "name": "Серо-бежевый",
+   "status": "hypothesis"
+  },
+  "terracotta": {
+   "name": "Терракота",
+   "status": "hypothesis"
+  },
+  "red": {
+   "name": "Красный",
+   "status": "hypothesis"
+  },
+  "olive": {
+   "name": "Оливковый",
+   "status": "hypothesis",
+   "note": "тёмный оливково-коричневый IMG_3783"
+  },
+  "burgundy": {
+   "name": "Бордовый",
+   "status": "hypothesis"
+  },
+  "wash-black": {
+   "name": "Варёный чёрный",
+   "status": "hypothesis"
+  },
+  "wash-grey": {
+   "name": "Варёный серый",
+   "status": "hypothesis"
+  },
+  "wash-indigo": {
+   "name": "Варёный индиго",
+   "status": "hypothesis"
+  },
+  "wash-purple": {
+   "name": "Варёный фиолетовый",
+   "status": "hypothesis"
+  },
+  "wash-pink": {
+   "name": "Варёный розовый",
+   "status": "hypothesis"
+  }
+ },
+ "products": {
+  "zhood": {
+   "black": {
+    "front": {
+     "set": {
+      "src": "zhood-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#1E1E1C"
+     },
+     "fit": {
+      "src": "zhood-black-front-fit",
+      "widths": [
+       600,
+       1059
+      ],
+      "w": 1059,
+      "h": 1186,
+      "ratio": 0.8929,
+      "hex": "#1E1E1C"
+     },
+     "anim": {
+      "src": "zhood-black-front-anim",
+      "widths": [
+       546
+      ],
+      "w": 546,
+      "h": 603,
+      "ratio": 0.9055,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "zhood-black-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#181817"
+     },
+     "fit": {
+      "src": "zhood-black-back-fit",
+      "widths": [
+       600,
+       1059
+      ],
+      "w": 1059,
+      "h": 1186,
+      "ratio": 0.8929,
+      "hex": "#181817"
+     }
+    }
+   },
+   "milk": {
+    "front": {
+     "set": {
+      "src": "zhood-milk-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#E2D5C2"
+     },
+     "fit": {
+      "src": "zhood-milk-front-fit",
+      "widths": [
+       600,
+       1055
+      ],
+      "w": 1055,
+      "h": 1185,
+      "ratio": 0.8903,
+      "hex": "#E2D5C2"
+     },
+     "anim": {
+      "src": "zhood-milk-front-anim",
+      "widths": [
+       564
+      ],
+      "w": 564,
+      "h": 608,
+      "ratio": 0.9276,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "zhood-milk-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#DDCEB9"
+     },
+     "fit": {
+      "src": "zhood-milk-back-fit",
+      "widths": [
+       600,
+       1055
+      ],
+      "w": 1055,
+      "h": 1185,
+      "ratio": 0.8903,
+      "hex": "#DDCEB9"
+     }
+    }
+   },
+   "white": {
+    "front": {
+     "set": {
+      "src": "zhood-white-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#D7D7D5"
+     },
+     "fit": {
+      "src": "zhood-white-front-fit",
+      "widths": [
+       600,
+       1053
+      ],
+      "w": 1053,
+      "h": 1186,
+      "ratio": 0.8879,
+      "hex": "#D7D7D5"
+     },
+     "anim": {
+      "src": "zhood-white-front-anim",
+      "widths": [
+       584
+      ],
+      "w": 584,
+      "h": 607,
+      "ratio": 0.9621,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "zhood-white-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#DEDEDD"
+     },
+     "fit": {
+      "src": "zhood-white-back-fit",
+      "widths": [
+       600,
+       1056
+      ],
+      "w": 1056,
+      "h": 1186,
+      "ratio": 0.8904,
+      "hex": "#DEDEDD"
+     }
+    }
+   },
+   "grey": {
+    "front": {
+     "set": {
+      "src": "zhood-grey-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#B5B6B6"
+     },
+     "fit": {
+      "src": "zhood-grey-front-fit",
+      "widths": [
+       600,
+       1200,
+       1518
+      ],
+      "w": 1518,
+      "h": 1704,
+      "ratio": 0.8908,
+      "hex": "#B5B6B6"
+     }
+    }
+   }
+  },
+  "hood": {
+   "grey": {
+    "front": {
+     "set": {
+      "src": "hood-grey-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#AFAFAE"
+     },
+     "fit": {
+      "src": "hood-grey-front-fit",
+      "widths": [
+       600,
+       1058
+      ],
+      "w": 1058,
+      "h": 1186,
+      "ratio": 0.8921,
+      "hex": "#AFAFAE"
+     },
+     "anim": {
+      "src": "hood-grey-front-anim",
+      "widths": [
+       563
+      ],
+      "w": 563,
+      "h": 614,
+      "ratio": 0.9169,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "hood-grey-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#A7A7A4"
+     },
+     "fit": {
+      "src": "hood-grey-back-fit",
+      "widths": [
+       600,
+       1062
+      ],
+      "w": 1062,
+      "h": 1185,
+      "ratio": 0.8962,
+      "hex": "#A7A7A4"
+     }
+    }
+   },
+   "wash-black": {
+    "front": {
+     "set": {
+      "src": "hood-wash-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#2E2E2E"
+     },
+     "fit": {
+      "src": "hood-wash-black-front-fit",
+      "widths": [
+       600,
+       1058
+      ],
+      "w": 1058,
+      "h": 1185,
+      "ratio": 0.8928,
+      "hex": "#2E2E2E"
+     },
+     "anim": {
+      "src": "hood-wash-black-front-anim",
+      "widths": [
+       613
+      ],
+      "w": 613,
+      "h": 620,
+      "ratio": 0.9887,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "hood-wash-black-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#2B2B2C"
+     },
+     "fit": {
+      "src": "hood-wash-black-back-fit",
+      "widths": [
+       600,
+       1057
+      ],
+      "w": 1057,
+      "h": 1185,
+      "ratio": 0.892,
+      "hex": "#2B2B2C"
+     }
+    }
+   },
+   "burgundy": {
+    "front": {
+     "set": {
+      "src": "hood-burgundy-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#9F3138"
+     },
+     "fit": {
+      "src": "hood-burgundy-front-fit",
+      "widths": [
+       600,
+       1200,
+       1525
+      ],
+      "w": 1525,
+      "h": 1708,
+      "ratio": 0.8929,
+      "hex": "#9F3138"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "hood-burgundy-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#942E35"
+     },
+     "fit": {
+      "src": "hood-burgundy-back-fit",
+      "widths": [
+       600,
+       1200,
+       1522
+      ],
+      "w": 1522,
+      "h": 1701,
+      "ratio": 0.8948,
+      "hex": "#942E35"
+     }
+    }
+   }
+  },
+  "top": {
+   "white": {
+    "front": {
+     "set": {
+      "src": "top-white-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#E7E7E9"
+     },
+     "fit": {
+      "src": "top-white-front-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 781,
+      "ratio": 1.5173,
+      "hex": "#E7E7E9"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "top-white-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#DEDCDC"
+     },
+     "fit": {
+      "src": "top-white-back-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 780,
+      "ratio": 1.5205,
+      "hex": "#DEDCDC"
+     }
+    }
+   },
+   "black": {
+    "front": {
+     "set": {
+      "src": "top-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#181816"
+     },
+     "fit": {
+      "src": "top-black-front-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 772,
+      "ratio": 1.5363,
+      "hex": "#181816"
+     }
+    }
+   },
+   "grey": {
+    "front": {
+     "set": {
+      "src": "top-grey-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#D4D1CC"
+     },
+     "fit": {
+      "src": "top-grey-front-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 785,
+      "ratio": 1.5096,
+      "hex": "#D4D1CC"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "top-grey-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#C8C7C3"
+     },
+     "fit": {
+      "src": "top-grey-back-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 784,
+      "ratio": 1.5115,
+      "hex": "#C8C7C3"
+     }
+    }
+   }
+  },
+  "long": {
+   "black": {
+    "front": {
+     "set": {
+      "src": "long-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#171717"
+     },
+     "fit": {
+      "src": "long-black-front-fit",
+      "widths": [
+       600,
+       1179
+      ],
+      "w": 1179,
+      "h": 1185,
+      "ratio": 0.9949,
+      "hex": "#171717"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "long-black-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#1A1A19"
+     },
+     "fit": {
+      "src": "long-black-back-fit",
+      "widths": [
+       600,
+       1179
+      ],
+      "w": 1179,
+      "h": 1186,
+      "ratio": 0.9941,
+      "hex": "#1A1A19"
+     }
+    }
+   },
+   "white": {
+    "front": {
+     "set": {
+      "src": "long-white-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#E2E2E3"
+     },
+     "fit": {
+      "src": "long-white-front-fit",
+      "widths": [
+       600,
+       1179
+      ],
+      "w": 1179,
+      "h": 1186,
+      "ratio": 0.9941,
+      "hex": "#E2E2E3"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "long-white-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#E4E3E6"
+     },
+     "fit": {
+      "src": "long-white-back-fit",
+      "widths": [
+       600,
+       1179
+      ],
+      "w": 1179,
+      "h": 1185,
+      "ratio": 0.9949,
+      "hex": "#E4E3E6"
+     }
+    }
+   }
+  },
+  "sweat": {
+   "black": {
+    "front": {
+     "set": {
+      "src": "sweat-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#171817"
+     },
+     "fit": {
+      "src": "sweat-black-front-fit",
+      "widths": [
+       600,
+       1095
+      ],
+      "w": 1095,
+      "h": 1185,
+      "ratio": 0.9241,
+      "hex": "#171817"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "sweat-black-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#1B1B1A"
+     },
+     "fit": {
+      "src": "sweat-black-back-fit",
+      "widths": [
+       600,
+       1089
+      ],
+      "w": 1089,
+      "h": 1186,
+      "ratio": 0.9182,
+      "hex": "#1B1B1A"
+     }
+    }
+   },
+   "milk": {
+    "front": {
+     "set": {
+      "src": "sweat-milk-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#D9C9B4"
+     },
+     "fit": {
+      "src": "sweat-milk-front-fit",
+      "widths": [
+       600,
+       1094
+      ],
+      "w": 1094,
+      "h": 1186,
+      "ratio": 0.9224,
+      "hex": "#D9C9B4"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "sweat-milk-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#D8C8B1"
+     },
+     "fit": {
+      "src": "sweat-milk-back-fit",
+      "widths": [
+       600,
+       1095
+      ],
+      "w": 1095,
+      "h": 1185,
+      "ratio": 0.9241,
+      "hex": "#D8C8B1"
+     }
+    }
+   }
+  },
+  "tee-os": {
+   "sand": {
+    "front": {
+     "set": {
+      "src": "tee-os-sand-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#CFC6BC"
+     },
+     "fit": {
+      "src": "tee-os-sand-front-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 1104,
+      "ratio": 1.0743,
+      "hex": "#CFC6BC"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-os-sand-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#CEC4BA"
+     },
+     "fit": {
+      "src": "tee-os-sand-back-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 1112,
+      "ratio": 1.0656,
+      "hex": "#CEC4BA"
+     }
+    }
+   },
+   "terracotta": {
+    "front": {
+     "set": {
+      "src": "tee-os-terracotta-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#91594D"
+     },
+     "fit": {
+      "src": "tee-os-terracotta-front-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 1119,
+      "ratio": 1.059,
+      "hex": "#91594D"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-os-terracotta-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#925D51"
+     },
+     "fit": {
+      "src": "tee-os-terracotta-back-fit",
+      "widths": [
+       600,
+       1184
+      ],
+      "w": 1184,
+      "h": 1124,
+      "ratio": 1.0534,
+      "hex": "#925D51"
+     }
+    }
+   },
+   "red": {
+    "front": {
+     "set": {
+      "src": "tee-os-red-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#AE282E"
+     },
+     "fit": {
+      "src": "tee-os-red-front-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 1050,
+      "ratio": 1.1286,
+      "hex": "#AE282E"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-os-red-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#A32028"
+     },
+     "fit": {
+      "src": "tee-os-red-back-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 1051,
+      "ratio": 1.1284,
+      "hex": "#A32028"
+     }
+    }
+   },
+   "grey": {
+    "front": {
+     "set": {
+      "src": "tee-os-grey-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#9E9D9B"
+     },
+     "fit": {
+      "src": "tee-os-grey-front-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 1051,
+      "ratio": 1.1284,
+      "hex": "#9E9D9B"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-os-grey-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#A3A4A6"
+     },
+     "fit": {
+      "src": "tee-os-grey-back-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 1051,
+      "ratio": 1.1284,
+      "hex": "#A3A4A6"
+     }
+    }
+   },
+   "taupe": {
+    "front": {
+     "set": {
+      "src": "tee-os-taupe-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#BBAEA5"
+     },
+     "fit": {
+      "src": "tee-os-taupe-front-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 1120,
+      "ratio": 1.058,
+      "hex": "#BBAEA5"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-os-taupe-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#A99B94"
+     },
+     "fit": {
+      "src": "tee-os-taupe-back-fit",
+      "widths": [
+       600,
+       1176
+      ],
+      "w": 1176,
+      "h": 1185,
+      "ratio": 0.9924,
+      "hex": "#A99B94"
+     }
+    }
+   },
+   "olive": {
+    "front": {
+     "set": {
+      "src": "tee-os-olive-front-set",
+      "widths": [
+       600
+      ],
+      "w": 1174,
+      "h": 1174,
+      "ratio": 1.0,
+      "hex": "#5F5751"
+     },
+     "fit": {
+      "src": "tee-os-olive-front-fit",
+      "widths": [
+       600,
+       995
+      ],
+      "w": 995,
+      "h": 930,
+      "ratio": 1.0699,
+      "hex": "#5F5751"
+     }
+    }
+   }
+  },
+  "tee-wash": {
+   "wash-indigo": {
+    "front": {
+     "set": {
+      "src": "tee-wash-wash-indigo-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#3E3C6C"
+     },
+     "fit": {
+      "src": "tee-wash-wash-indigo-front-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 1076,
+      "ratio": 1.1022,
+      "hex": "#3E3C6C"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-wash-wash-indigo-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#4B4074"
+     },
+     "fit": {
+      "src": "tee-wash-wash-indigo-back-fit",
+      "widths": [
+       600,
+       1178
+      ],
+      "w": 1178,
+      "h": 1186,
+      "ratio": 0.9933,
+      "hex": "#4B4074"
+     }
+    }
+   },
+   "wash-purple": {
+    "front": {
+     "set": {
+      "src": "tee-wash-wash-purple-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#77527D"
+     },
+     "fit": {
+      "src": "tee-wash-wash-purple-front-fit",
+      "widths": [
+       600,
+       1184
+      ],
+      "w": 1184,
+      "h": 1129,
+      "ratio": 1.0487,
+      "hex": "#77527D"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-wash-wash-purple-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#815A88"
+     },
+     "fit": {
+      "src": "tee-wash-wash-purple-back-fit",
+      "widths": [
+       600,
+       1180
+      ],
+      "w": 1180,
+      "h": 1185,
+      "ratio": 0.9958,
+      "hex": "#815A88"
+     }
+    }
+   },
+   "wash-black": {
+    "front": {
+     "set": {
+      "src": "tee-wash-wash-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#232323"
+     },
+     "fit": {
+      "src": "tee-wash-wash-black-front-fit",
+      "widths": [
+       600,
+       1184
+      ],
+      "w": 1184,
+      "h": 1091,
+      "ratio": 1.0852,
+      "hex": "#232323"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-wash-wash-black-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#29292B"
+     },
+     "fit": {
+      "src": "tee-wash-wash-black-back-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 1105,
+      "ratio": 1.0733,
+      "hex": "#29292B"
+     }
+    }
+   },
+   "wash-pink": {
+    "front": {
+     "set": {
+      "src": "tee-wash-wash-pink-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#C8758E"
+     },
+     "fit": {
+      "src": "tee-wash-wash-pink-front-fit",
+      "widths": [
+       600,
+       1184
+      ],
+      "w": 1184,
+      "h": 1075,
+      "ratio": 1.1014,
+      "hex": "#C8758E"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-wash-wash-pink-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#D37195"
+     },
+     "fit": {
+      "src": "tee-wash-wash-pink-back-fit",
+      "widths": [
+       600,
+       1177
+      ],
+      "w": 1177,
+      "h": 1185,
+      "ratio": 0.9932,
+      "hex": "#D37195"
+     }
+    }
+   },
+   "wash-grey": {
+    "front": {
+     "set": {
+      "src": "tee-wash-wash-grey-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#999894"
+     },
+     "fit": {
+      "src": "tee-wash-wash-grey-front-fit",
+      "widths": [
+       600,
+       1185
+      ],
+      "w": 1185,
+      "h": 1077,
+      "ratio": 1.1003,
+      "hex": "#999894"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "tee-wash-wash-grey-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#8C8B89"
+     },
+     "fit": {
+      "src": "tee-wash-wash-grey-back-fit",
+      "widths": [
+       600,
+       1177
+      ],
+      "w": 1177,
+      "h": 1185,
+      "ratio": 0.9932,
+      "hex": "#8C8B89"
+     }
+    }
+   }
+  },
+  "shorts": {
+   "black": {
+    "front": {
+     "set": {
+      "src": "shorts-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#1C1C1B"
+     },
+     "fit": {
+      "src": "shorts-black-front-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 958,
+      "ratio": 1.238,
+      "hex": "#1C1C1B"
+     },
+     "anim": {
+      "src": "shorts-black-front-anim",
+      "widths": [
+       638
+      ],
+      "w": 638,
+      "h": 517,
+      "ratio": 1.234,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "shorts-black-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#1B1B1B"
+     },
+     "fit": {
+      "src": "shorts-black-back-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 952,
+      "ratio": 1.2458,
+      "hex": "#1B1B1B"
+     }
+    }
+   },
+   "white": {
+    "front": {
+     "set": {
+      "src": "shorts-white-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#E3E1E3"
+     },
+     "fit": {
+      "src": "shorts-white-front-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 928,
+      "ratio": 1.278,
+      "hex": "#E3E1E3"
+     },
+     "anim": {
+      "src": "shorts-white-front-anim",
+      "widths": [
+       639
+      ],
+      "w": 639,
+      "h": 498,
+      "ratio": 1.2831,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "shorts-white-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#E1E1E3"
+     },
+     "fit": {
+      "src": "shorts-white-back-fit",
+      "widths": [
+       600,
+       1186
+      ],
+      "w": 1186,
+      "h": 970,
+      "ratio": 1.2227,
+      "hex": "#E1E1E3"
+     }
+    }
+   },
+   "grey": {
+    "front": {
+     "set": {
+      "src": "shorts-grey-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#CFCFCE"
+     },
+     "fit": {
+      "src": "shorts-grey-front-fit",
+      "widths": [
+       600,
+       1200,
+       1796
+      ],
+      "w": 1796,
+      "h": 1406,
+      "ratio": 1.2774,
+      "hex": "#CFCFCE"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "shorts-grey-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#C2C2C2"
+     },
+     "fit": {
+      "src": "shorts-grey-back-fit",
+      "widths": [
+       600,
+       1200,
+       1780
+      ],
+      "w": 1780,
+      "h": 1458,
+      "ratio": 1.2209,
+      "hex": "#C2C2C2"
+     }
+    }
+   }
+  },
+  "pants": {
+   "black": {
+    "front": {
+     "set": {
+      "src": "pants-black-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#181816"
+     },
+     "fit": {
+      "src": "pants-black-front-fit",
+      "widths": [
+       600,
+       668
+      ],
+      "w": 668,
+      "h": 1185,
+      "ratio": 0.5637,
+      "hex": "#181816"
+     },
+     "anim": {
+      "src": "pants-black-front-anim",
+      "widths": [
+       398
+      ],
+      "w": 398,
+      "h": 685,
+      "ratio": 0.581,
+      "frames": 61
+     }
+    },
+    "back": {
+     "set": {
+      "src": "pants-black-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#191919"
+     },
+     "fit": {
+      "src": "pants-black-back-fit",
+      "widths": [
+       600,
+       623
+      ],
+      "w": 623,
+      "h": 1185,
+      "ratio": 0.5257,
+      "hex": "#191919"
+     }
+    }
+   },
+   "grey": {
+    "front": {
+     "set": {
+      "src": "pants-grey-front-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#C0BFBE"
+     },
+     "fit": {
+      "src": "pants-grey-front-fit",
+      "widths": [
+       600,
+       1087
+      ],
+      "w": 1087,
+      "h": 1920,
+      "ratio": 0.5661,
+      "hex": "#C0BFBE"
+     }
+    },
+    "back": {
+     "set": {
+      "src": "pants-grey-back-set",
+      "widths": [
+       600,
+       1200
+      ],
+      "w": 1400,
+      "h": 1400,
+      "ratio": 1.0,
+      "hex": "#C5C5C3"
+     },
+     "fit": {
+      "src": "pants-grey-back-fit",
+      "widths": [
+       600,
+       1020
+      ],
+      "w": 1020,
+      "h": 1799,
+      "ratio": 0.567,
+      "hex": "#C5C5C3"
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ru" class="is-loading">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Фабрика — бланки с фабрики, нанесение, пошив под заказ</title>
+<meta name="description" content="Швейное производство в Москве: готовые бланки от одной штуки, DTF-печать, плёнки и вышивка со своим макетом, пошив под заказ.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:,">
+<!-- Локально: cd fabrika-v6 && python3 tools/serve.py 4180 → http://localhost:4180/ (ES-модули и fetch требуют http) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css?v=6">
+<link rel="stylesheet" href="styles/base.css?v=6">
+<link rel="stylesheet" href="styles/header.css?v=6">
+<link rel="stylesheet" href="styles/layers.css?v=6">
+<link rel="stylesheet" href="styles/menu.css?v=6">
+<link rel="stylesheet" href="styles/dock.css?v=6">
+<link rel="stylesheet" href="styles/garment.css?v=6">
+<link rel="stylesheet" href="styles/hero.css?v=6">
+<link rel="stylesheet" href="styles/catalog.css?v=6">
+<link rel="stylesheet" href="styles/product.css?v=6">
+<link rel="stylesheet" href="styles/print.css?v=6">
+<link rel="stylesheet" href="styles/cart.css?v=6">
+<link rel="stylesheet" href="styles/services.css?v=6">
+<link rel="stylesheet" href="styles/factory.css?v=6">
+<link rel="stylesheet" href="styles/admin.css?v=6">
+</head>
+<body>
+
+<header class="hdr" data-hdr>
+  <a class="hdr__left" href="#print" data-pick-file>Свой принт</a>
+  <a class="hdr__logo" href="#top" aria-label="Fabrika.market — на главную">Fabrika.market</a>
+  <div class="hdr__right">
+    <button type="button" class="hdr__adm" data-adm-btn hidden>Управление <sup hidden></sup></button>
+    <button type="button" class="hdr__cart" data-open-cart aria-label="Корзина, 0 товаров">Корзина (<span data-cart-count>0</span>)<span class="hdr__added" data-added aria-hidden="true">Добавлено</span></button>
+    <button type="button" class="hdr__menu" data-open-menu aria-haspopup="dialog">Меню
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 8h18M3 16h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- 1. Первый экран -->
+  <section class="hero" id="hero" data-hero data-tone="light" aria-labelledby="h1">
+    <div class="hero__stage" data-stage></div>
+    <div class="hero__cap">
+      <h1 id="h1">Бланки с фабрики</h1>
+      <p>Нанесём ваш принт. Сошьём под заказ. От одной штуки.</p>
+      <div class="hero__act">
+        <a class="btn" href="#blanks" data-go="blanks">Каталог</a>
+        <a class="btn btn--ghost" href="#print" data-pick-file>Примерить свой принт</a>
+      </div>
+      <div class="sw hero__sw" data-swatches aria-label="Цвет"></div>
+      <p class="hero__specs" data-specs></p>
+    </div>
+  </section>
+
+  <!-- 2. Бланки -->
+  <section class="blanks" id="blanks" aria-labelledby="h-blanks">
+    <div class="blanks__head">
+      <h2 class="h-block" id="h-blanks">Бланки</h2>
+      <div class="cats" data-cats role="tablist" aria-label="Категории"></div>
+      <button type="button" class="blanks__mine" data-mine aria-pressed="false" hidden><i></i>С моим принтом</button>
+    </div>
+    <div class="tiles" data-tiles></div>
+  </section>
+
+  <!-- 3. Два крупных превью: Нанесение и Пошив под заказ -->
+  <section class="services" id="services" aria-label="Нанесение и пошив">
+    <div class="duo">
+      <article class="duo__item" id="print" data-which="print" aria-expanded="false">
+        <div class="duo__media" data-demo></div>
+        <div class="duo__cap">
+          <h2>Нанесение</h2>
+          <p>DTF-печать, плёнки через плоттер, вышивка. Свой макет на вещи — прямо здесь.</p>
+          <span class="link">Подробнее</span>
+        </div>
+      </article>
+      <article class="duo__item" id="sewing" data-which="sewing" aria-expanded="false">
+        <div class="duo__media" data-sew-demo>
+          <div class="duo__cap">
+            <h2>Пошив под заказ</h2>
+            <p>Лекала, образец, тираж. Любая сложность — своё производство в Москве.</p>
+            <span class="link">Подробнее</span>
+          </div>
+        </div>
+      </article>
+
+      <div class="duo__more duo__more--print" data-more="print" hidden>
+        <div class="more">
+          <div>
+            <h3>Методы нанесения</h3>
+            <p class="t-s t-mute">Выберите метод — вещь слева покажет, как он выглядит. Плёнка режется плоттером и всегда одноцветная: макет становится силуэтом.</p>
+            <div class="meth" data-methods></div>
+          </div>
+          <div>
+            <h3>Как это работает</h3>
+            <ol class="steps">
+              <li><b>Загрузите макет</b><span>PNG с прозрачным фоном, SVG или PDF. Сайт сразу подскажет, хватит ли файла для печати.</span></li>
+              <li><b>Положите на вещь</b><span>Расположение, размер, метод. Можно примерить на любой бланк из каталога.</span></li>
+              <li><b>Отправьте заявку</b><span>В ней уже файл, размер и метод — нам не нужно ничего переспрашивать. Цену подтверждаем в Telegram.</span></li>
+            </ol>
+            <div class="brief__row">
+              <button type="button" class="btn" data-try-print>Примерить свой принт</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="duo__more duo__more--sewing" data-more="sewing" hidden>
+        <div class="more">
+          <div>
+            <h3>Три шага</h3>
+            <ol class="steps">
+              <li><b>Референс</b><span>Фото, ссылка или эскиз. Для первого сообщения хватит референса, типа изделия и тиража.</span></li>
+              <li><b>Образец</b><span>Лекала и первая вещь на утверждение.</span></li>
+              <li><b>Тираж</b><span>Шьём партию, наносим принт, отдаём в шоуруме или отправляем.</span></li>
+            </ol>
+            <ul class="terms__list" data-sew-terms></ul>
+            <a class="link" href="https://fabrika.market/production">Производство для брендов</a>
+          </div>
+          <div>
+            <h3>Отправить задачу</h3>
+            <form class="brief" data-brief onsubmit="return false">
+              <label class="field"><span>Что шьём</span><input name="item" type="text" placeholder="Например, худи оверсайз 400 г"></label>
+              <label class="field"><span>Тираж</span><input name="qty" type="text" inputmode="numeric" placeholder="Сколько штук"></label>
+              <label class="field"><span>Референс — ссылка</span><input name="reference" type="url" placeholder="https://"></label>
+              <div class="field--file"><span>Референс — файл</span><label class="link link--quiet"><input name="refFile" type="file" accept="image/*,.pdf"><span data-ref-name>Выбрать файл</span></label></div>
+              <label class="field"><span>Срок</span><input name="deadline" type="text" placeholder="Необязательно"></label>
+              <label class="field"><span>Как с вами связаться</span><input name="contact" type="text" placeholder="Telegram или телефон"></label>
+              <label class="field"><span>Комментарий</span><textarea name="comment" rows="2" placeholder="Необязательно"></textarea></label>
+              <div class="brief__row"><button type="button" class="btn" data-sew-send>Отправить задачу</button></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Производство и шоурум -->
+  <section class="factory" id="factory" aria-labelledby="h-factory">
+    <div class="factory__head"><h2 class="h-block" id="h-factory">Производство и шоурум</h2></div>
+    <!-- Слот под экран 16:9 с айдентикой производства (кадр или анимация процесса) — покажется, когда появится файл: settings.factoryMedia -->
+    <div class="factory__frame" data-factory-frame hidden></div>
+    <div class="factory__body">
+      <div>
+        <p class="addr" data-addr></p>
+        <div class="addr-row" data-route></div>
+        <div data-route-extra></div>
+        <div id="contact" data-contacts></div>
+      </div>
+      <div>
+        <details class="rows__item" open>
+          <summary class="h-block" style="cursor:pointer;list-style:none">Как это шьётся</summary>
+          <div class="line4" data-live>
+            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><rect class="ln" x="20" y="120" width="200" height="50"/><path class="ln d" d="M40 145h160"/><path class="ln s cut" d="M44 70h150"/><g class="scis"><circle class="ln" cx="36" cy="60" r="7"/><circle class="ln" cx="36" cy="82" r="7"/><path class="ln" d="M42 64 62 72M42 78 62 70"/></g></svg></div><h3>Раскрой</h3><p>По своим лекалам — посадка одна и та же от первой штуки до тиража.</p></div>
+            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><path class="ln" d="M40 150V60h120v30"/><path class="ln" d="M160 60h36v44"/><rect class="ln" x="30" y="150" width="190" height="16"/><g class="needle"><path class="ln" d="M186 104v22"/><path class="ln s" d="M186 126v8"/></g><path class="ln s seam" d="M60 146h126"/></svg></div><h3>Пошив</h3><p>Свои швеи и оборудование, без посредников.</p></div>
+            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><path class="ln" d="M120 20v30"/><g class="press"><rect class="ln" x="60" y="50" width="120" height="22"/><path class="ln" d="M120 30v20"/></g><path class="ln" d="M80 110c10 8 70 8 80 0l24 10v60H56v-60z"/><g class="printed"><rect x="98" y="132" width="44" height="26" fill="#E8734A"/></g><path class="ln" d="M40 184h160"/></svg></div><h3>Нанесение</h3><p>DTF, плёнки и вышивка в том же цеху.</p></div>
+            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><path class="ln" d="M20 160h200"/><g class="box"><rect class="ln" x="80" y="90" width="80" height="70"/><path class="ln" d="M80 110h80"/><path class="ln s" d="M120 90v20"/><path class="ln s okm" d="M104 132l10 10 20-20"/></g></svg></div><h3>Контроль</h3><p>Проверяем каждую вещь и отдаём в шоуруме или отправляем.</p></div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Условия -->
+  <section class="terms" id="terms" aria-labelledby="h-terms">
+    <h2 class="h-block" id="h-terms">Условия</h2>
+    <div class="rows" data-terms></div>
+  </section>
+
+  <!-- 6. Подвал -->
+  <footer class="foot">
+    <span>© 2026 Фабрика</span>
+    <nav><a href="https://fabrika.market/oferta">Оферта</a><a href="https://fabrika.market/privacy">Приватность</a><a href="https://fabrika.market/production">Производство для брендов</a></nav>
+  </footer>
+</main>
+
+<nav class="dock" data-dock aria-label="Разделы">
+  <span class="dock__pill" aria-hidden="true"></span>
+  <button type="button" data-go="blanks" aria-current="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 4 6.5l2 3.5 2-1V20h8V9l2 1 2-3.5L16 4c-.8 1.4-2.3 2.2-4 2.2S8.8 5.4 8 4Z"/></svg>Бланки</button>
+  <button type="button" data-go="print" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14"/><path d="M9 12h6M12 9v6"/></svg>Принт</button>
+  <button type="button" data-go="sewing" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 17.5 6.5"/><path d="M17.5 6.5c1.4-1.4 2.6-1.3 2.1-.1-.5 1.2-1.7 1.6-2.6.7"/><path d="M5 19c-1 1-2 .9-2.4.1"/></svg>Пошив</button>
+  <button type="button" data-go="cart" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 11H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Корзина<b class="dock__n" data-cart-count hidden>0</b></button>
+  <button type="button" data-go="contact" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4 3 11l6 2 2 7 3-5 5 4z"/></svg>Связь</button>
+</nav>
+
+<div class="scrim" data-scrim></div>
+
+<!-- Меню (компьютер) -->
+<div class="menu__peek" data-peek aria-hidden="true"></div>
+<aside class="panel menu" data-layer="menu" role="dialog" aria-modal="true" aria-label="Меню">
+  <div class="panel__head"><span class="h-block">Меню</span><button type="button" class="x" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="panel__body"></div>
+</aside>
+
+<!-- Корзина и заявка -->
+<aside class="panel cart" data-layer="cart" role="dialog" aria-modal="true" aria-label="Корзина">
+  <div class="panel__head"><span class="h-block" data-title>Корзина</span><button type="button" class="x" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="panel__body"></div>
+  <div class="panel__foot"></div>
+</aside>
+
+<!-- Карточка товара -->
+<section class="pv" data-layer="product" role="dialog" aria-modal="true" aria-label="Товар">
+  <div class="pv__stage">
+    <button type="button" class="x pv__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="pv__tools" hidden></div>
+    <div class="pv__scene"><div class="pv__box"></div></div>
+    <div class="seg pv__sides"></div>
+  </div>
+  <div class="pv__panel"></div>
+</section>
+
+<!-- Админка (только в артефакте) -->
+<aside class="panel adm" data-layer="admin" role="dialog" aria-modal="true" aria-label="Управление">
+  <div class="panel__head"><span class="h-block">Управление</span><button type="button" class="x" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="panel__body"></div>
+</aside>
+
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+<input type="file" data-file-input accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf" hidden>
+
+<script type="module" src="app/main.js?v=6"></script>
+</body>
+</html>

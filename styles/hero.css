@@ -1,0 +1,40 @@
+/* Первый экран (план §7.4): от края до края, ровный светлый тон, рендер по центру, подпись внизу. */
+.hero {
+  position: relative;
+  height: var(--hero-h);
+  min-height: 560px;
+  background: var(--tone);
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--hdr-h) - 4px) var(--gutter) 24px;
+}
+.hero__stage { position: relative; flex: 1 1 0; min-height: 0; display: grid; place-items: center; }
+.hero__stage .gm { height: 100%; width: 100%; max-width: 80vh; }
+
+.hero__cap {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding-top: 14px;
+}
+.hero__cap h1 { font: 500 var(--fs-l) / var(--lh-l) var(--disp); text-wrap: balance; }
+.hero__cap > p { font-size: var(--fs-m); line-height: var(--lh-m); max-width: 44ch; text-wrap: balance; }
+.hero__act { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.hero__sw { --bg: var(--tone); margin-top: 2px; justify-content: center; }
+.hero__specs { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); text-wrap: balance; }
+
+@media (max-width: 1023px) {
+  .hero { min-height: 0; padding-bottom: 16px; padding-top: calc(var(--hdr-h) + 2px); }
+  .hero__stage { min-height: 88vw; }
+  .hero__stage .gm { max-width: none; }
+  .hero__cap { gap: 8px; padding-top: 12px; }
+  .hero__cap > p { font-size: var(--fs-s); line-height: var(--lh-s); }
+  .hero__act { flex-direction: column; gap: 12px; margin-top: 4px; }
+  .hero__specs { display: none; }
+}
+@media (max-width: 1023px) and (max-height: 700px) {
+  .hero__cap > p { display: none; }
+}

@@ -1,0 +1,34 @@
+/* Корзина и заявка (план §7.8): панель справа, заявка — второй шаг в той же панели. */
+.cart__list { display: grid; }
+.ci { display: grid; grid-template-columns: 72px 1fr auto; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--tone-2); align-items: start; }
+.ci__media { width: 72px; height: 90px; background: var(--tone); position: relative; }
+.ci__media .gm { position: absolute; inset: 6px; width: auto; height: auto; }
+.ci__info { display: grid; gap: 2px; font-size: var(--fs-s); line-height: var(--lh-s); min-width: 0; }
+.ci__info b { font-weight: 500; font-size: var(--fs-m); line-height: var(--lh-m); }
+.ci__info .t-mute { overflow-wrap: anywhere; }
+.ci__act { display: grid; justify-items: end; gap: 6px; }
+.ci__rm { font-size: var(--fs-s); color: var(--mute); min-height: 32px; display: inline-flex; align-items: center; }
+.ci__rm:hover { color: var(--ink); }
+.cart__empty { padding: 40px 0; color: var(--mute); font-size: var(--fs-s); line-height: var(--lh-s); display: grid; gap: 12px; justify-items: start; }
+.cart__tot { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: var(--fs-m); }
+.cart__tot small { color: var(--mute); }
+.cart__note { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); }
+
+/* Шаг заявки */
+.ord { display: grid; gap: 18px; padding-top: 6px; }
+.ord__sum { font-size: var(--fs-s); line-height: var(--lh-s); display: grid; gap: 6px; }
+.ord__sum li { display: flex; justify-content: space-between; gap: 12px; }
+.ord__sum li span:first-child { overflow-wrap: anywhere; }
+.ord__pre {
+  margin: 0;
+  padding: 14px 16px;
+  box-shadow: inset 0 0 0 1px var(--tone-2);
+  font: 400 var(--fs-s) / var(--lh-s) var(--font);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 32vh;
+  overflow: auto;
+}
+.ord__id { font: 500 var(--fs-l) / 1 var(--disp); }
+.ord__row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.ord__fields { display: grid; gap: 14px; }
