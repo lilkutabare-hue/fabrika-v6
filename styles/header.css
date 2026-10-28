@@ -53,13 +53,3 @@
   .hdr .hdr__menu { display: none; }
   .hdr__right { gap: 16px; }
 }
-
-/* Пункты шапки: тот же короткий прыжок букв, без стекла.
-   Шапка закреплена над прокруткой — blur здесь размазывал бы фон при скролле. */
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .hdr a:hover .hop,
-  .hdr button:hover .hop {
-    animation: letter-hop .36s var(--ease-out) both;
-    animation-delay: calc(var(--d) * 25ms);
-  }
-}
