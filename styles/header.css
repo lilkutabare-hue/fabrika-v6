@@ -49,9 +49,25 @@
 .hdr__added.is-on { opacity: 1; transform: none; }
 
 @media (max-width: 1023px) {
-  /* телефон: «Свой принт» и корзина в шапке, бургера нет; разделы — в доке */
+  /* телефон и планшет: «Свой принт» и корзина в шапке, бургера нет; разделы — в доке */
   .hdr .hdr__menu { display: none; }
   .hdr__right { gap: 16px; }
+  /* Прыжок букв и blur здесь раздувают строку и тормозят прокрутку.
+     На шапку и док размытие не вешаем: у дока своё стекло, шапка остаётся плоской. */
+  .hdr,
+  .hdr a,
+  .hdr button,
+  a.btn:not(.btn--ghost),
+  button.btn:not(.btn--ghost),
+  label.btn:not(.btn--ghost) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .hop {
+    display: inline;
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 /* Пункты шапки: тот же короткий прыжок букв, без стекла.
