@@ -49,17 +49,26 @@
 .hdr__added.is-on { opacity: 1; transform: none; }
 
 @media (max-width: 1023px) {
-  /* телефон: «Свой принт» и корзина в шапке, бургера нет; разделы — в доке */
+  /* телефон и планшет: «Свой принт» и корзина в шапке, бургера нет; разделы — в доке */
   .hdr .hdr__menu { display: none; }
   .hdr__right { gap: 16px; }
+  /* Прыжок букв и blur здесь раздувают строку и тормозят прокрутку.
+     На шапку и док размытие не вешаем: у дока своё стекло, шапка остаётся плоской. */
+  .hdr,
+  .hdr a,
+  .hdr button,
+  a.btn:not(.btn--ghost),
+  button.btn:not(.btn--ghost),
+  label.btn:not(.btn--ghost) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
-
-/* Пункты шапки: тот же короткий прыжок букв, без стекла.
-   Шапка закреплена над прокруткой — blur здесь размазывал бы фон при скролле. */
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .hdr a:hover .hop,
-  .hdr button:hover .hop {
-    animation: letter-hop .36s var(--ease-out) both;
-    animation-delay: calc(var(--d) * 25ms);
+/* Тач: если буквы всё же разрезаны, не дёргать строку. Мышь ниже 1024 ведёт hop.js. */
+@media (max-width: 1023px) and (pointer: coarse) {
+  .hop {
+    display: inline;
+    animation: none !important;
+    transform: none !important;
   }
 }

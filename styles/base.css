@@ -60,8 +60,15 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
 }
 .h-big { font: 500 var(--fs-l) / var(--lh-l) var(--disp); text-wrap: balance; }
 
-/* Кнопки — Apple 2027: пилюля 48 px, строчные, без капса. Главная чёрная, вторая — мягкая заливка. */
+/* Кнопки — Apple Liquid Glass: капсула.
+   Тело: вертикальный градиент белый 22% → 0 поверх тёмного стекла у главной
+   и поверх белого стекла у второстепенной. Блик едет по ::after.
+   «Примерить свой принт» (.is-try) остаётся текстом — сброс в #hero-type.
+   Волна букв живёт только у «Свой принт» (hop.js), не на кнопке. */
 .btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -69,69 +76,87 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
   height: 48px;
   padding: 0 26px;
   border-radius: 999px;
-  background: var(--ink);
+  border: 1px solid rgba(255, 255, 255, .55);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0)),
+    rgba(0, 0, 0, .78);
+  background-clip: padding-box;
   color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .7),
+    inset 0 -1px 0 rgba(0, 0, 0, .18),
+    0 0 0 1px rgba(11, 11, 11, .45),
+    0 6px 12px -8px rgba(0, 0, 0, .38);
   font: 500 var(--fs-m) / 1 var(--font);
   letter-spacing: -.01em;
   white-space: nowrap;
-  transition: transform var(--dur-press) ease-out, opacity var(--dur-state), background var(--dur-state);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  transition: transform var(--dur-press) var(--ease-out), opacity var(--dur-state);
+}
+.btn::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: -60%;
+  bottom: -60%;
+  left: 0;
+  width: 38%;
+  background: linear-gradient(
+    108deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, .08) 36%,
+    rgba(255, 255, 255, .62) 50%,
+    rgba(255, 255, 255, .08) 64%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translate3d(-240%, 0, 0) skewX(-18deg);
+  pointer-events: none;
+  transition: transform .7s cubic-bezier(.2, .8, .2, 1);
 }
 .btn:active { transform: scale(.98); }
-.btn--ghost { background: var(--tone-2); color: var(--ink); }
+.btn--ghost {
+  color: var(--ink);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0)),
+    rgba(255, 255, 255, .72);
+}
 .btn--wide { width: 100%; }
 
-/* Буквы для короткого прыжка. Сам прыжок — только мышь, см. ниже и header.css. */
-.hop-run { display: inline; white-space: inherit; }
-.hop { display: inline-block; letter-spacing: normal; line-height: 1; vertical-align: top; }
-
-/* Прямоугольная чёрная кнопка (.btn, .is-catalog) — тёмное стекло.
-   Только под мышь: на таче остаётся плоский чёрный фон из разметки, без blur.
-   Подчёркнутая .btn--ghost («Примерить свой принт») не входит. */
-@media (hover: hover) and (pointer: fine) {
-  a.btn:not(.btn--ghost),
-  button.btn:not(.btn--ghost),
-  label.btn:not(.btn--ghost) {
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 46%),
-      rgba(0, 0, 0, .8) !important;
-    border: 1px solid rgba(255, 255, 255, .48) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, .4),
-      0 8px 18px -12px rgba(0, 0, 0, .5) !important;
-    -webkit-backdrop-filter: blur(8px) saturate(140%);
-    backdrop-filter: blur(8px) saturate(140%);
-  }
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  @media (hover: hover) and (pointer: fine) {
-    a.btn:not(.btn--ghost),
-    button.btn:not(.btn--ghost),
-    label.btn:not(.btn--ghost) {
-      background: #000 !important;
-    }
-  }
-}
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-transparency: reduce) {
-  a.btn:not(.btn--ghost),
-  button.btn:not(.btn--ghost),
-  label.btn:not(.btn--ghost) {
-    background: #000 !important;
+/* На узком экране и на таче капсула и градиент остаются, blur с кнопки снят. */
+@media (max-width: 1023px), (hover: none), (pointer: coarse) {
+  .btn {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
 }
+@media (prefers-reduced-transparency: reduce) {
+  .btn {
+    background: #141414;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .btn--ghost { background: #f4f4f2; }
+}
 
-@keyframes letter-hop {
-  0% { transform: translateY(0); }
-  42% { transform: translateY(-3px); }
-  100% { transform: translateY(0); }
+/* Буквы волны у «Свой принт». Само движение — в hop.js, только мышь. */
+.hop-run { display: inline; white-space: inherit; position: relative; z-index: 2; }
+.hop {
+  display: inline-block;
+  letter-spacing: normal;
+  line-height: 1;
+  vertical-align: top;
+  transform-origin: 50% 50%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:not(.is-try):hover { transform: translateY(-1px); }
+  .btn:not(.is-try):hover:active { transform: translateY(-1px) scale(.98); }
 }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .btn:not(.btn--ghost):hover .hop {
-    animation: letter-hop .36s var(--ease-out) both;
-    animation-delay: calc(var(--d) * 25ms);
-  }
+  .btn:not(.is-try):hover::after { transform: translate3d(380%, 0, 0) skewX(-18deg); }
 }
+
 .link {
   font: 500 var(--fs-m) / 1 var(--font);
   color: var(--ink);
