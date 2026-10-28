@@ -10,6 +10,7 @@ import * as sewing from './sewing.js';
 import * as showroom from './showroom.js';
 import * as admin from './admin.js';
 import { $, $$, toast } from './ui.js';
+import { mountHop } from './hop.js';
 
 /* ---------- Шапка: прозрачная → белая после порога ---------- */
 function initHeader() {
@@ -173,6 +174,7 @@ function initRoute(data) {
 }
 
 /* ---------- старт ---------- */
+mountHop();
 initHeader();
 initDock();
 const pickFile = initFileInput();
