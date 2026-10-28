@@ -166,13 +166,13 @@
   background:
     linear-gradient(180deg, rgba(255, 255, 255, .30), rgba(255, 255, 255, 0) 46%),
     linear-gradient(180deg, rgba(42, 42, 42, .86), rgba(0, 0, 0, .94)) !important;
-  border: 1px solid rgba(255, 255, 255, .5) !important;
+  border: 1px solid rgba(11, 11, 11, .55) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .45),
+    inset 0 1px 0 rgba(255, 255, 255, .7),
     0 5px 10px -7px rgba(0, 0, 0, .55) !important;
   white-space: nowrap;
 }
-@media (min-width: 1024px) {
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .pt__upload > button.btn:not(.btn--ghost) {
     -webkit-backdrop-filter: blur(8px) saturate(140%);
     backdrop-filter: blur(8px) saturate(140%);
@@ -231,7 +231,11 @@
 .pt__cta .link--quiet { color: var(--mute); }
 
 @media (max-width: 1023px) {
-  .pv.is-print .pv__scene { max-height: 50svh; }
+  /* Сцена уступает место: липкая «В корзину» не накрывает «Загрузить» на 360. */
+  .pv.is-print .pv__scene {
+    height: max(148px, min(46svh, calc(100svh - 468px)));
+    max-height: none;
+  }
 }
 
 /* Карточки методов и места: та же вещь квадратом, как сцена. Макет уже на ней, не плашка цвета. */

@@ -63,6 +63,9 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
+}
+/* Тач: если буквы всё же разрезаны, не дёргать строку. Мышь ниже 1024 ведёт hop.js. */
+@media (max-width: 1023px) and (pointer: coarse) {
   .hop {
     display: inline;
     animation: none !important;

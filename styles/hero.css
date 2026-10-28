@@ -27,7 +27,13 @@
 .hero__specs { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); text-wrap: balance; }
 
 @media (max-width: 1023px) {
-  .hero { min-height: 0; padding-bottom: 16px; padding-top: calc(var(--hdr-h) + 2px); }
+  /* Первый экран закрывает кадр: «Бланки» и чипы начинаются ниже дока, не в его полосе. */
+  .hero {
+    height: auto;
+    min-height: 100svh;
+    padding-bottom: var(--dock-space);
+    padding-top: calc(var(--hdr-h) + 2px);
+  }
   /* Сцена отдаёт место подписи: иначе кнопка и текст вылезают из кадра (768 и низкий планшет). */
   .hero__stage { min-height: 0; }
   .hero__stage .gm { max-width: none; }
