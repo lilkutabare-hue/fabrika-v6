@@ -50,7 +50,7 @@ export function orderText(order, data) {
     L.push('');
     order.items.forEach((it, i) => {
       const bits = [colorName(data, it.color), it.size, it.gram].filter(Boolean).join(' · ');
-      L.push(`${i + 1}. ${it.product.name}${it.product.code ? ' ' + it.product.code : ''} — ${bits} — ${it.qty} шт × ${rub(it.unitPrice)}`);
+      L.push(`${i + 1}. ${it.product.name} — ${bits} — ${it.qty} шт × ${rub(it.unitPrice)}`);
       for (const p of it.prints) {
         const m = data.methods.find(x => x.id === p.method);
         const size = p.width_mm ? `${p.width_mm}×${p.height_mm} мм` : (p.scale_pct != null ? `${p.scale_pct} % зоны, размер уточнит менеджер` : 'размер уточнит менеджер');

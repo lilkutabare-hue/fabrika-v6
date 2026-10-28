@@ -33,9 +33,7 @@
   transform: translate(-50%, -50%);
   padding: 12px 18px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, .72);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: #fff;
   box-shadow: 0 1px 3px rgba(11, 11, 11, .12), 0 0 0 .5px rgba(11, 11, 11, .06);
   font: 500 var(--fs-s) / 1 var(--font);
   color: var(--ink);
