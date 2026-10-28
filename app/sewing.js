@@ -1,16 +1,17 @@
 /* sewing.js — два крупных превью «Нанесение» и «Пошив под заказ» (план §7.9) и бриф пошива заявкой. */
-import { esc, rub, colorHex } from './data.js';
+import { esc, colorHex } from './data.js';
 import { mountGarment, isDark } from './garment.js';
 import { zoneRect } from './print/zones.js';
 import { state as printState, subscribe as onPrint, set as setPrint } from './print/stage.js';
 import { artHTML, artClass, methodById, defaultFilm, publicMethods, methodLine } from './print/methods.js';
-import { buildOrder } from './order.js';
+import { buildOrder, sendCaption, TEXT_ONLY_CAPTION } from './order.js';
 import * as cart from './cart.js';
 import { $, $$, toast } from './ui.js';
 
 let data = null, api = null, demoView = null, demoProduct = null;
 const root = $('#services');
 const DEMO_TEXT = 'FABRIKA';
+let wordMaskUrl = '';
 
 export function init(d, a) {
   data = d; api = a;
@@ -28,30 +29,146 @@ export function init(d, a) {
   renderMethods();
   onPrint(() => { renderDemoArt(); renderMethods(); });
   renderTerms();
+  labelSewSend();
+  document.fonts?.ready.then(async () => {
+    try { await document.fonts.load('700 152px Unbounded'); } catch { /* слово останется запасным шрифтом */ }
+    wordMaskUrl = '';
+    publishMask();
+    renderDemoArt();
+    renderMethods();
+  });
+}
+
+/* Пока сервер пустой, кнопка не обещает, что референс уже ушёл. */
+function labelSewSend() {
+  const b = $('[data-sew-send]', root);
+  if (!b) return;
+  const cap = sendCaption(data.settings, 'sew');
+  if (cap !== TEXT_ONLY_CAPTION) { b.textContent = cap; return; }
+  b.style.whiteSpace = 'normal';
+  b.style.height = 'auto';
+  b.style.minHeight = '48px';
+  b.style.maxWidth = '100%';
+  b.style.paddingTop = '12px';
+  b.style.paddingBottom = '12px';
+  const span = document.createElement('span');
+  span.textContent = cap;
+  span.style.display = 'block';
+  span.style.minWidth = '0';
+  span.style.whiteSpace = 'normal';
+  span.style.textAlign = 'center';
+  span.style.textWrap = 'balance';
+  b.replaceChildren(span);
+}
+
+/* Силуэт слова для плёнки и маска нити. Тот же Unbounded, что у надписи на вещи. */
+function wordMask() {
+  if (wordMaskUrl) return wordMaskUrl;
+  const c = document.createElement('canvas');
+  c.width = 800;
+  c.height = 220;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, 800, 220);
+  ctx.fillStyle = '#000';
+  ctx.font = '700 152px Unbounded, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  try { ctx.letterSpacing = '-4px'; } catch { /* холст без letterSpacing */ }
+  ctx.fillText(DEMO_TEXT, 400, 156);
+  wordMaskUrl = c.toDataURL();
+  return wordMaskUrl;
+}
+function publishMask() {
+  root.style.setProperty('--demo-mask', `url("${wordMask()}")`);
+}
+
+let svgN = 0;
+/* Демо-слово без файла: у DTF цвет остаётся, плёнка сводит его в один силуэт. */
+function wordSvg(fill, asIs) {
+  const id = 'dw' + (++svgN);
+  const paint = asIs ? `url(#${id})` : fill;
+  const defs = asIs ? `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${fill}"/><stop offset="1" stop-color="#E8734A"/></linearGradient></defs>` : '';
+  return `<svg viewBox="0 0 400 110" width="100%" aria-hidden="true">${defs}<text x="200" y="78" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="700" font-size="76" letter-spacing="-2" fill="${paint}">${DEMO_TEXT}</text></svg>`;
+}
+
+function filmOf(method, dark) {
+  if (method.group !== 'film') return null;
+  return (printState.method === method.id && printState.film) || defaultFilm(method, dark);
+}
+
+/* Макет в методе: DTF как есть, плёнка силуэтом, вышивка нитью. Свой файл — та же ветка, что в конструкторе. */
+function methodArtInner(method, dark) {
+  const film = filmOf(method, dark);
+  if (printState.art) return artHTML(printState.art, method, film);
+  const fill = film ? film.hex : (dark ? '#F4F3EF' : '#0B0B0B');
+  if (method.preview === 'stitch') return `<div class="art__thread"></div>`;
+  if ((method.preview || '').startsWith('silhouette')) return `<div class="art__sil" style="--film:${fill}"></div>`;
+  return wordSvg(fill, true);
+}
+
+function artPlace(grow = 1) {
+  const [x, y, w, h] = zoneRect(demoProduct, 'front', 'center');
+  const W = w * grow, H = h * grow;
+  const cx = x + w / 2, cy = y + h / 2;
+  const n = v => (Math.round(v * 100) / 100) + '%';
+  return { left: n(12 + (cx - W / 2) * 76), top: n(6 + (cy - H / 2) * 76), width: n(W * 76), height: n(H * 76) };
+}
+
+/* То же фото, что в крупном превью. Гифку не берём. */
+function garmentShot() {
+  const gm = demoView?.el;
+  if (!gm) return '';
+  if (gm.dataset.kind === 'sketch') {
+    const svg = gm.querySelector('svg');
+    if (!svg) return '';
+    const c = svg.cloneNode(true);
+    c.classList.add('is-on');
+    return `<span class="gm" data-kind="sketch">${c.outerHTML}</span>`;
+  }
+  const imgs = [...gm.querySelectorAll('.gm__img:not(.gm__img--anim)')];
+  const img = imgs.find(i => i.classList.contains('is-on')) || imgs.at(-1);
+  if (!img) return '';
+  const c = img.cloneNode(true);
+  c.classList.add('is-on');
+  c.alt = '';
+  c.style.opacity = '1';
+  return `<span class="gm" data-kind="render">${c.outerHTML}</span>`;
+}
+
+function fabricDark() {
+  const box = $('[data-demo]', root);
+  return isDark(colorHex(demoProduct, data, box?.dataset.color));
 }
 
 /* Макет на превью: свой, если загружен; иначе демонстрационное слово Fabrika */
 function renderDemoArt() {
   const box = $('[data-demo]', root), a = $('.art-demo', box);
-  const [x, y, w, h] = zoneRect(demoProduct, 'front', 'center');
-  a.style.left = (12 + x * 76) + '%'; a.style.top = (6 + y * 76) + '%'; a.style.width = w * 76 + '%'; a.style.height = h * 76 + '%';
+  if (!box || !a) return;
+  publishMask();
+  const place = artPlace();
+  a.style.left = place.left; a.style.top = place.top; a.style.width = place.width; a.style.height = place.height;
   const m = methodById(data, printState.method);
-  const dark = isDark(colorHex(demoProduct, data, box.dataset.color));
+  const dark = fabricDark();
   box.classList.toggle('on-light', !dark);
   a.className = 'art-demo art ' + artClass(m);
-  if (printState.art) { a.innerHTML = artHTML(printState.art, m, m.group === 'film' ? (printState.film || defaultFilm(m, dark)) : null); return; }
-  const film = m.group === 'film' ? (printState.film || defaultFilm(m, dark)) : null;
-  const fill = film ? film.hex : (dark ? '#F4F3EF' : '#0B0B0B');
-  const word = `<svg viewBox="0 0 400 110" width="100%" style="overflow:visible"><text x="200" y="78" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="700" font-size="76" letter-spacing="-2" fill="${fill}">${DEMO_TEXT}</text></svg>`;
-  if (m.preview === 'stitch') a.innerHTML = word + `<div class="art__thread" style="--mask:none;mask:none;-webkit-mask:none;opacity:.35"></div>`;
-  else if (m.preview === 'silhouette-sparkle') a.innerHTML = word.replace(`fill="${fill}"`, `fill="${fill}" style="filter:url(#)"`);
-  else a.innerHTML = word;
+  a.innerHTML = methodArtInner(m, dark);
 }
 
 function renderMethods() {
   const list = $('[data-methods]', root);
   if (!list) return;
-  list.innerHTML = publicMethods(data).map(m => `<button type="button" data-method="${esc(m.id)}" aria-pressed="${m.id === printState.method}"><b>${esc(m.name)}</b><span>${esc(m.forWhat || '')}</span><span>${esc(methodLine(m))}</span></button>`).join('');
+  publishMask();
+  const dark = fabricDark();
+  const shot = garmentShot();
+  const place = artPlace(1.55);
+  const placeStyle = `left:${place.left};top:${place.top};width:${place.width};height:${place.height}`;
+  list.innerHTML = publicMethods(data).map(m => `<button type="button" data-method="${esc(m.id)}" aria-pressed="${m.id === printState.method}">
+      <span class="meth__shot${dark ? '' : ' on-light'}">
+        ${shot}
+        <span class="art ${artClass(m)}" style="${placeStyle}">${methodArtInner(m, dark)}</span>
+      </span>
+      <span class="meth__cap"><span class="meth__name">${esc(m.name)}</span><span class="meth__meta">${esc(methodLine(m))}</span></span>
+    </button>`).join('');
 }
 
 function renderTerms() {
@@ -87,8 +204,8 @@ root.addEventListener('click', async e => {
     const f = $('[data-brief]', root);
     const v = Object.fromEntries([...new FormData(f)].map(([k, x]) => [k, typeof x === 'string' ? x.trim() : x]));
     if (!v.item && !v.reference) { toast('Напишите, что шьём, или приложите референс'); return; }
-    const refFile = f.querySelector('[name="refFile"]').files[0];
-    const sewing = { item: v.item || null, qty: v.qty || null, reference: [v.reference, refFile?.name].filter(Boolean).join(' · ') || null, deadline: v.deadline || null, comment: v.comment || null };
+    /* Файл из вкладки в заявку не кладём: выглядит, будто он уже ушёл, а отправить его некуда. */
+    const sewing = { item: v.item || null, qty: v.qty || null, reference: v.reference || null, deadline: v.deadline || null, comment: v.comment || null };
     const order = buildOrder({ items: [], sewing, extras: { contact: v.contact } });
     t.closest('[data-sew-send]').disabled = true;
     await cart.sendExternal(order);

@@ -2,7 +2,7 @@
    Переживает перезагрузку (localStorage в try/catch, баг 12). */
 import { rub, esc, colorName, density } from './data.js';
 import { mountGarment } from './garment.js';
-import { buildOrder, send, orderText } from './order.js';
+import { buildOrder, send, orderText, sendCaption, TEXT_ONLY_CAPTION } from './order.js';
 import * as layers from './layers.js';
 import { $, $$, toast, copy } from './ui.js';
 
@@ -58,6 +58,15 @@ export function open() {
 const total = () => items.reduce((s, i) => s + i.qty * i.unitPrice, 0);
 const printFrom = () => items.reduce((s, i) => s + i.qty * (i.prints || []).reduce((a, p) => a + (p.priceFrom || 0), 0), 0);
 
+function wideControl(tag, attrs, label) {
+  const long = label === TEXT_ONLY_CAPTION;
+  const style = long ? ' style="white-space:normal;height:auto;min-height:48px;padding-top:12px;padding-bottom:12px"' : '';
+  const inner = long
+    ? `<span style="display:block;width:100%;min-width:0;white-space:normal;text-align:center;text-wrap:balance">${esc(label)}</span>`
+    : esc(label);
+  return `<${tag} class="btn btn--wide"${style} ${attrs}>${inner}</${tag}>`;
+}
+
 function render() {
   if (!data) return;
   const body = $('.panel__body', el), foot = $('.panel__foot', el), title = $('[data-title]', el);
@@ -103,16 +112,17 @@ function render() {
       </div>
     </form>`;
     foot.innerHTML = `<div class="cart__tot"><span>Бланки</span><span>${rub(total())}</span></div>
-      <button type="button" class="btn btn--wide" data-send>${data.settings.bot ? 'Отправить в бота' : 'Отправить в Telegram'}</button>
+      ${wideControl('button', 'type="button" data-send', sendCaption(data.settings))}
       <button type="button" class="link link--quiet" data-back style="justify-self:center">Назад в корзину</button>`;
   } else if (step === 'done') {
     title.textContent = 'Заявка готова';
+    const lead = lastResult.sent ? 'Файлы макетов и картинки уже у производства. ' : `${TEXT_ONLY_CAPTION}. `;
     body.innerHTML = `<div class="ord">
       <div class="ord__id">${esc(lastOrder.id)}</div>
-      <p class="t-s t-mute">${lastResult.sent ? 'Файлы макетов и картинки уже у производства. ' : ''}Текст заявки в кнопке ниже${lastResult.saved ? ', копия сохранена у нас' : ''}. Если Telegram не подставил текст — скопируйте и вставьте в чат.</p>
+      <p class="t-s t-mute">${lead}Текст заявки в кнопке ниже${lastResult.saved ? ', копия сохранена у нас' : ''}. Если Telegram не подставил текст — скопируйте и вставьте в чат.</p>
       <pre class="ord__pre">${esc(lastResult.text)}</pre>
     </div>`;
-    foot.innerHTML = `<a class="btn btn--wide" href="${esc(lastResult.url)}" target="_blank" rel="noopener" data-tg>${esc(lastResult.label)}</a>
+    foot.innerHTML = `${wideControl('a', `href="${esc(lastResult.url)}" target="_blank" rel="noopener" data-tg`, lastResult.label)}
       <div class="ord__row"><button type="button" class="link" data-copy>Скопировать</button><button type="button" class="link link--quiet" data-clear>Очистить корзину</button></div>`;
   }
 }

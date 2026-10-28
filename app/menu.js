@@ -51,7 +51,12 @@ el.addEventListener('click', e => {
   const t = e.target;
   if (t.closest('[data-close]')) { layers.close('menu'); return; }
   const c = t.closest('[data-cat]'); if (c) { layers.close('menu').then(() => api.setCat(c.dataset.cat, true)); return; }
-  const g = t.closest('[data-go]'); if (g) { layers.close('menu').then(() => api.goTo(g.dataset.go)); return; }
+  const g = t.closest('[data-go]');
+  if (g) {
+    const go = g.dataset.go;
+    layers.close('menu').then(() => { if (go === 'print') api.openFramePrint(); else api.goTo(go); });
+    return;
+  }
 });
 el.addEventListener('pointerover', e => { const c = e.target.closest('[data-cat]'); if (c) showPeek(c.dataset.cat); });
 el.addEventListener('pointerleave', hidePeek);

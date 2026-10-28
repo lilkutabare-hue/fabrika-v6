@@ -48,16 +48,62 @@ function initHero(data) {
       const b = e.target.closest('[data-color]');
       if (!b || b.dataset.color === current) return;
       current = b.dataset.color;
+      hero.dataset.color = current;
       $$('button', sw).forEach(x => x.setAttribute('aria-pressed', x.dataset.color === current));
       view.setColor(current);
     });
   } else sw.hidden = true;
-  stage.addEventListener('click', () => product.open(p.id, { color: current, from: stage }));
+  stage.addEventListener('click', () => { rememberFrame(p.id, current); product.open(p.id, { color: current, from: stage }); });
   stage.style.cursor = 'pointer';
   hero.dataset.product = p.id;
+  hero.dataset.color = current;
   const specs = $('[data-specs]', hero);
   const d = density(p);
   specs.textContent = ['от 1 шт', d ? 'до ' + d.split('–').pop() : '', p.colors.length > 1 ? p.colors.length + ' цветов' : '', 'XS–XXL'].filter(Boolean).join(' · ');
+}
+
+/* Вещь, которая уже в кадре: сцена первого экрана или плитка каталога.
+   «Принт» открывает конструктор на ней. Худи с меткой «Хит» сюда не подставляется. */
+let framed = null;
+function rememberFrame(id, color) { if (id) framed = { id, color }; }
+
+function visibleArea(el) {
+  if (!el) return 0;
+  const r = el.getBoundingClientRect();
+  const w = Math.min(r.right, innerWidth) - Math.max(r.left, 0);
+  const h = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
+  return w > 0 && h > 0 ? w * h : 0;
+}
+function frameSpots() {
+  const spots = [];
+  const hero = $('[data-hero]');
+  const stage = hero && $('[data-stage]', hero);
+  const heroArea = visibleArea(stage);
+  if (hero?.dataset.product && heroArea > 0) spots.push({ id: hero.dataset.product, color: hero.dataset.color, area: heroArea, from: stage });
+  $$('#blanks .tile').forEach(tile => {
+    const media = $('.tile__media', tile);
+    const area = visibleArea(media);
+    if (area > 0) spots.push({ id: tile.dataset.id, color: tile.dataset.color, area, from: media });
+  });
+  return spots;
+}
+function garmentInFrame() {
+  const spots = frameSpots();
+  const top = spots.reduce((a, b) => (!a || b.area > a.area ? b : a), null);
+  if (framed) {
+    const s = spots.filter(x => x.id === framed.id).reduce((a, b) => (!a || b.area > a.area ? b : a), null);
+    if (s && top && s.area >= top.area * 0.5) return { id: s.id, color: s.color || framed.color, from: s.from };
+  }
+  if (top) return { id: top.id, color: top.color, from: top.from };
+  const hero = $('[data-hero]');
+  if (!hero?.dataset.product) return null;
+  return { id: hero.dataset.product, color: hero.dataset.color, from: $('[data-stage]', hero) };
+}
+function openFramePrint() {
+  if (layers.isOpen('product')) { product.openPrint(); return; }
+  const g = garmentInFrame();
+  if (g && product.open(g.id, { mode: 'print', color: g.color, from: g.from })) { rememberFrame(g.id, g.color); return; }
+  product.openPrint();
 }
 
 /* ---------- Переходы по разделам ---------- */
@@ -81,7 +127,7 @@ function initDock() {
     const b = e.target.closest('button[data-go]');
     if (!b) return;
     set(b);
-    if (b.dataset.go === 'print') { product.openPrint(); return; }
+    if (b.dataset.go === 'print') { openFramePrint(); return; }
     if (b.dataset.go === 'cart') { set(items.find(x => x.dataset.go === 'blanks') || b); cart.open(); return; }
     goTo(b.dataset.go);
   });
@@ -120,6 +166,7 @@ function initRoute(data) {
   if (!h) return;
   const [id, color] = h.split('/');
   if (data.products.some(p => p.id === id)) {
+    rememberFrame(id, color);
     try { history.replaceState({ depth: 0 }, '', location.pathname + location.search); } catch {}
     product.open(id, { color, mode: 'clean' });
   }
@@ -136,7 +183,8 @@ $('[data-adm-btn]')?.addEventListener('click', admin.open);
 $$('[data-go]').forEach(b => { if (!b.closest('.dock')) b.addEventListener('click', e => { e.preventDefault(); goTo(b.dataset.go); }); });
 
 const api = {
-  openProduct: (id, o) => product.open(id, o),
+  openProduct: (id, o) => { rememberFrame(id, o?.color); return product.open(id, o); },
+  openFramePrint,
   addToCart: item => { cart.add(item); toast(`Добавлено: ${item.product.name} ${item.size}`); },
   setCat: (k, scroll) => catalog.setCat(k, scroll),
   goTo,

@@ -2,7 +2,7 @@
    Панель: сверху всегда вещь, цена и «В корзину»; ниже «Чистый бланк / С принтом»;
    в режиме принта три вкладки: Макет · Где и как · Вещь. «+ ещё вещь» собирает заказ из нескольких вещей. */
 import { rub, esc, density, colorName, colorHex, SIZES } from './data.js';
-import { mountGarment, hasSide, isDark } from './garment.js';
+import { mountGarment, hasSide, isDark, mediaFor } from './garment.js';
 import * as layers from './layers.js';
 import * as cart from './cart.js';
 import * as print from './print/stage.js';
@@ -122,7 +122,7 @@ function renderPanel() {
     <div class="pv__buy">
       <div class="qty"><button type="button" data-q="-1" aria-label="Меньше">−</button><output>${S.qty}</output><button type="button" data-q="1" aria-label="Больше">+</button></div>
       <button type="button" class="btn" data-add>В корзину</button>
-      <button type="button" class="btn btn--ghost pv__more" data-add-more aria-label="Добавить и выбрать ещё вещь" title="Добавить и выбрать ещё вещь">+</button>
+      <button type="button" class="btn btn--ghost pv__more" data-add-more aria-label="Добавить и выбрать ещё вещь">+</button>
     </div>
     ${inCart ? `<button type="button" class="pv__order" data-open-cart><span>В заказе ${inCart} ${plural(inCart, 'вещь', 'вещи', 'вещей')}</span><b>Оформить</b></button>` : ''}`;
   el.classList.toggle('is-print', printMode);
@@ -178,7 +178,6 @@ function artTab(m) {
         <button type="button" data-folds aria-pressed="${st.folds}">Складки ткани</button>
         <button type="button" data-art-clear>Убрать макет</button>
       </div>
-      <p class="pt__hint">Тяните макет по вещи, угол тянет размер, точка сверху — поворот. На телефоне щипок и два пальца. Стрелки на клавиатуре двигают, ⌘Z отменяет.</p>
     </div>
     <div class="pv__grp"><div class="pv__gh"><span>Примерить на другой вещи</span></div>${othersRow()}</div>` : ''}`;
 }
@@ -192,7 +191,7 @@ function placeTab(m) {
   return `
     <div class="pv__grp">
       <div class="pv__gh"><span>Где</span><span>${st.place === 'custom' ? 'своё место' : (st.side === 'back' ? 'спина' : 'перёд')}</span></div>
-      <div class="ppre" data-places>${presets.map(p => `<button type="button" data-place="${p.k}" aria-pressed="${p.k === st.place}" aria-label="${esc(p.name)}"><span class="ppre__g" data-gm-mini><i style="left:${p.cx * 100}%;top:${p.cy * 100}%"></i></span><span class="ppre__n">${esc(p.name)}</span></button>`).join('')}</div>
+      <div class="ppre" data-places>${presets.map(p => `<button type="button" data-place="${p.k}" aria-pressed="${p.k === st.place}" aria-label="${esc(p.name)}"><span class="ppre__g${shotClass(dark)}" data-gm-mini>${shotHTML(m, filmOf(m, dark), p.cx, p.cy, p.w, 0)}</span><span class="ppre__n">${esc(p.name)}</span></button>`).join('')}</div>
     </div>
     <div class="pv__grp">
       <div class="pv__gh"><span>Размер</span><b>${widthMm ? `${widthMm} мм по ширине` : `${Math.round(st.scale * 100)} % ширины вещи`}</b></div>
@@ -201,19 +200,53 @@ function placeTab(m) {
     </div>
     <div class="pv__grp">
       <div class="pv__gh"><span>Как</span><b>${esc(m.name)}</b></div>
-      <div class="mcards" data-methods>${publicMethods(data).map(x => {
-        const film = x.group === 'film' ? defaultFilm(x, dark) : null;
-        return `<button type="button" class="mcard" data-method="${esc(x.id)}" aria-pressed="${x.id === m.id}">
-          <span class="mcard__pic ${dark ? '' : 'on-light'}" style="--fabric:${fabric}"><span class="art ${artClass(x)}"><span class="art__body">${artHTML(st.art, x, film)}</span></span></span>
-          <b>${esc(x.name)}</b><small>${esc(methodLine(x))}</small></button>`;
-      }).join('')}</div>
-      <p class="pt__hint">${esc(m.forWhat || '')}${m.group === 'film' ? '. Плёнка одноцветная, в примерке контрастная к ткани.' : ''}</p>
+      <div class="mcards" data-methods>${publicMethods(data).map(x => `<button type="button" class="mcard" data-method="${esc(x.id)}" aria-pressed="${x.id === m.id}">
+          <span class="mcard__pic${shotClass(dark)}" data-gm-mini>${shotHTML(x, x.group === 'film' ? defaultFilm(x, dark) : null, st.cx, st.cy, st.scale, st.rot)}</span>
+          <b>${esc(x.name)}</b><small>${esc(methodLine(x))}</small></button>`).join('')}</div>
     </div>`;
+}
+
+/* Кадр той же вещи: рендер, если он есть, иначе эскиз. Макет лежит в долях квадрата сцены. */
+function photoURL(product, color, side = 'front') {
+  const v = mediaFor(product, color, side, 'fit');
+  if (!v) return '';
+  if (v.url) return v.url;
+  return `${data.mediaBase}${v.src}-${v.widths[v.widths.length - 1]}.webp`;
+}
+function shotClass(dark) {
+  const photo = !!photoURL(S.product, S.color, print.state.side);
+  return `${photo ? '' : ' is-sketch'}${dark ? '' : ' on-light'}`;
+}
+function filmOf(method, dark) {
+  return method.group === 'film' ? (print.state.film || defaultFilm(method, dark)) : null;
+}
+function artGeom(cx, cy, scale, art) {
+  const ratio = art?.px ? art.px[1] / art.px[0] : 1;
+  let w = scale, h = scale * ratio;
+  if (h > 1) { h = 1; w = h / ratio; }
+  const hx = w / 2, hy = h / 2;
+  cx = Math.max(hx, Math.min(1 - hx, cx));
+  cy = Math.max(hy, Math.min(1 - hy, cy));
+  return { left: (cx - hx) * 100, top: (cy - hy) * 100, w: w * 100, h: h * 100 };
+}
+function shotHTML(method, film, cx, cy, scale, rot) {
+  const a = print.state.art;
+  if (!a) return '';
+  const g = artGeom(cx, cy, scale, a);
+  const url = photoURL(S.product, S.color, print.state.side);
+  const mask = url ? ` data-photo style="--shot:url('${url}')"` : '';
+  const flip = print.state.flip ? ' style="transform:scaleX(-1)"' : '';
+  const turn = rot ? `transform:rotate(${rot}deg);` : '';
+  return `<span class="shot"${mask}><span class="art ${artClass(method)}" style="${turn}left:${g.left.toFixed(2)}%;top:${g.top.toFixed(2)}%;width:${g.w.toFixed(2)}%;height:${g.h.toFixed(2)}%"><span class="art__body"${flip}>${artHTML(a, method, film)}</span></span></span>`;
 }
 
 function othersRow() {
   const others = data.products.filter(p => p.id !== S.product.id).slice(0, 12);
-  return `<div class="pt__others">${others.map(p => `<button type="button" data-other="${esc(p.id)}" aria-label="${esc(p.name)}" data-gm-thumb="${esc(p.id)}"></button>`).join('')}</div>`;
+  return `<div class="pt__others">${others.map(p => {
+    const color = p.colors[0];
+    const sketch = !mediaFor(p, color, 'front', 'fit');
+    return `<button type="button" class="${sketch ? 'is-sketch' : ''}" data-other="${esc(p.id)}" aria-label="${esc(p.name)}" data-gm-thumb="${esc(p.id)}"></button>`;
+  }).join('')}</div>`;
 }
 
 /* после «+»: выбрать следующую вещь для того же заказа */
@@ -276,12 +309,12 @@ function mountThumbs() {
     const p = data.products.find(x => x.id === b.dataset.gmThumb);
     if (!p || b.firstElementChild) return;
     const d = document.createElement('div'); b.appendChild(d);
-    mountGarment(d, p, data, { color: p.colors[0], variant: 'set', sizes: '64px' });
+    mountGarment(d, p, data, { color: p.colors[0], variant: 'fit', sizes: '180px' });
   });
   $$('[data-gm-mini]', el).forEach(n => {
     if (n.querySelector('.gm')) return;
     const d = document.createElement('div'); n.prepend(d);
-    mountGarment(d, S.product, data, { color: S.color, side: print.state.side, variant: 'fit', sizes: '48px' });
+    mountGarment(d, S.product, data, { color: S.color, side: print.state.side, variant: 'fit', sizes: '180px' });
   });
 }
 
@@ -307,6 +340,8 @@ function addToCart(silent) {
 /* файл выбран где угодно на сайте (шапка, первый экран, конструктор) */
 export async function onFile(file, { openAfter = true } = {}) {
   await print.setFile(file);
+  /* Файл не входит в историю места: commit() тогда молчит, и большая вещь не узнаёт о макете. */
+  print.set({}, { history: false });
   if (S) { if (S.mode !== 'print') S.mode = 'print'; S.tab = 'place'; S.more = false; renderPanel(); }
   else if (openAfter) openPrint();
 }

@@ -104,7 +104,7 @@ export function garmentHTML(product, color, data, o = {}) {
   return `<div class="gm" data-kind="sketch" style="--sway-delay:${(Math.random() * -7).toFixed(2)}s">${sketchSVG(product.type, hexColor, { side: o.side, label: alt }).replace('<svg ', '<svg class="is-on" ')}</div>`;
 }
 
-/* Живая сцена: смена цвета, стороны, анимированный кадр, переворот */
+/* Живая сцена: смена цвета и стороны. Сторона — другой кадр, не переворот ребром. */
 export function mountGarment(el, product, data, o = {}) {
   let color = o.color, side = o.side || 'front', variant = o.variant || 'set', anim = false;
   el.classList.add('gm');
@@ -155,10 +155,17 @@ export function mountGarment(el, product, data, o = {}) {
       layers.forEach(i => i.classList.remove('is-on'));
       const hex = data.palette[color]?.hex || data.palette[color]?.hex === null && product.swatch?.[color] || '#CCCCCC';
       if (!svg || svg.dataset.side !== side) {
-        if (svg) svg.remove();
+        const prev = svg;
         el.insertAdjacentHTML('beforeend', sketchSVG(product.type, hex, { side, label: alt(color) }));
         svg = el.lastElementChild; svg.dataset.side = side;
-        requestAnimationFrame(() => svg.classList.add('is-on'));
+        /* смена стороны: рисунок сразу на месте, без пустого кадра и без фото */
+        if (prev && !fade) {
+          svg.classList.add('is-on');
+          prev.remove();
+        } else {
+          if (prev) prev.remove();
+          requestAnimationFrame(() => svg.classList.add('is-on'));
+        }
       } else {
         svg.querySelectorAll('[data-fill="body"]').forEach(p => p.setAttribute('fill', hex));
         svg.querySelectorAll('[data-fill="shade"]').forEach(p => p.setAttribute('fill', shade(hex, -38)));
@@ -177,9 +184,8 @@ export function mountGarment(el, product, data, o = {}) {
     setAnim(on) { const next = ANIM_RENDERS && !!on; if (next === anim) return; anim = next; show(false); },
     flip(s) {
       if (s === side) return Promise.resolve();
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) { view.setSide(s); return Promise.resolve(); }
-      el.classList.add('is-flipping');
-      return new Promise(r => setTimeout(() => { view.setSide(s); el.classList.remove('is-flipping'); setTimeout(r, 200); }, 200));
+      view.setSide(s);
+      return Promise.resolve();
     },
     currentImg() { return layers.find(i => i.classList.contains('is-on')) || svg; },
   };

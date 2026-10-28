@@ -7,8 +7,8 @@
   --mute: #66665F;            /* 5.8:1 на белом */
   --sig: #E8734A;             /* только активная зона печати и метка New */
 
-  --font: Onest, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --disp: Unbounded, var(--font);
+  --font: Jost, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --disp: Jost, var(--font);
 
   --fs-s: 12px;
   --fs-m: 16px;

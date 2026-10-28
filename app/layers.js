@@ -6,22 +6,76 @@ const stack = [];
 const scrim = document.querySelector('[data-scrim]');
 const dock = document.querySelector('[data-dock]');
 const bgNodes = () => [document.querySelector('main'), document.querySelector('.hdr'), dock].filter(Boolean);
-const isTouch = matchMedia('(pointer: coarse)').matches;
+const isTouch = () => matchMedia('(pointer: coarse)').matches;
 let lockY = 0;
+let touchX = 0;
+let touchY = 0;
+let gestureX = 0;
+
+/* Жест можно отдать только прокрутке внутри слоя (или ползунку). Иначе на iPhone фон едет вместе со шторкой. */
+function canTakeScroll(node, dx, dy) {
+  for (let n = node instanceof Element ? node : null; n && n !== document.body; n = n.parentElement) {
+    if (n.matches('input, textarea, select')) return true;
+    const s = getComputedStyle(n);
+    const vert = (s.overflowY === 'auto' || s.overflowY === 'scroll') && n.scrollHeight > n.clientHeight + 1;
+    const hor = (s.overflowX === 'auto' || s.overflowX === 'scroll') && n.scrollWidth > n.clientWidth + 1;
+    if (vert && Math.abs(dy) >= Math.abs(dx)) {
+      if (dy > 0 && n.scrollTop > 0) return true;
+      if (dy < 0 && n.scrollTop + n.clientHeight < n.scrollHeight - 1) return true;
+    }
+    if (hor && Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 0 && n.scrollLeft > 0) return true;
+      if (dx < 0 && n.scrollLeft + n.clientWidth < n.scrollWidth - 1) return true;
+    }
+  }
+  return false;
+}
+
+function onLockStart(e) {
+  const t = e.touches[0];
+  if (!t) return;
+  gestureX = touchX = t.clientX;
+  touchY = t.clientY;
+}
+
+function onLockMove(e) {
+  if (e.touches.length !== 1) return;
+  const t = e.touches[0];
+  const dx = t.clientX - touchX;
+  const dy = t.clientY - touchY;
+  touchX = t.clientX;
+  touchY = t.clientY;
+  if (gestureX < 24 && dx > 0 && Math.abs(dx) > Math.abs(dy)) return;
+  const layer = e.target instanceof Element && e.target.closest('[data-layer]');
+  if (layer && canTakeScroll(e.target, dx, dy)) return;
+  if (e.cancelable) e.preventDefault();
+}
+
+function bindTouchLock(on) {
+  if (on) {
+    document.addEventListener('touchstart', onLockStart, { passive: true });
+    document.addEventListener('touchmove', onLockMove, { passive: false });
+  } else {
+    document.removeEventListener('touchstart', onLockStart);
+    document.removeEventListener('touchmove', onLockMove);
+  }
+}
 
 function lock(on) {
   const html = document.documentElement;
   if (on) {
     if (html.classList.contains('lock') || html.classList.contains('lock-touch')) return;
-    if (isTouch) {
+    if (isTouch()) {
       lockY = window.scrollY;
       html.style.setProperty('--lock-y', `-${lockY}px`);
       html.classList.add('lock-touch');
+      bindTouchLock(true);
     } else {
       html.style.setProperty('--sbw', (window.innerWidth - html.clientWidth) + 'px');
       html.classList.add('lock');
     }
   } else {
+    bindTouchLock(false);
     if (html.classList.contains('lock-touch')) { html.classList.remove('lock-touch'); window.scrollTo(0, lockY); }
     html.classList.remove('lock');
     html.style.setProperty('--sbw', '0px');

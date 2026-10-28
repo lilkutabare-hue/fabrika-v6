@@ -12,10 +12,8 @@
 }
 .gm__img.is-on, .gm > svg.is-on { opacity: 1; }
 .gm__img--anim { transition-duration: .2s; }
-.gm.is-flipping { transform: scaleX(0); transition: transform .2s ease-in; }
-.gm { transition: transform .2s ease-out; }
 
-/* Эскиз — 3:4 в квадрате: ужимаем до масштаба рендеров (вещь ≈ 80 % холста) */
+/* Эскиз — рисунок в силуэте вещи (≈ 80 % холста), не фотография. Сторона меняется кадром, без схлопывания в линию. */
 .gm[data-kind="sketch"] > svg { inset: 10%; width: 80%; height: 80%; }
 
 /* Эскизы: тихое покачивание, рассинхронизированное через --sway-delay */

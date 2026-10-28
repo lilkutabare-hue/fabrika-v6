@@ -182,11 +182,11 @@
 .pt__range::-moz-range-track { height: 4px; border-radius: 2px; background: var(--tone-2); }
 .pt__range::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; margin-top: -10px; box-shadow: 0 1px 4px rgba(11, 11, 11, .28), 0 0 0 .5px rgba(11, 11, 11, .12); }
 .pt__range::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 4px rgba(11, 11, 11, .28), 0 0 0 .5px rgba(11, 11, 11, .12); }
-.pt__others { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
+.pt__others { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
 .pt__others::-webkit-scrollbar { display: none; }
-.pt__others button { flex: none; width: 64px; height: 76px; border-radius: 12px; background: var(--tone-2); position: relative; opacity: .7; transition: opacity var(--dur-state); }
-.pt__others button[aria-pressed="true"], .pt__others button:hover { opacity: 1; }
-.pt__others .gm { position: absolute; inset: 6px; width: auto; height: auto; }
+.pt__others button { flex: none; width: 148px; height: 168px; border-radius: 14px; background: var(--paper); position: relative; box-shadow: inset 0 0 0 .5px rgba(11, 11, 11, .12); }
+.pt__others button.is-sketch { background: var(--paper); }
+.pt__others .gm { position: absolute; inset: 0; width: auto; height: auto; }
 .pt__film { --bg: var(--paper); margin-left: -8px; }
 .pt__hint { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); }
 .pt__cta { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
@@ -196,24 +196,26 @@
   .pv.is-print .pv__scene { max-height: 50svh; }
 }
 
-/* Карточки методов: макет в каждом методе на цвете ткани */
+/* Карточки методов и места: та же вещь квадратом, как сцена. Макет уже на ней, не плашка цвета. */
 .mcards { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
 .mcards::-webkit-scrollbar { display: none; }
-.mcard { flex: none; width: 108px; display: grid; gap: 6px; text-align: left; padding: 6px; border-radius: 14px; transition: background var(--dur-state); }
-.mcard[aria-pressed="true"] { background: var(--tone-2); }
-.mcard__pic { display: block; position: relative; aspect-ratio: 1; border-radius: 10px; background: var(--fabric); overflow: hidden; }
-.mcard__pic .art { position: absolute; inset: 18%; cursor: default; overflow: visible; }
-.mcard__pic .art__body { display: grid; place-items: center; }
+.mcard { flex: none; width: 148px; display: grid; gap: 6px; text-align: left; padding: 6px; border-radius: 14px; }
+.mcard[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.mcard__pic, .ppre__g { display: block; position: relative; aspect-ratio: 1; border-radius: 10px; background: var(--paper); overflow: hidden; }
+.mcard__pic.is-sketch, .ppre__g.is-sketch { background: var(--paper); }
+.mcard__pic .gm, .ppre__g .gm { position: absolute; inset: 0; width: auto; height: auto; }
+.shot { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.shot[data-photo] { -webkit-mask: var(--shot) center / contain no-repeat; mask: var(--shot) center / contain no-repeat; }
+.shot .art { cursor: default; overflow: hidden; }
+.shot .art__body { display: grid; place-items: center; }
 .mcard b { font-weight: 500; font-size: var(--fs-s); line-height: 1.2; }
 .mcard small { color: var(--mute); font-size: 11px; line-height: 1.2; }
 
-/* Пресеты расположения как картинки: вещь и точка */
-.ppre { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
+/* Место: фото вещи, макет уже на груди, рукаве или спине */
+.ppre { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
 .ppre::-webkit-scrollbar { display: none; }
-.ppre button { flex: none; width: 80px; display: grid; gap: 6px; padding: 6px; border-radius: 14px; text-align: center; transition: background var(--dur-state); }
-.ppre button[aria-pressed="true"] { background: var(--tone-2); }
-.ppre__g { position: relative; display: block; width: 100%; aspect-ratio: 1; }
-.ppre__g .gm { position: absolute; inset: 0; width: auto; height: auto; }
-.ppre__g i { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--sig); box-shadow: 0 0 0 2px #fff; }
+.ppre button { flex: none; width: 132px; display: grid; gap: 6px; padding: 6px; border-radius: 14px; text-align: center; }
+.ppre button[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
 .ppre__n { font-size: 11px; line-height: 1.2; color: var(--ink); }
+.mcard__pic.is-sketch svg path, .ppre__g.is-sketch svg path, .pt__others button.is-sketch svg path { vector-effect: non-scaling-stroke; stroke-width: 1.25px; }
 .pt--more { display: grid; gap: 14px; }

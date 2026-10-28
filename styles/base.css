@@ -6,9 +6,17 @@ html {
   color-scheme: light only;
   scroll-padding-top: calc(var(--hdr-h) + 8px);
 }
-html.lock { overflow: hidden; }
+html.lock { overflow: hidden; overscroll-behavior: none; }
 html.lock body, html.lock .hdr { padding-right: var(--sbw); }
-html.lock-touch body { position: fixed; left: 0; right: 0; top: var(--lock-y, 0px); overflow: hidden; }
+html.lock-touch { overflow: hidden; height: 100%; overscroll-behavior: none; }
+html.lock-touch body {
+  position: fixed;
+  left: 0; right: 0;
+  width: 100%;
+  top: var(--lock-y, 0px);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 
 body {
   margin: 0;

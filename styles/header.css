@@ -49,7 +49,7 @@
 .hdr__added.is-on { opacity: 1; transform: none; }
 
 @media (max-width: 1023px) {
-  /* телефон: в шапке только логотип, корзина и разделы — в доке */
-  .hdr .hdr__left, .hdr .hdr__menu, .hdr .hdr__cart { display: none; }
+  /* телефон: «Свой принт» и корзина в шапке, бургера нет; разделы — в доке */
+  .hdr .hdr__menu { display: none; }
   .hdr__right { gap: 16px; }
 }

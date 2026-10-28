@@ -18,6 +18,47 @@
 }
 .duo__media .art-demo > * { max-width: 100%; max-height: 100%; }
 .duo__media .art-demo .art__img { object-fit: contain; width: 100%; height: 100%; }
+
+/* Макет на превью и на карточках метода: DTF как есть, плёнка силуэтом, вышивка нитью.
+   Свои правила, чтобы блок не зависел от правки конструктора. */
+.services .art__sil {
+  width: 100%;
+  height: 100%;
+  background-color: var(--film, #fff);
+  -webkit-mask: var(--mask, var(--demo-mask)) center / contain no-repeat;
+  mask: var(--mask, var(--demo-mask)) center / contain no-repeat;
+}
+.services .art--flex .art__sil {
+  background-color: var(--film, #F4F3EF);
+  background-image: none;
+  filter: none;
+}
+.services .art--flock .art__sil {
+  background-color: #1a1a1a;
+  background-image: none;
+  filter: none;
+}
+.services .art--glitter .art__sil {
+  background-color: transparent;
+  background-image: radial-gradient(circle, #F4F3EF 1.6px, transparent 1.85px);
+  background-size: 5px 5px;
+  filter: none;
+}
+.services .art--reflective .art__sil {
+  background-color: #8b9198;
+  background-image: linear-gradient(115deg, #6e757c 0%, #6e757c 32%, #ffffff 46%, #ffffff 54%, #4e555c 68%, #aeb4ba 100%);
+  background-size: 100% 100%;
+  filter: none;
+}
+.services .art--stitch .art__thread {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: var(--mask, var(--demo-mask)) center / contain no-repeat;
+  mask: var(--mask, var(--demo-mask)) center / contain no-repeat;
+  background: repeating-linear-gradient(0deg, #f6f0e4 0 3px, transparent 3px 5px);
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
 .duo__draw { position: absolute; left: 14%; top: 14%; width: 72%; height: 72%; }
 .duo__draw svg { width: 100%; height: 100%; overflow: visible; }
 .duo__draw path, .duo__draw circle, .duo__draw line, .duo__draw rect { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
@@ -49,23 +90,47 @@
 .more h3 { font: 500 var(--fs-m) / 1.2 var(--disp); text-transform: uppercase; }
 .more p { font-size: var(--fs-m); max-width: 56ch; }
 .more .t-s { max-width: 56ch; }
-.meth { display: grid; }
+/* Методы — фото той же вещи, не строки. На узком экране одно фото в ряд, чтобы макет читался. */
+.meth { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .meth button {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2px 16px;
-  padding: 12px 0;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   text-align: left;
-  border-bottom: 1px solid var(--tone-2);
-  color: var(--mute);
-  transition: color var(--dur-state);
+  color: var(--ink);
 }
-.meth button b { color: var(--ink); font-weight: 500; }
-.meth button[aria-pressed="true"] { color: var(--ink); }
-.meth button b::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(11, 11, 11, .25); vertical-align: 1px; transition: background var(--dur-state), box-shadow var(--dur-state); }
-.meth button[aria-pressed="true"] b::before { background: var(--ink); box-shadow: none; }
-.meth button span:nth-child(2) { grid-column: 1; font-size: var(--fs-s); }
-.meth button span:nth-child(3) { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: var(--fs-s); white-space: nowrap; text-align: right; }
+.meth__shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 0 transparent;
+  transition: box-shadow var(--dur-state);
+}
+.meth button[aria-pressed="true"] .meth__shot { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.meth__shot .gm { position: absolute; left: 12%; top: 6%; width: 76%; height: 76%; }
+.meth__shot .gm__img { width: 100%; height: 100%; object-fit: contain; }
+.meth__shot .art {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  cursor: default;
+  overflow: hidden;
+}
+.meth__shot .art > * { max-width: 100%; max-height: 100%; }
+.meth__shot .art svg { width: 100%; height: auto; }
+.meth__cap { display: grid; gap: 2px; min-width: 0; }
+.meth__name { font-weight: 500; font-size: var(--fs-s); line-height: 1.25; color: var(--ink); }
+.meth__meta { font-size: var(--fs-s); line-height: 1.25; color: var(--mute); }
+@media (min-width: 720px) {
+  .meth { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+}
 .steps { display: grid; gap: 14px; counter-reset: step; }
 .steps li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; counter-increment: step; }
 .steps li::before { content: counter(step, decimal-leading-zero); font-size: var(--fs-s); line-height: var(--lh-m); color: var(--mute); }

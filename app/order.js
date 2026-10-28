@@ -78,6 +78,20 @@ export function orderText(order, data) {
 }
 const side = s => s === 'back' ? 'спина' : 'перёд';
 
+/* Пустой settings.api: с вкладки уходит только текст. Файл остаётся у человека, его кладут в чат. */
+export const TEXT_ONLY_CAPTION = 'Уходит текст, файл надо приложить в чат';
+
+export function orderApi(settings) {
+  return String(settings?.api || '').trim().replace(/\/$/, '');
+}
+
+export function sendCaption(settings, where) {
+  if (!orderApi(settings)) return TEXT_ONLY_CAPTION;
+  if (where === 'done') return settings?.bot ? 'Открыть бота' : 'Открыть Telegram';
+  if (where === 'sew') return 'Отправить задачу';
+  return settings?.bot ? 'Отправить в бота' : 'Отправить в Telegram';
+}
+
 /* ---------- способы отправки ---------- */
 export const SENDERS = [
   /* 1. Telegram: бот с номером заявки или чат менеджера с текстом */
@@ -88,7 +102,7 @@ export const SENDERS = [
       const url = s.bot
         ? `https://t.me/${encodeURIComponent(s.bot)}?start=${encodeURIComponent(order.id)}`
         : `https://t.me/${encodeURIComponent(s.manager || 'trtmoscow')}?text=${encodeURIComponent(text)}`;
-      return { url, label: s.bot ? 'Открыть бота' : 'Открыть Telegram' };
+      return { url, label: sendCaption(s, 'done') };
     },
   },
 ];
@@ -100,7 +114,7 @@ export function addSender(s) { SENDERS.push(s); }
 SENDERS.push({
   id: 'server',
   async run(order, text, data) {
-    const api = (data.settings.api || '').replace(/\/$/, '');
+    const api = orderApi(data.settings);
     if (!api) return null;
     const fd = new FormData();
     fd.append('order', JSON.stringify(order));
