@@ -80,9 +80,15 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
 .btn--ghost { background: var(--tone-2); color: var(--ink); }
 .btn--wide { width: 100%; }
 
-/* Буквы для короткого прыжка. Сам прыжок — только мышь, см. ниже и header.css. */
+/* Буквы волны у «Свой принт». Само движение — в hop.js, только мышь. */
 .hop-run { display: inline; white-space: inherit; }
-.hop { display: inline-block; letter-spacing: normal; line-height: 1; vertical-align: top; }
+.hop {
+  display: inline-block;
+  letter-spacing: normal;
+  line-height: 1;
+  vertical-align: top;
+  transform-origin: 50% 50%;
+}
 
 /* Прямоугольная чёрная кнопка (.btn, .is-catalog) — тёмное стекло.
    Только под мышь: на таче остаётся плоский чёрный фон из разметки, без blur.
@@ -121,17 +127,6 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
   }
 }
 
-@keyframes letter-hop {
-  0% { transform: translateY(0); }
-  42% { transform: translateY(-3px); }
-  100% { transform: translateY(0); }
-}
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .btn:not(.btn--ghost):hover .hop {
-    animation: letter-hop .36s var(--ease-out) both;
-    animation-delay: calc(var(--d) * 25ms);
-  }
-}
 .link {
   font: 500 var(--fs-m) / 1 var(--font);
   color: var(--ink);
