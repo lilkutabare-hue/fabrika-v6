@@ -79,6 +79,59 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
 .btn:active { transform: scale(.98); }
 .btn--ghost { background: var(--tone-2); color: var(--ink); }
 .btn--wide { width: 100%; }
+
+/* Буквы для короткого прыжка. Сам прыжок — только мышь, см. ниже и header.css. */
+.hop-run { display: inline; white-space: inherit; }
+.hop { display: inline-block; letter-spacing: normal; line-height: 1; vertical-align: top; }
+
+/* Прямоугольная чёрная кнопка (.btn, .is-catalog) — тёмное стекло.
+   Только под мышь: на таче остаётся плоский чёрный фон из разметки, без blur.
+   Подчёркнутая .btn--ghost («Примерить свой принт») не входит. */
+@media (hover: hover) and (pointer: fine) {
+  a.btn:not(.btn--ghost),
+  button.btn:not(.btn--ghost),
+  label.btn:not(.btn--ghost) {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 46%),
+      rgba(0, 0, 0, .8) !important;
+    border: 1px solid rgba(255, 255, 255, .48) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .4),
+      0 8px 18px -12px rgba(0, 0, 0, .5) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    backdrop-filter: blur(8px) saturate(140%);
+  }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @media (hover: hover) and (pointer: fine) {
+    a.btn:not(.btn--ghost),
+    button.btn:not(.btn--ghost),
+    label.btn:not(.btn--ghost) {
+      background: #000 !important;
+    }
+  }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-transparency: reduce) {
+  a.btn:not(.btn--ghost),
+  button.btn:not(.btn--ghost),
+  label.btn:not(.btn--ghost) {
+    background: #000 !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@keyframes letter-hop {
+  0% { transform: translateY(0); }
+  42% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .btn:not(.btn--ghost):hover .hop {
+    animation: letter-hop .36s var(--ease-out) both;
+    animation-delay: calc(var(--d) * 25ms);
+  }
+}
 .link {
   font: 500 var(--fs-m) / 1 var(--font);
   color: var(--ink);
@@ -205,4 +258,5 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
+  .hop { animation: none !important; transform: none !important; }
 }
