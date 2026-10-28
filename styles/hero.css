@@ -56,8 +56,6 @@
     max-width: 100%;
     white-space: normal;
     text-align: center;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
   }
   .hero__specs { display: none; }
 }
