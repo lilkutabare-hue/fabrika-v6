@@ -154,6 +154,46 @@
 }
 .pt__upload b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pt__file { display: grid; gap: 2px; min-width: 0; font-size: var(--fs-s); line-height: var(--lh-s); }
+/* «Загрузить» — та же капсула. «Заменить» остаётся тихой ссылкой (.btn--ghost). */
+.pt__upload > button.btn:not(.btn--ghost) {
+  flex: none;
+  max-width: 100%;
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .30), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(180deg, rgba(42, 42, 42, .86), rgba(0, 0, 0, .94)) !important;
+  border: 1px solid rgba(255, 255, 255, .5) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .45),
+    0 5px 10px -7px rgba(0, 0, 0, .55) !important;
+  white-space: nowrap;
+}
+@media (min-width: 1024px) {
+  .pt__upload > button.btn:not(.btn--ghost) {
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    backdrop-filter: blur(8px) saturate(140%);
+  }
+}
+@media (max-width: 1023px) {
+  .pt__upload > button.btn:not(.btn--ghost) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .pt__upload > button.btn:not(.btn--ghost):hover:not(:disabled) { transform: translateY(-1px); }
+  .pt__upload > button.btn:not(.btn--ghost):active:not(:disabled) { transform: translateY(-1px) scale(.98); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .pt__upload > button.btn:not(.btn--ghost) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
 .pt__checks { display: grid; gap: 8px; padding: 10px 0 4px; font-size: var(--fs-s); line-height: var(--lh-s); }
 .pt__checks li { display: grid; grid-template-columns: 10px 1fr; gap: 10px; color: var(--ink); }
 .pt__checks li::before { content: ""; width: 6px; height: 6px; margin-top: 5px; border-radius: 50%; background: var(--mute); }
