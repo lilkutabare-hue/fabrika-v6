@@ -6,7 +6,7 @@
   background: var(--tone);
   display: flex;
   flex-direction: column;
-  padding: calc(var(--hdr-h) - 4px) var(--gutter) 24px;
+  padding: calc(var(--hdr-h) + env(safe-area-inset-top, 0px) - 4px) var(--gutter) 24px;
 }
 .hero__stage { position: relative; flex: 1 1 0; min-height: 0; display: grid; place-items: center; }
 .hero__stage .gm { height: 100%; width: 100%; max-width: 80vh; }
@@ -32,11 +32,22 @@
     height: auto;
     min-height: 100svh;
     padding-bottom: var(--dock-space);
-    padding-top: calc(var(--hdr-h) + 2px);
+    padding-top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px) + 2px);
   }
-  /* Сцена отдаёт место подписи: иначе кнопка и текст вылезают из кадра (768 и низкий планшет). */
-  .hero__stage { min-height: 0; }
-  .hero__stage .gm { max-width: none; }
+  /* Сцена отдаёт место подписи. Высота в пикселях: вещь чуть меньше и не растёт,
+     когда при скролле увеличивается окно (адресная строка Telegram). */
+  .hero__stage {
+    flex: none;
+    height: 340px;
+    max-height: 340px;
+    min-height: 0;
+  }
+  .hero__stage .gm {
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    transform: none;
+  }
   .hero__cap { gap: 8px; padding-top: 12px; width: 100%; max-width: 100%; }
   .hero__cap > p { font-size: var(--fs-s); line-height: var(--lh-s); }
   .hero__act {

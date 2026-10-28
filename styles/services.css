@@ -76,7 +76,7 @@
 .duo__cap .link { pointer-events: none; font-size: var(--fs-s); color: var(--mute); }
 
 /* Раскрытие под парой */
-.duo__more { grid-column: 1 / -1; overflow: hidden; scroll-margin-top: var(--hdr-h); }
+.duo__more { grid-column: 1 / -1; overflow: hidden; scroll-margin-top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px)); }
 .duo__more[hidden] { display: none; }
 .more {
   padding: 40px var(--gutter) 24px;

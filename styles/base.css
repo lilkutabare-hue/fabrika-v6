@@ -4,7 +4,8 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   color-scheme: light only;
-  scroll-padding-top: calc(var(--hdr-h) + 8px);
+  background: var(--paper);
+  scroll-padding-top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px) + 8px);
 }
 html.lock { overflow: hidden; overscroll-behavior: none; }
 html.lock body, html.lock .hdr { padding-right: var(--sbw); }
@@ -20,6 +21,7 @@ html.lock-touch body {
 
 body {
   margin: 0;
+  min-height: 100%;
   background: var(--paper);
   color: var(--ink);
   font: 400 var(--fs-m) / var(--lh-m) var(--font);
@@ -31,7 +33,7 @@ body {
 }
 
 main { padding-bottom: var(--dock-space); }
-section[id] { scroll-margin-top: var(--hdr-h); }
+section[id] { scroll-margin-top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px)); }
 
 h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; font-weight: inherit; }
 ul, ol { padding: 0; list-style: none; }
@@ -62,7 +64,8 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
 
 /* Кнопки — чёрный прямоугольник, без капсулы и стекла.
    «Примерить свой принт» (.is-try, .btn--ghost) — подчёркнутый текст.
-   Капсула остаётся только у дока. Волна букв — только у «Свой принт» (hop.js). */
+   Выбираемые контролы — тот же прямой угол в покое, hover, active и selected.
+   Волна букв — только у «Свой принт» (hop.js). */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -121,45 +124,59 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
 }
 .link--quiet { font-size: var(--fs-s); color: var(--mute); }
 
-/* Сегментный выбор — как переключатель iOS: мягкая подложка, активный — белая пилюля */
+/* Сегмент и чипсы — прямой прямоугольник. Выбор меняет заливку, не угол. */
 .seg {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 2px;
-  padding: 3px;
-  border-radius: 999px;
-  background: var(--tone-2);
+  gap: 4px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .seg button {
   position: relative;
   min-height: 32px;
   padding: 0 14px;
-  border-radius: 999px;
+  border-radius: 0;
   font-size: var(--fs-s);
   line-height: 1;
-  color: var(--mute);
-  transition: color var(--dur-state), background var(--dur-state), box-shadow var(--dur-state);
-}
-.seg button[aria-pressed="true"], .seg button[aria-current="true"], .seg button.is-on {
   color: var(--ink);
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(11, 11, 11, .10), 0 0 0 .5px rgba(11, 11, 11, .04);
+  background: var(--tone-2);
+  box-shadow: none;
+  transition: color var(--dur-state), background var(--dur-state);
+}
+.seg button:hover,
+.seg button:active { border-radius: 0; }
+.seg button[aria-pressed="true"],
+.seg button[aria-current="true"],
+.seg button.is-on,
+.seg button[aria-pressed="true"]:hover,
+.seg button[aria-pressed="true"]:active,
+.seg button[aria-current="true"]:hover,
+.seg button[aria-current="true"]:active {
+  color: #fff;
+  background: #000;
+  box-shadow: none;
+  border-radius: 0;
 }
 .seg button:disabled { text-decoration: line-through; }
 
-/* Чипсы: свободный ряд, активный — чёрная пилюля */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips button {
   min-height: 32px;
   padding: 0 14px;
-  border-radius: 999px;
+  border-radius: 0;
   font-size: var(--fs-s);
   line-height: 1;
   color: var(--ink);
   background: var(--tone-2);
   transition: color var(--dur-state), background var(--dur-state);
 }
-.chips button[aria-pressed="true"] { color: #fff; background: var(--ink); }
+.chips button:hover,
+.chips button:active { border-radius: 0; }
+.chips button[aria-pressed="true"],
+.chips button[aria-pressed="true"]:hover,
+.chips button[aria-pressed="true"]:active { color: #fff; background: #000; border-radius: 0; }
 
 /* Образцы цвета — круги; зона нажатия 32 px */
 .sw { display: flex; flex-wrap: wrap; gap: 2px; }
@@ -196,9 +213,10 @@ small { font-size: var(--fs-s); line-height: var(--lh-s); }
 .field input::placeholder, .field textarea::placeholder { color: var(--mute); }
 
 /* Количество */
-.qty { display: inline-flex; align-items: center; border-radius: 999px; background: var(--tone-2); height: 44px; padding: 0 4px; }
-.qty button { width: 36px; height: 36px; display: grid; place-items: center; font-size: 18px; border-radius: 50%; }
-.qty button:active { background: #fff; }
+.qty { display: inline-flex; align-items: center; border-radius: 0; background: var(--tone-2); height: 44px; padding: 0 4px; }
+.qty button { width: 36px; height: 36px; display: grid; place-items: center; font-size: 18px; border-radius: 0; }
+.qty button:hover,
+.qty button:active { border-radius: 0; background: #fff; }
 .qty output { min-width: 28px; text-align: center; }
 
 /* Раскрывающиеся строки: без рамок, заголовок — строка, плюс превращается в минус */

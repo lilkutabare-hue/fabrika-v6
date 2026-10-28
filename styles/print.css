@@ -32,7 +32,7 @@
   z-index: 4;
   transform: translate(-50%, -50%);
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: 0;
   background: #fff;
   box-shadow: 0 1px 3px rgba(11, 11, 11, .12), 0 0 0 .5px rgba(11, 11, 11, .06);
   font: 500 var(--fs-s) / 1 var(--font);
@@ -182,7 +182,11 @@
 .pt__range::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 4px rgba(11, 11, 11, .28), 0 0 0 .5px rgba(11, 11, 11, .12); }
 .pt__others { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
 .pt__others::-webkit-scrollbar { display: none; }
-.pt__others button { flex: none; width: 148px; height: 168px; border-radius: 14px; background: var(--paper); position: relative; box-shadow: inset 0 0 0 .5px rgba(11, 11, 11, .12); }
+.pt__others button,
+.pt__others button:hover,
+.pt__others button:active,
+.pt__others button[aria-pressed="true"] { flex: none; width: 148px; height: 168px; border-radius: 0; background: var(--paper); position: relative; box-shadow: inset 0 0 0 .5px rgba(11, 11, 11, .12); }
+.pt__others button[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
 .pt__others button.is-sketch { background: var(--paper); }
 .pt__others .gm { position: absolute; inset: 0; width: auto; height: auto; }
 .pt__film { --bg: var(--paper); margin-left: -8px; }
@@ -201,9 +205,13 @@
 /* Карточки методов и места: та же вещь квадратом, как сцена. Макет уже на ней, не плашка цвета. */
 .mcards { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
 .mcards::-webkit-scrollbar { display: none; }
-.mcard { flex: none; width: 148px; display: grid; gap: 6px; text-align: left; padding: 6px; border-radius: 14px; }
-.mcard[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
-.mcard__pic, .ppre__g { display: block; position: relative; aspect-ratio: 1; border-radius: 10px; background: var(--paper); overflow: hidden; }
+.mcard,
+.mcard:hover,
+.mcard:active { flex: none; width: 148px; display: grid; gap: 6px; text-align: left; padding: 6px; border-radius: 0; }
+.mcard[aria-pressed="true"],
+.mcard[aria-pressed="true"]:hover,
+.mcard[aria-pressed="true"]:active { border-radius: 0; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.mcard__pic, .ppre__g { display: block; position: relative; aspect-ratio: 1; border-radius: 0; background: var(--paper); overflow: hidden; }
 .mcard__pic.is-sketch, .ppre__g.is-sketch { background: var(--paper); }
 .mcard__pic .gm, .ppre__g .gm { position: absolute; inset: 0; width: auto; height: auto; }
 .shot { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
@@ -216,8 +224,12 @@
 /* Место: фото вещи, макет уже на груди, рукаве или спине */
 .ppre { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); }
 .ppre::-webkit-scrollbar { display: none; }
-.ppre button { flex: none; width: 132px; display: grid; gap: 6px; padding: 6px; border-radius: 14px; text-align: center; }
-.ppre button[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.ppre button,
+.ppre button:hover,
+.ppre button:active { flex: none; width: 132px; display: grid; gap: 6px; padding: 6px; border-radius: 0; text-align: center; }
+.ppre button[aria-pressed="true"],
+.ppre button[aria-pressed="true"]:hover,
+.ppre button[aria-pressed="true"]:active { border-radius: 0; box-shadow: inset 0 0 0 1.5px var(--ink); }
 .ppre__n { font-size: 11px; line-height: 1.2; color: var(--ink); }
 .mcard__pic.is-sketch svg path, .ppre__g.is-sketch svg path, .pt__others button.is-sketch svg path { vector-effect: non-scaling-stroke; stroke-width: 1.25px; }
 .pt--more { display: grid; gap: 14px; }

@@ -2,19 +2,34 @@
    Прозрачная в начале страницы, белая после порога (main.js ставит .is-solid). */
 .hdr {
   position: fixed;
-  inset: 0 0 auto 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 40;
-  height: var(--hdr-h);
-  padding: 0 var(--gutter);
+  box-sizing: border-box;
+  /* Полоска доходит до края вебвью, включая вырез. Текст остаётся ниже safe-area. */
+  height: calc(var(--hdr-h) + constant(safe-area-inset-top));
+  height: calc(var(--hdr-h) + env(safe-area-inset-top, 0px));
+  padding: constant(safe-area-inset-top) var(--gutter) 0;
+  padding: env(safe-area-inset-top, 0px) var(--gutter) 0;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   background-color: transparent;
+  background-image: linear-gradient(var(--paper), var(--paper));
+  background-repeat: no-repeat;
+  background-size: 100% constant(safe-area-inset-top);
+  background-size: 100% env(safe-area-inset-top, 0px);
+  background-position: top left;
   color: var(--ink);
   transition: background-color var(--dur-big) var(--ease-big), color var(--dur-big) var(--ease-big);
 }
 .hdr[data-on="dark"] { color: #fff; }
-.hdr.is-solid { background-color: var(--paper); color: var(--ink); }
+.hdr.is-solid {
+  background-color: var(--paper);
+  background-image: none;
+  color: var(--ink);
+}
 
 .hdr a, .hdr button {
   display: inline-flex;
@@ -53,7 +68,7 @@
   .hdr .hdr__menu { display: none; }
   .hdr__right { gap: 16px; }
   /* Прыжок букв и blur здесь раздувают строку и тормозят прокрутку.
-     На шапку и док размытие не вешаем: у дока своё стекло, шапка остаётся плоской. */
+     На шапку и док размытие не вешаем: оба плоские. */
   .hdr,
   .hdr a,
   .hdr button,
