@@ -98,22 +98,27 @@ function updateMine() {
   /* макет загружен — рядом с переключателем появляются «Заменить» и «Убрать» */
   $$('[data-art-replace], [data-art-clear]', root).forEach(b => { b.hidden = !printState.art; });
   toggle.setAttribute('aria-pressed', on);
-  $$('.tile', root).forEach(t => {
-    const a = $('.tile__art', t);
-    if (!on) { a.classList.remove('is-on'); a.innerHTML = ''; return; }
-    const p = data.products.find(x => x.id === t.dataset.id);
-    const [x, y, w, h] = zoneRect(p, 'front', p.type === 'zhood' || p.type === 'olymp' ? 'chest' : (/pants|shorts/.test(p.type) ? 'leg' : 'center'));
-    /* zoneRect даёт доли вещи; вещь занимает 88 % плитки с полем 6 % (рендер) */
-    /* .gm занимает 88 % плитки с полем 6 % */
-    a.style.left = (6 + x * 88) + '%'; a.style.top = (6 + y * 88) + '%'; a.style.width = w * 88 + '%'; a.style.height = h * 88 + '%';
-    const m = methodById(data, printState.method);
-    const dark = isDark(colorHex(p, data, t.dataset.color));
-    const film = m.group === 'film' ? (printState.film || defaultFilm(m, dark)) : null;
-    a.className = 'tile__art art ' + artClass(m) + ' is-on';
-    a.style.position = 'absolute'; a.style.cursor = 'default';
-    a.innerHTML = artHTML(printState.art, m, film);
-    t.querySelector('.tile__media').classList.toggle('on-light', !dark);
-  });
+  $$('.tile', root).forEach(t => paintTile(t));
+}
+/* Макет на одной плитке. color — цвет, под который подстраиваемся: выбранный или тот, на который навели курсор.
+   От него зависят наложение на светлой ткани и цвет плёнки, поэтому при примерке цвета макет перекрашивается сразу. */
+function paintTile(t, color = t.dataset.color) {
+  const a = $('.tile__art', t);
+  const on = mine && !!printState.art;
+  if (!on) { a.classList.remove('is-on'); a.innerHTML = ''; delete a.dataset.key; return; }
+  const p = data.products.find(x => x.id === t.dataset.id);
+  const [x, y, w, h] = zoneRect(p, 'front', p.type === 'zhood' || p.type === 'olymp' ? 'chest' : (/pants|shorts/.test(p.type) ? 'leg' : 'center'));
+  /* zoneRect даёт доли вещи; .gm занимает 88 % плитки с полем 6 % */
+  a.style.left = (6 + x * 88) + '%'; a.style.top = (6 + y * 88) + '%'; a.style.width = w * 88 + '%'; a.style.height = h * 88 + '%';
+  const m = methodById(data, printState.method);
+  const dark = isDark(colorHex(p, data, color));
+  const film = m.group === 'film' ? (printState.film || defaultFilm(m, dark)) : null;
+  a.className = 'tile__art art ' + artClass(m) + ' is-on';
+  a.style.position = 'absolute'; a.style.cursor = 'default';
+  /* разметку меняем, только когда изменился сам макет, метод или цвет плёнки — иначе картинка мигала бы при каждом наведении */
+  const key = [printState.art.id, printState.art.url, m.id, film?.hex].join('|');
+  if (a.dataset.key !== key) { a.dataset.key = key; a.innerHTML = artHTML(printState.art, m, film); }
+  t.querySelector('.tile__media').classList.toggle('on-light', !dark);
 }
 
 root.addEventListener('click', e => {
@@ -147,12 +152,15 @@ if (matchMedia('(hover:hover)').matches) {
   /* курсор на образце цвета — вещь сразу показывает этот цвет; ушёл с ряда — возвращается выбранный */
   root.addEventListener('pointerover', e => {
     const sw = e.target.closest?.('.tile__sw [data-color]'); if (!sw) return;
-    views.get(sw.closest('.tile').dataset.id)?.setColor(sw.dataset.color);
+    const tile = sw.closest('.tile');
+    views.get(tile.dataset.id)?.setColor(sw.dataset.color);
+    paintTile(tile, sw.dataset.color);             /* макет сразу подстраивается под цвет, на который навели */
   });
   root.addEventListener('pointerout', e => {
     const row = e.target.closest?.('.tile__sw'); if (!row || row.contains(e.relatedTarget)) return;
     const tile = row.closest('.tile');
     views.get(tile.dataset.id)?.setColor(tile.dataset.color);
+    paintTile(tile);
   });
   root.addEventListener('pointerenter', e => {
     const tile = e.target.closest?.('.tile'); if (!tile) return;
