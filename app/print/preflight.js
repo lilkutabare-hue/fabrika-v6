@@ -1,6 +1,8 @@
 /* preflight.js — проверка макета на сайте. Повторяет приёмку из xtc-dtf мягко: не блокирует заявку,
    говорит человеку понятными словами, результат уходит в заявку (checks[]). */
 
+import { cutout } from './cutout.js';
+
 const RASTER = ['image/png', 'image/jpeg', 'image/webp', 'image/tiff', 'image/gif'];
 
 /* analyze(file) → art: { id, file, name, type, url, px:[w,h], hasAlpha, vector, pdf, colors } */
@@ -22,7 +24,26 @@ export async function analyze(file) {
   const s = sample(img);
   art.hasAlpha = type === 'image/jpeg' ? false : s.hasAlpha;
   art.colors = s.colors;
+  /* Умный фон (cutout.js): если у картинки ровный фон по краям — показываем её уже без фона.
+     art.bg хранит обе версии, чтобы фон можно было вернуть; исходный файл для менеджера не меняется. */
+  const cut = await cutout(img);
+  if (cut.url) {
+    art.bg = { on: true, hex: cut.bg, mono: cut.mono, cut: { url: cut.url, px: cut.px }, src: { url: art.url, px: art.px, hasAlpha: art.hasAlpha } };
+    art.url = cut.url; art.px = cut.px; art.hasAlpha = true;
+  } else art.bgSkip = cut.skip;
   return art;
+}
+
+/* Вернуть фон или снова убрать его: меняет то, что видно на вещи. */
+export function setBg(art, on) {
+  if (!art?.bg) return;
+  const v = on ? art.bg.cut : art.bg.src;
+  art.bg.on = !!on;
+  art.url = v.url; art.px = v.px; art.hasAlpha = on ? true : art.bg.src.hasAlpha;
+}
+export function revokeArt(art) {
+  if (!art) return;
+  for (const u of new Set([art.url, art.bg?.cut.url, art.bg?.src.url])) if (u) URL.revokeObjectURL(u);
 }
 
 function guessType(name) {
@@ -66,7 +87,9 @@ export function runChecks(art, method, widthMm) {
   if (!art) return out;
   const say = (code, level, text) => out.push({ code, level, text });
   if (art.pdf) say('PDF_NO_PREVIEW', 'info', 'PDF подойдёт для печати. В примерке показываем рамку по размеру — сам файл менеджер посмотрит в заявке.');
-  if (art.type === 'image/jpeg') say('JPEG', 'warn', 'Для примерки подойдёт. Для печати нужен PNG с прозрачным фоном, SVG или PDF — менеджер попросит исходник.');
+  if (art.bg?.on) say('BG_CUT', 'info', 'Фон убрали автоматически — на вещи только рисунок. Менеджер получит ваш исходный файл и подготовит его к печати.');
+  else if (art.bgSkip === 'photo' && art.hasAlpha === false) say('PHOTO', 'info', 'Похоже на фотографию или рисунок во весь кадр: фон не трогаем, напечатается прямоугольником.');
+  else if (art.type === 'image/jpeg') say('JPEG', 'warn', 'Для примерки подойдёт. Для печати нужен PNG с прозрачным фоном, SVG или PDF — менеджер попросит исходник.');
   else if (art.hasAlpha === false && method?.needsAlpha !== false) say('ALPHA_OPAQUE', 'warn', 'Фон напечатается прямоугольником. Нужен файл с прозрачным фоном.');
   if (method?.colors === 'mono' && isMulticolor(art)) say('FILM_MONO', 'info', `${method.group === 'film' ? 'Плёнка одноцветная' : 'Вышивка в примерке одним цветом'}: макет станет силуэтом. Для полноцвета — DTF.`);
   if (widthMm && art.px && !art.vector && !art.pdf) {

@@ -56,16 +56,28 @@
 .art__body { position: absolute; inset: 0; display: grid; place-items: center; }
 /* складки: карта смещения из рендера; во время движения выключены, чтобы не тормозить */
 .art__body.has-folds:not(.is-moving) { filter: url(#fold-f); }
+/* Тени ткани поверх макета. Обёртка обрезана по прозрачности самого макета (--amask ставит stage.js),
+   поэтому у макета без фона тени лежат только на рисунке, а не прямоугольником вокруг него. */
+.art__shadeclip {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: .55;
+  -webkit-mask-image: var(--amask, none); mask-image: var(--amask, none);
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
 .art__shade {
   position: absolute;
   max-width: none;
   object-fit: contain;
   pointer-events: none;
-  mix-blend-mode: multiply;
-  opacity: .55;
 }
 /* тёмная ткань: копию вещи осветляем до серого, чтобы складки легли на принт, не убив его */
-.pv__box:not(.on-light) .art__shade { filter: grayscale(1) brightness(2.6) contrast(1.3); mix-blend-mode: multiply; opacity: .55; }
+.pv__box:not(.on-light) .art__shade { filter: grayscale(1) brightness(5) contrast(1.15); }
+/* на тёмной ткани тени слабее: печать на чёрном в жизни яркая, прежняя сила делала коралл бурым, а белое серым */
+.pv__box:not(.on-light) .art__shadeclip { opacity: .32; }
 .art__img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .on-light .art--asis .art__img { mix-blend-mode: multiply; }
 .art__sil {

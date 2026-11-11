@@ -23,7 +23,7 @@ export function buildOrder({ items = [], sewing = null, extras = {} }) {
         offset_mm: p.offset_mm || null, center: p.center || null, scale_pct: p.scale_pct ?? null,
         allow_rotate: true,
         rotate_deg: p.rotate_deg || 0, mirrored: !!p.mirrored,
-        file: p.file ? { id: p.file.id || null, name: p.file.name, type: p.file.type, px: p.file.px || null, hasAlpha: p.file.hasAlpha ?? null, dpi: p.file.dpi ?? null, kept: fileStore.has(p.file.id) } : null,
+        file: p.file ? { id: p.file.id || null, name: p.file.name, type: p.file.type, px: p.file.px || null, hasAlpha: p.file.hasAlpha ?? null, bgRemoved: !!p.file.bgRemoved, dpi: p.file.dpi ?? null, kept: fileStore.has(p.file.id) } : null,
         mockup: p.mockup || null,
         text: null,
         checks: (p.checks || []).map(c => c.code),
@@ -56,7 +56,7 @@ export function orderText(order, data) {
         const size = p.width_mm ? `${p.width_mm}×${p.height_mm} мм` : (p.scale_pct != null ? `${p.scale_pct} % зоны, размер уточнит менеджер` : 'размер уточнит менеджер');
         const pos = p.center ? ` (центр ${Math.round(p.center.x * 100)} % × ${Math.round(p.center.y * 100)} % от вещи)` : '';
         L.push(`   + ${m?.name || p.method}${p.film ? ' (' + p.film.name + ')' : ''}: ${side(p.side)}, ${placeName(p.side, p.place)}${pos}, ${size}${p.priceFrom ? ', от ' + rub(p.priceFrom) : ''}`);
-        if (p.file) L.push(`     файл: ${p.file.name}${p.file.px ? ' ' + p.file.px.join('×') + ' px' : ''}${p.file.hasAlpha === false ? ', без прозрачности' : ''}${p.file.dpi ? ', ' + p.file.dpi + ' dpi' : ''}`);
+        if (p.file) L.push(`     файл: ${p.file.name}${p.file.px ? ' ' + p.file.px.join('×') + ' px' : ''}${p.file.hasAlpha === false ? ', без прозрачности' : ''}${p.file.bgRemoved ? ', на примерке фон убран автоматически' : ''}${p.file.dpi ? ', ' + p.file.dpi + ' dpi' : ''}`);
         if (p.checks.length) L.push(`     проверка: ${p.checks.join(', ')}`);
       }
     });

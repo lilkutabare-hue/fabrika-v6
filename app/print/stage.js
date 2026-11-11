@@ -2,7 +2,7 @@
    Сцена: поле печати — вся вещь, слой обрезан маской по силуэту, поверх — тени ткани, складки через
    карту смещения из самого рендера. Руки: тянуть, щипок, поворот двумя пальцами, ручки размера и поворота,
    колесо/щипок приближает вещь, стрелки двигают, отмена/повтор, «сравнить с чистым». */
-import { analyze, runChecks, dpiFor } from './preflight.js';
+import { analyze, runChecks, dpiFor, setBg, revokeArt } from './preflight.js';
 import { preset, defaultPlace, presetsFor, garmentMm } from './zones.js';
 import { artHTML, artClass, methodById, defaultFilm } from './methods.js';
 import { fileStore } from '../order.js';
@@ -48,7 +48,7 @@ export function redo() { if (!canRedo()) return; hi++; Object.assign(state, hist
 /* ---------- файл ---------- */
 export async function setFile(file) {
   if (!file) return;
-  if (state.art?.url) URL.revokeObjectURL(state.art.url);
+  revokeArt(state.art);
   const art = await analyze(file);
   fileStore.set(art.id, file);
   state.art = art;
@@ -56,8 +56,14 @@ export async function setFile(file) {
   commit();
   return art;
 }
+/* Фон макета: убран автоматически (cutout.js) — можно вернуть и снова убрать. */
+export function toggleBg(on = !state.art?.bg?.on) {
+  if (!state.art?.bg) return;
+  setBg(state.art, on);
+  emit();
+}
 export function clearArt() {
-  if (state.art?.url) URL.revokeObjectURL(state.art.url);
+  revokeArt(state.art);
   if (state.art) fileStore.delete(state.art.id);
   state.art = null; state.checks = []; emit();
 }
@@ -94,7 +100,8 @@ export function printSpec(product, data, fabricHex, size) {
     center: { x: +state.cx.toFixed(3), y: +state.cy.toFixed(3) },
     scale_pct: Math.round(state.scale * 100),
     rotate_deg: Math.round(state.rot), mirrored: !!state.flip,
-    file: art ? { id: art.id, name: art.name, type: art.type, px: art.px, hasAlpha: art.hasAlpha, dpi: dpiFor(art, width_mm) } : null,
+    /* в заявку идёт описание исходного файла (его получит менеджер); dpi — по самому рисунку без полей */
+    file: art ? { id: art.id, name: art.name, type: art.type, px: art.bg ? art.bg.src.px : art.px, hasAlpha: art.bg ? art.bg.src.hasAlpha : art.hasAlpha, dpi: dpiFor(art, width_mm), bgRemoved: !!art.bg?.on } : null,
     checks,
     priceFrom: m.priceFrom || 0,
   };
@@ -149,7 +156,7 @@ function ensureFilter() {
 export function mountStage(box, product, data, opts) {
   /* не innerHTML += : он пересоздал бы уже смонтированную вещь и потерял её обработчики */
   box.insertAdjacentHTML('beforeend', `
-    <div class="zone"><div class="art" hidden><div class="art__body"></div><img class="art__shade" alt="" aria-hidden="true"></div></div>
+    <div class="zone"><div class="art" hidden><div class="art__body"></div><div class="art__shadeclip"><img class="art__shade" alt="" aria-hidden="true"></div></div></div>
     <div class="zone-ui"><i class="zone__axis zone__axis--x" aria-hidden="true"></i><i class="zone__axis zone__axis--y" aria-hidden="true"></i>
       <div class="art-ui" hidden><i class="art__rotate" aria-hidden="true"></i><i class="art__handle" aria-hidden="true"></i></div></div>
     <button type="button" class="zone__empty"><span>Положите макет на вещь</span></button>`);
@@ -209,12 +216,17 @@ export function mountStage(box, product, data, opts) {
     body.style.transform = state.flip ? 'scaleX(-1)' : '';
     /* копия вещи поверх макета совмещена с вещью, поворот компенсируем */
     shade.style.width = zw + 'px'; shade.style.height = zh + 'px'; shade.style.left = -left + 'px'; shade.style.top = -top + 'px';
-    shade.style.transformOrigin = `${left + aw / 2}px ${top + ah / 2}px`; shade.style.transform = `rotate(${-state.rot}deg)`;
+    /* тени лежат только на самом рисунке: обёртка обрезана по прозрачности макета и отражается вместе с ним,
+       а копия вещи внутри отражается обратно, чтобы складки остались на своих местах */
+    const clip = shade.parentElement;
+    clip.style.transform = state.flip ? 'scaleX(-1)' : '';
+    clip.style.setProperty('--amask', a.pdf || !a.url ? 'none' : `url('${a.url}')`);
+    shade.style.transformOrigin = `${left + aw / 2}px ${top + ah / 2}px`; shade.style.transform = `${state.flip ? 'scaleX(-1) ' : ''}rotate(${-state.rot}deg)`;
     const fi = filterEl; if (fi) { fi.setAttribute('x', -left); fi.setAttribute('y', -top); fi.setAttribute('width', zw); fi.setAttribute('height', zh); }
     const m = methodById(data, state.method);
     const dark = isDark(opts.fabricHex());
     const film = m.group === 'film' ? (state.film || defaultFilm(m, dark)) : null;
-    const key = [a.id, m.id, film?.hex].join('|');
+    const key = [a.id, a.url, m.id, film?.hex].join('|');
     if (art.dataset.key !== key) {
       art.dataset.key = key;
       art.className = 'art ' + artClass(m);

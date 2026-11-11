@@ -165,7 +165,7 @@ function artTab(m) {
   return `
     <div class="pv__grp">
       <div class="pt__upload">
-        <div class="pt__file">${a ? `<b>${esc(a.name)}</b><span class="t-mute">${a.px ? a.px.join('×') + ' px' : (a.pdf ? 'PDF' : 'вектор')}${a.hasAlpha === false ? ' · без прозрачности' : ''}</span>` : `<b>Файл не выбран</b><span class="t-mute">PNG с прозрачным фоном, SVG или PDF. Можно просто бросить файл на вещь.</span>`}</div>
+        <div class="pt__file">${a ? `<b>${esc(a.name)}</b><span class="t-mute">${a.px ? a.px.join('×') + ' px' : (a.pdf ? 'PDF' : 'вектор')}${a.bg ? (a.bg.on ? ' · фон убран' : ' · с фоном') : a.hasAlpha === false ? ' · без прозрачности' : ''}</span>` : `<b>Файл не выбран</b><span class="t-mute">PNG с прозрачным фоном, SVG или PDF. Можно просто бросить файл на вещь.</span>`}</div>
         <button type="button" class="btn ${a ? 'btn--ghost' : ''}" style="height:40px;padding:0 16px" data-art-pick>${a ? 'Заменить' : 'Загрузить'}</button>
       </div>
       ${spec.checks.length ? `<ul class="pt__checks">${spec.checks.map(c => `<li data-level="${c.level}">${esc(c.text)}</li>`).join('')}</ul>` : ''}
@@ -175,6 +175,7 @@ function artTab(m) {
       <div class="chips">
         <button type="button" data-flip aria-pressed="${st.flip}">Отразить</button>
         <button type="button" data-rot0 ${st.rot ? '' : 'disabled'}>Выровнять</button>
+        ${a.bg ? `<button type="button" data-bg aria-pressed="${a.bg.on}">Без фона</button>` : ''}
         <button type="button" data-folds aria-pressed="${st.folds}">Складки ткани</button>
         <button type="button" data-art-clear>Убрать макет</button>
       </div>
@@ -278,6 +279,7 @@ el.addEventListener('click', e => {
   if (t.closest('[data-art-clear]')) { print.clearArt(); S.tab = 'art'; renderPanel(); return; }
   if (t.closest('[data-flip]')) { print.set({ flip: !print.state.flip }); renderPanel(); return; }
   if (t.closest('[data-rot0]')) { print.set({ rot: 0 }); renderPanel(); return; }
+  if (t.closest('[data-bg]')) { print.toggleBg(); renderStage(); renderPanel(); return; }
   if (t.closest('[data-folds]')) { print.set({ folds: !print.state.folds }, { history: false }); renderStage(); renderPanel(); return; }
   if (t.closest('[data-undo]')) { print.undo(); renderPanel(); return; }
   if (t.closest('[data-redo]')) { print.redo(); renderPanel(); return; }
