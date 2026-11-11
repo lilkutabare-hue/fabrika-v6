@@ -132,7 +132,12 @@ el.addEventListener('click', async e => {
   if (t.closest('[data-close]')) { layers.close('cart'); return; }
   if (t.closest('[data-go-blanks]')) { layers.close('cart').then(() => document.dispatchEvent(new CustomEvent('fabrika:go', { detail: 'catalog' }))); return; }
   const ci = t.closest('.ci');
-  if (ci && t.closest('[data-q]')) { const it = items.find(i => i.key === ci.dataset.key); setQty(ci.dataset.key, it.qty + +t.closest('[data-q]').dataset.q); return; }
+  if (ci && t.closest('[data-q]')) {
+    /* минус на одной штуке убирает товар — так же, как «Убрать» */
+    const it = items.find(i => i.key === ci.dataset.key), q = it.qty + +t.closest('[data-q]').dataset.q;
+    if (q < 1) remove(ci.dataset.key); else setQty(ci.dataset.key, q);
+    return;
+  }
   if (ci && t.closest('[data-rm]')) { remove(ci.dataset.key); return; }
   if (t.closest('[data-checkout]')) { step = 'order'; render(); $('.panel__body', el).scrollTop = 0; return; }
   if (t.closest('[data-back]')) { step = 'cart'; render(); return; }

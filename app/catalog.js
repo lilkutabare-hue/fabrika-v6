@@ -3,25 +3,34 @@
 import { rub, esc, density, colorName, colorHex, CATS, SIZES } from './data.js';
 import { mountGarment, animFor } from './garment.js';
 import { zoneRect } from './print/zones.js';
-import { state as printState, subscribe as onPrint } from './print/stage.js';
+import { state as printState, subscribe as onPrint, clearArt } from './print/stage.js';
 import { artHTML, artClass, methodById, defaultFilm } from './print/methods.js';
 import { isDark } from './garment.js';
 import { $, $$, reduced } from './ui.js';
 
 let data = null, cat = 'all', mine = false;
+let subcats = {}, sub = null;   /* подкатегории: data/subcats.json; sub — выбранная запись или null */
 const views = new Map();     /* id → garment view */
 let api = null;
 const root = $('#blanks');
 
-export function init(d, a) { data = d; api = a; render(); onPrint(() => { updateMine(); }); }
+export function init(d, a) {
+  data = d; api = a; render(); onPrint(() => { updateMine(); });
+  fetch('data/subcats.json', { cache: 'no-cache' }).then(r => r.json()).then(j => { subcats = j || {}; render(); }).catch(() => {});
+}
 export function setData(d) { data = d; render(); }
 export function showMine(on) { mine = !!on; updateMine(); }
 
-function visible() { return data.products.filter(p => cat === 'all' || p.cat === cat); }
+function visible() { return data.products.filter(p => (cat === 'all' || p.cat === cat) && (!sub || p.id === sub.product)); }
+/* подкатегории выбранной категории — только те, чей товар и плотность есть в каталоге */
+function subsOf(k) {
+  return (Array.isArray(subcats[k]) ? subcats[k] : []).filter(s => data.products.some(p => p.id === s.product && p.cat === k && (!s.gram || p.grams?.includes(s.gram))));
+}
 
 export function setCat(k, scroll = false) {
   if (!CATS.some(c => c[0] === k) && k !== 'all') k = 'all';
   const changed = k !== cat;
+  if (changed) sub = null;
   cat = k;
   render(changed);
   if (scroll) root.scrollIntoView({ block: 'start' });
@@ -30,6 +39,10 @@ export function setCat(k, scroll = false) {
 function render(swap = false) {
   const cats = [['all', 'Все'], ...CATS.filter(c => data.products.some(p => p.cat === c[0]))];
   $('[data-cats]', root).innerHTML = cats.map(([k, n]) => `<button type="button" data-cat="${k}" aria-pressed="${k === cat}">${n}</button>`).join('');
+  const subs = subsOf(cat), subBox = $('[data-subs]', root);
+  if (sub && !subs.includes(sub)) sub = null;
+  subBox.hidden = !subs.length;
+  subBox.innerHTML = subs.length ? `<button type="button" data-sub="-1" aria-pressed="${!sub}">Все</button>` + subs.map((s, i) => `<button type="button" data-sub="${i}" aria-pressed="${s === sub}">${esc(s.name)}</button>`).join('') : '';
   placeCats();
   $('[data-mine]', root).setAttribute('aria-pressed', mine && !!printState.art);
 
@@ -82,6 +95,8 @@ function tileHTML(p, i) {
 function updateMine() {
   const toggle = $('[data-mine]', root);
   const on = mine && !!printState.art;
+  /* макет загружен — рядом с переключателем появляются «Заменить» и «Убрать» */
+  $$('[data-art-replace], [data-art-clear]', root).forEach(b => { b.hidden = !printState.art; });
   toggle.setAttribute('aria-pressed', on);
   $$('.tile', root).forEach(t => {
     const a = $('.tile__art', t);
@@ -104,6 +119,9 @@ function updateMine() {
 root.addEventListener('click', e => {
   const t = e.target;
   const c = t.closest('[data-cat]'); if (c) { setCat(c.dataset.cat); return; }
+  const sb = t.closest('[data-sub]'); if (sb) { sub = subsOf(cat)[+sb.dataset.sub] || null; render(true); return; }
+  if (t.closest('[data-art-replace]')) { api.pickFile('catalog'); return; }
+  if (t.closest('[data-art-clear]')) { mine = false; clearArt(); updateMine(); return; }
   /* Переключатель виден всегда. Макета ещё нет — он просит файл и включается, когда файл выбран (main.js → showMine). */
   if (t.closest('[data-mine]')) {
     if (!printState.art) { api.pickFile('catalog'); return; }
@@ -121,7 +139,7 @@ root.addEventListener('click', e => {
   }
   const sz = t.closest('[data-size]');
   if (sz) { api.addToCart({ product: { id: p.id, code: p.code, name: p.name }, color: tile.dataset.color, size: sz.dataset.size, gram: p.grams?.[0] || null, qty: 1, unitPrice: p.price, prints: [] }); return; }
-  if (t.closest('[data-open]')) api.openProduct(p.id, { color: tile.dataset.color, from: tile.querySelector('.tile__media'), mode: mine && printState.art ? 'print' : 'clean' });
+  if (t.closest('[data-open]')) api.openProduct(p.id, { color: tile.dataset.color, from: tile.querySelector('.tile__media'), mode: mine && printState.art ? 'print' : 'clean', gram: sub?.gram });
 });
 
 /* наведение: анимированный рендер, молния на эскизе */

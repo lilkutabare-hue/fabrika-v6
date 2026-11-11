@@ -31,7 +31,7 @@ export function open(id, o = {}) {
   if (!product) return false;
   const color = product.colors.includes(o.color) ? o.color : product.colors[0];
   const already = !!S;
-  S = { product, color, gram: product.grams?.[0] || null, size: S?.size || 'M', qty: 1, mode: o.mode || 'clean', side: 'front', tab: o.tab || (print.state.art ? 'place' : 'art'), more: false };
+  S = { product, color, gram: (o.gram && product.grams?.includes(o.gram) ? o.gram : product.grams?.[0]) || null, size: S?.size || 'M', qty: 1, mode: o.mode || 'clean', side: 'front', tab: o.tab || (print.state.art ? 'place' : 'art'), more: false };
   print.state.side = 'front';
   if (print.state.place === 'custom') print.state.place = 'center';
   print.ensurePlace(product);
