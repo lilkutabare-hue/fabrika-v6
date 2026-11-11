@@ -31,9 +31,7 @@ function render(swap = false) {
   const cats = [['all', 'Все'], ...CATS.filter(c => data.products.some(p => p.cat === c[0]))];
   $('[data-cats]', root).innerHTML = cats.map(([k, n]) => `<button type="button" data-cat="${k}" aria-pressed="${k === cat}">${n}</button>`).join('');
   placeCats();
-  const toggle = $('[data-mine]', root);
-  toggle.hidden = !printState.art;
-  toggle.setAttribute('aria-pressed', mine && !!printState.art);
+  $('[data-mine]', root).setAttribute('aria-pressed', mine && !!printState.art);
 
   const grid = $('[data-tiles]', root);
   views.clear();
@@ -84,9 +82,6 @@ function tileHTML(p, i) {
 function updateMine() {
   const toggle = $('[data-mine]', root);
   const on = mine && !!printState.art;
-  toggle.hidden = !printState.art;
-  const tryAll = $('[data-try-all]', root);
-  if (tryAll) tryAll.hidden = !!printState.art;
   toggle.setAttribute('aria-pressed', on);
   $$('.tile', root).forEach(t => {
     const a = $('.tile__art', t);
@@ -109,7 +104,11 @@ function updateMine() {
 root.addEventListener('click', e => {
   const t = e.target;
   const c = t.closest('[data-cat]'); if (c) { setCat(c.dataset.cat); return; }
-  if (t.closest('[data-mine]')) { mine = !mine; updateMine(); return; }
+  /* Переключатель виден всегда. Макета ещё нет — он просит файл и включается, когда файл выбран (main.js → showMine). */
+  if (t.closest('[data-mine]')) {
+    if (!printState.art) { api.pickFile('catalog'); return; }
+    mine = !mine; updateMine(); return;
+  }
   const tile = t.closest('.tile'); if (!tile) return;
   const p = data.products.find(x => x.id === tile.dataset.id);
   const sw = t.closest('.tile__sw [data-color]');

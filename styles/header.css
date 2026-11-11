@@ -41,7 +41,7 @@
   white-space: nowrap;
 }
 .hdr > * { grid-row: 1; }
-/* Левый край шапки: корзина. Класс не .hdr__left — на нём hop.js вешает волну букв, корзине она не нужна. */
+/* Левый край шапки: корзина. Волна букв при наведении — data-hop-wave на самой кнопке (hop.js). */
 .hdr__start { justify-self: start; grid-column: 1; display: flex; align-items: center; }
 .hdr__logo {
   grid-column: 2;

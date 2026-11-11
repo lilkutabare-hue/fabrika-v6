@@ -21,30 +21,30 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/tokens.css?v=11">
-<link rel="stylesheet" href="styles/base.css?v=11">
-<link rel="stylesheet" href="styles/header.css?v=11">
-<link rel="stylesheet" href="styles/layers.css?v=11">
-<link rel="stylesheet" href="styles/menu.css?v=11">
-<link rel="stylesheet" href="styles/dock.css?v=11">
-<link rel="stylesheet" href="styles/garment.css?v=11">
-<link rel="stylesheet" href="styles/hero.css?v=11">
-<link rel="stylesheet" href="styles/catalog.css?v=11">
-<link rel="stylesheet" href="styles/product.css?v=11">
-<link rel="stylesheet" href="styles/print.css?v=11">
-<link rel="stylesheet" href="styles/cart.css?v=11">
-<link rel="stylesheet" href="styles/services.css?v=11">
-<link rel="stylesheet" href="styles/factory.css?v=11">
-<link rel="stylesheet" href="styles/how.css?v=11">
-<link rel="stylesheet" href="styles/home.css?v=11">
-<link rel="stylesheet" href="styles/admin.css?v=11">
+<link rel="stylesheet" href="styles/tokens.css?v=12">
+<link rel="stylesheet" href="styles/base.css?v=12">
+<link rel="stylesheet" href="styles/header.css?v=12">
+<link rel="stylesheet" href="styles/layers.css?v=12">
+<link rel="stylesheet" href="styles/menu.css?v=12">
+<link rel="stylesheet" href="styles/dock.css?v=12">
+<link rel="stylesheet" href="styles/garment.css?v=12">
+<link rel="stylesheet" href="styles/hero.css?v=12">
+<link rel="stylesheet" href="styles/catalog.css?v=12">
+<link rel="stylesheet" href="styles/product.css?v=12">
+<link rel="stylesheet" href="styles/print.css?v=12">
+<link rel="stylesheet" href="styles/cart.css?v=12">
+<link rel="stylesheet" href="styles/services.css?v=12">
+<link rel="stylesheet" href="styles/factory.css?v=12">
+<link rel="stylesheet" href="styles/how.css?v=12">
+<link rel="stylesheet" href="styles/home.css?v=12">
+<link rel="stylesheet" href="styles/admin.css?v=12">
 </head>
 <body>
 
 <header class="hdr" data-hdr>
   <a class="hdr__logo" href="./" data-home aria-label="Fabrika.market — на главную">Fabrika.market</a>
   <div class="hdr__start">
-    <button type="button" class="hdr__cart" data-open-cart aria-label="Корзина, 0 товаров">Корзина (<span data-cart-count>0</span>)<span class="hdr__added" data-added aria-hidden="true">Добавлено</span></button>
+    <button type="button" class="hdr__cart" data-open-cart data-hop-wave aria-label="Корзина, 0 товаров">Корзина (<span data-cart-count>0</span>)<span class="hdr__added" data-added aria-hidden="true">Добавлено</span></button>
   </div>
   <div class="hdr__right">
     <button type="button" class="hdr__adm" data-adm-btn hidden>Управление <sup hidden></sup></button>
@@ -84,8 +84,7 @@
     <div class="blanks__head">
       <h2 class="vh" id="h-blanks">Бланки</h2>
       <div class="cats" data-cats role="tablist" aria-label="Категории"></div>
-      <button type="button" class="blanks__try" data-pick-file="catalog" data-try-all data-hop-wave>Примерить свой принт на всех вещах</button>
-      <button type="button" class="blanks__mine" data-mine aria-pressed="false" hidden><i></i>С моим принтом</button>
+      <button type="button" class="blanks__mine" data-mine aria-pressed="false"><i></i>С моим принтом</button>
     </div>
     <div class="tiles" data-tiles></div>
   </section>
@@ -268,7 +267,7 @@
 <div class="toast" data-toast role="status" aria-live="polite"></div>
 <input type="file" data-file-input accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf" hidden>
 
-<script type="module" src="app/main.js?v=11"></script>
+<script type="module" src="app/main.js?v=12"></script>
 <style id="hero-type">
 h1{font-family:Jost,sans-serif!important;font-weight:500!important;font-size:32px!important;letter-spacing:0!important}
 @media(max-width:1023px){h1{font-size:24px!important}}
