@@ -130,7 +130,7 @@ function render() {
 el.addEventListener('click', async e => {
   const t = e.target;
   if (t.closest('[data-close]')) { layers.close('cart'); return; }
-  if (t.closest('[data-go-blanks]')) { layers.close('cart').then(() => document.getElementById('blanks')?.scrollIntoView({ block: 'start' })); return; }
+  if (t.closest('[data-go-blanks]')) { layers.close('cart').then(() => document.dispatchEvent(new CustomEvent('fabrika:go', { detail: 'catalog' }))); return; }
   const ci = t.closest('.ci');
   if (ci && t.closest('[data-q]')) { const it = items.find(i => i.key === ci.dataset.key); setQty(ci.dataset.key, it.qty + +t.closest('[data-q]').dataset.q); return; }
   if (ci && t.closest('[data-rm]')) { remove(ci.dataset.key); return; }

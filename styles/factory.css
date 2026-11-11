@@ -30,7 +30,7 @@
   gap: 40px 64px;
   padding: 0 var(--gutter);
 }
-.factory__body > div { display: grid; gap: 16px; align-content: start; }
+.factory__body > div { display: grid; gap: 16px; align-content: start; justify-items: start; }
 .addr { font: 500 var(--fs-l) / var(--lh-l) var(--disp); text-wrap: balance; }
 .addr-row { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; }
 .addr-row .btn { padding: 0 22px; }

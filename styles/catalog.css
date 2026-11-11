@@ -1,5 +1,5 @@
 /* Бланки — каталог (план §7.5): плитки 3:4 вплотную, 4 в ряд / 2 на телефоне. */
-.blanks { padding: 88px 0 96px; }
+.blanks { padding: calc(var(--hdr-h) + 40px) 0 96px; min-height: 100vh; }
 .blanks__head {
   display: flex;
   flex-wrap: wrap;
@@ -8,22 +8,31 @@
   gap: 12px 32px;
   padding: 0 var(--gutter) 28px;
 }
-.cats { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Категории — строка слов без плашек: выбранное слово чёрное, под ним тонкая линия, которая переезжает к новому слову. */
+.cats { position: relative; display: flex; flex-wrap: wrap; gap: 0 24px; }
 .cats button {
   min-height: 32px;
-  padding: 0 14px;
-  border-radius: 0;
-  font-size: var(--fs-s);
+  padding: 0;
+  font-size: 13px;
   line-height: 1;
-  color: var(--ink);
-  background: var(--tone-2);
-  transition: color var(--dur-state), background var(--dur-state);
+  letter-spacing: -.01em;
+  color: var(--mute);
+  background: transparent;
+  transition: color var(--dur-state);
 }
-.cats button:hover,
-.cats button:active { border-radius: 0; background: #deded8; }
-.cats button[aria-pressed="true"],
-.cats button[aria-pressed="true"]:hover,
-.cats button[aria-pressed="true"]:active { color: #fff; background: #000; border-radius: 0; }
+.cats button:hover, .cats button[aria-pressed="true"] { color: var(--ink); }
+.cats::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 0;
+  width: 1px; height: 1px;
+  background: var(--ink);
+  transform-origin: 0 50%;
+  transform: translate(var(--x, 0px), var(--y, 0px)) scaleX(var(--w, 0));
+  transition: transform var(--dur-state) var(--ease-out);
+  pointer-events: none;
+}
+.blanks__try { flex-basis: 100%; width: max-content; min-height: 32px; font-size: var(--fs-s); line-height: 1; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
 .blanks__mine { display: inline-flex; align-items: center; gap: 10px; font-size: var(--fs-s); color: var(--ink); }
 .blanks__mine i { width: 34px; height: 20px; border-radius: 0; background: var(--tone-2); position: relative; transition: background var(--dur-state); }
 .blanks__mine i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 0; background: #fff; box-shadow: 0 1px 3px rgba(11, 11, 11, .2); transition: transform var(--dur-state) var(--ease-out); }
@@ -72,21 +81,6 @@
 .tile__name b { font-weight: 500; }
 .tile__name .t-mute { white-space: nowrap; }
 .tile__row { position: relative; min-height: 18px; }
-.tile__price, .tile__sizes { transition: opacity var(--dur-state), transform var(--dur-state) var(--ease-out); }
-.tile__sizes {
-  position: absolute; inset: 0 auto auto 0;
-  display: flex; gap: 2px 14px;
-  opacity: 0; transform: translateY(4px);
-  pointer-events: none;
-}
-.tile__sizes button { min-height: 18px; padding: 0 2px; font-size: var(--fs-s); color: var(--ink); }
-.tile__sizes button { padding: 0 8px; border-radius: 0; min-height: 22px; }
-.tile__sizes button:hover,
-.tile__sizes button:active { border-radius: 0; background: var(--tone-2); }
-@media (hover: hover) and (pointer: fine) {
-  .tile:hover .tile__price { opacity: 0; transform: translateY(-4px); }
-  .tile:hover .tile__sizes { opacity: 1; transform: none; pointer-events: auto; }
-}
 .tile__sw { --bg: var(--paper); margin: 2px 0 0 -8px; }
 .tile__stock { color: var(--mute); }
 
@@ -95,7 +89,7 @@
 @keyframes tileIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
 
 @media (max-width: 1023px) {
-  .blanks { padding: 48px 0 56px; }
+  .blanks { padding: calc(var(--hdr-h) + 8px) 0 56px; }
   .blanks__head {
     position: sticky;
     top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px));
@@ -106,9 +100,42 @@
   }
   .cats { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); max-width: 100vw; }
   .cats::-webkit-scrollbar { display: none; }
-  .cats button { flex: none; }
+  .cats { gap: 0 20px; }
+  .cats button { flex: none; min-height: 40px; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
   .tile__cap { padding: 8px 12px 0; min-height: 80px; }
   .tile__tag { top: 8px; left: 8px; }
   .tile__sizes { display: none; }
 }
+
+/* Сетка собрана: квадратная плитка под квадратный рендер (без пустых полос сверху и снизу),
+   на компьютере каталог держится колонкой по центру, а не растянут на весь экран. */
+.tile__media { aspect-ratio: 1; }
+@media (min-width: 1024px) {
+  .blanks__head, .tiles { max-width: 1128px; margin-inline: auto; }
+  .blanks__head { padding-bottom: 20px; }
+  .tiles { gap: 28px 20px; padding: 0 var(--gutter); }
+  .tile__cap { padding: 8px 0 0; min-height: 0; }
+}
+@media (max-width: 1023px) {
+  .tiles { row-gap: 20px; }
+  .tile__cap { min-height: 0; padding-bottom: 0; }
+}
+/* Ссылка «примерить» и переключатель «с моим принтом» стоят на одном и том же месте — второй строкой под заголовком. */
+.blanks__mine { flex: 0 0 100%; min-height: 32px; }
+
+/* Шапка каталога без заголовка: категории по центру, под ними тихая ссылка на свой принт. */
+.blanks__head { justify-content: center; }
+@media (min-width: 1024px) {
+  .cats { flex: 0 0 100%; justify-content: center; }
+  .blanks__try { flex: 0 0 auto; }
+  .blanks__head { row-gap: 6px; padding-bottom: 28px; }
+  .blanks__mine { justify-content: center; }
+}
+/* Подпись плитки — одна строка по центру: название и цена; ниже образцы цвета. */
+.tile__cap { justify-items: center; text-align: center; gap: 4px; }
+.tile__name { flex-wrap: wrap; justify-content: center; gap: 0 8px; }
+.tile__name b { cursor: pointer; }
+.tile__price { color: var(--mute); white-space: nowrap; }
+.tile__sw { margin: 0; justify-content: center; }
+@media (max-width: 1023px) { .tile__cap { padding: 6px 4px 0; } }

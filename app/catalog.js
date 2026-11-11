@@ -15,6 +15,7 @@ const root = $('#blanks');
 
 export function init(d, a) { data = d; api = a; render(); onPrint(() => { updateMine(); }); }
 export function setData(d) { data = d; render(); }
+export function showMine(on) { mine = !!on; updateMine(); }
 
 function visible() { return data.products.filter(p => cat === 'all' || p.cat === cat); }
 
@@ -29,6 +30,7 @@ export function setCat(k, scroll = false) {
 function render(swap = false) {
   const cats = [['all', 'Все'], ...CATS.filter(c => data.products.some(p => p.cat === c[0]))];
   $('[data-cats]', root).innerHTML = cats.map(([k, n]) => `<button type="button" data-cat="${k}" aria-pressed="${k === cat}">${n}</button>`).join('');
+  placeCats();
   const toggle = $('[data-mine]', root);
   toggle.hidden = !printState.art;
   toggle.setAttribute('aria-pressed', mine && !!printState.art);
@@ -47,6 +49,20 @@ function render(swap = false) {
   if (swap) setTimeout(() => grid.classList.remove('is-swap'), 800);
 }
 
+/* Линия под выбранной категорией: место и ширина берутся с кнопки. На телефоне выбранное слово подъезжает в видимую часть ряда. */
+function placeCats() {
+  const box = $('[data-cats]', root);
+  const on = box && $('[aria-pressed="true"]', box);
+  if (!on || !on.offsetWidth) return;
+  box.style.setProperty('--x', on.offsetLeft + 'px');
+  box.style.setProperty('--y', Math.round(on.offsetTop + on.offsetHeight / 2 + 12) + 'px');
+  box.style.setProperty('--w', on.offsetWidth);
+  if (box.scrollWidth > box.clientWidth + 1) box.scrollTo({ left: on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2, behavior: reduced.matches ? 'auto' : 'smooth' });
+}
+document.addEventListener('fabrika:view', () => { placeCats(); requestAnimationFrame(placeCats); });
+document.fonts?.ready.then(placeCats);
+new ResizeObserver(placeCats).observe(root);
+
 function tileHTML(p, i) {
   const color = p.colors[0];
   const dens = density(p);
@@ -56,14 +72,9 @@ function tileHTML(p, i) {
     <div class="tile__media" data-open>
       <div class="gm"></div>
       <div class="tile__art"></div>
-      ${p.tag ? `<span class="tile__tag" data-tag="${esc(p.tag)}">${esc(p.tag)}</span>` : ''}
     </div>
     <div class="tile__cap">
-      <div class="tile__name"><b data-open>${esc(p.name)}</b>${dens ? `<span class="t-mute">${esc(dens)}</span>` : ''}</div>
-      <div class="tile__row">
-        <div class="tile__price">${rub(p.price)}${stock ? ` <span class="tile__stock">· ${esc(stock)}</span>` : ''}${tiers ? ` <span class="tile__stock">· ${esc(tiers)}</span>` : ''}</div>
-        <div class="tile__sizes" aria-label="Размер — в корзину">${SIZES.map(s => `<button type="button" data-size="${s}">${s}</button>`).join('')}</div>
-      </div>
+      <div class="tile__name"><b data-open>${esc(p.name)}</b><span class="tile__price">${rub(p.price)}${stock ? ` · ${esc(stock)}` : ''}${tiers ? ` · ${esc(tiers)}` : ''}</span></div>
       ${p.colors.length > 1 ? `<div class="sw sw--small tile__sw">${p.colors.map(c => `<button type="button" data-color="${esc(c)}" aria-pressed="${c === color}" aria-label="${esc(colorName(data, c))}" style="--c:${colorHex(p, data, c)}"><i></i></button>`).join('')}</div>` : ''}
     </div>
   </article>`;
@@ -74,6 +85,8 @@ function updateMine() {
   const toggle = $('[data-mine]', root);
   const on = mine && !!printState.art;
   toggle.hidden = !printState.art;
+  const tryAll = $('[data-try-all]', root);
+  if (tryAll) tryAll.hidden = !!printState.art;
   toggle.setAttribute('aria-pressed', on);
   $$('.tile', root).forEach(t => {
     const a = $('.tile__art', t);
@@ -114,6 +127,16 @@ root.addEventListener('click', e => {
 
 /* наведение: анимированный рендер, молния на эскизе */
 if (matchMedia('(hover:hover)').matches) {
+  /* курсор на образце цвета — вещь сразу показывает этот цвет; ушёл с ряда — возвращается выбранный */
+  root.addEventListener('pointerover', e => {
+    const sw = e.target.closest?.('.tile__sw [data-color]'); if (!sw) return;
+    views.get(sw.closest('.tile').dataset.id)?.setColor(sw.dataset.color);
+  });
+  root.addEventListener('pointerout', e => {
+    const row = e.target.closest?.('.tile__sw'); if (!row || row.contains(e.relatedTarget)) return;
+    const tile = row.closest('.tile');
+    views.get(tile.dataset.id)?.setColor(tile.dataset.color);
+  });
   root.addEventListener('pointerenter', e => {
     const tile = e.target.closest?.('.tile'); if (!tile) return;
     const v = views.get(tile.dataset.id); if (!v) return;

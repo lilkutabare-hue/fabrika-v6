@@ -26,6 +26,16 @@
 .hero__sw { --bg: var(--tone); margin-top: 2px; justify-content: center; }
 .hero__specs { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); text-wrap: balance; }
 
+/* Кадр со съёмки на первом экране: от края до края, подпись поверх, шапка светлая. */
+.hero.is-media { height: 100vh; height: 100svh; padding: 0; color: #fff; background: #0B0B0B; }
+.hero.is-media .hero__stage { position: absolute; inset: 0; cursor: default; }
+.hero.is-media .hero__stage img, .hero.is-media .hero__stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero.is-media .hero__stage::after { content: ""; position: absolute; inset: 0; background: rgba(11, 11, 11, .28); }
+.hero.is-media .hero__cap { position: relative; margin-top: auto; padding: 0 var(--gutter) calc(40px + var(--dock-space)); }
+.hero.is-media[data-tone="light"] { color: var(--ink); }
+.hero.is-media[data-tone="light"] .hero__stage::after { display: none; }
+.hero.is-media .btn { background: #fff !important; color: #000 !important; }
+
 @media (max-width: 1023px) {
   /* Первый экран закрывает кадр: «Бланки» и чипы начинаются ниже дока, не в его полосе. */
   .hero {

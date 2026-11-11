@@ -1,0 +1,52 @@
+/* «Как это шьётся» — одна сцена и пять слов. Слева этапы крупным кеглем, справа вещь идёт по цеху. */
+.how {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 0 64px;
+  align-items: center;
+  padding: 96px var(--gutter);
+}
+.how__text { display: grid; gap: 28px; align-content: center; }
+.how__list { display: grid; justify-items: start; gap: 2px; }
+.how__list button {
+  font: 500 var(--fs-l) / 1.3 var(--disp);
+  color: #8F8F88;                               /* 3.2:1 на белом — крупный кегль */
+  transition: color var(--dur-state);
+}
+.how__list button:hover { color: var(--mute); }
+.how__list button[aria-selected="true"] { color: var(--ink); }
+.how__desc { max-width: 34ch; min-height: calc(var(--fs-m) * var(--lh-m) * 2); text-wrap: balance; }
+.how__desc.is-in { animation: howIn var(--dur-state) var(--ease-out) both; }
+@keyframes howIn { from { opacity: 0; transform: translateY(4px); } }
+
+.how__stage { justify-self: center; width: min(100%, 78vh, 640px); aspect-ratio: 1; }
+.how__svg { width: 100%; height: 100%; overflow: hidden; }
+.how__svg .ln { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.how__svg .ln.s { stroke: var(--sig); }
+.how__svg .ln.th { stroke-width: 1.2; stroke: var(--mute); }
+.how__svg .ln.th.s, .how__svg .ln.s.th { stroke: var(--sig); }
+.how__svg .fl { fill: var(--paper); }
+.how__svg .pc,
+.how__svg [data-k="dim-h"], .how__svg [data-k="dim-v"], .how__svg [data-k="ok-o"], .how__svg [data-k="ok"],
+.how__svg [data-k="boxfront"], .how__svg [data-k="tape"], .how__svg [data-k="label"] { stroke-dasharray: 1; }
+.how__print { font: 700 25px / 1 var(--disp); letter-spacing: .02em; fill: var(--sig); }
+
+/* опорные точки движения — в единицах сцены 600 × 600 */
+.how__svg [data-k="fabric"] { transform-origin: 110px 300px; }
+.how__svg [data-k="sl-l"] { transform-origin: 208px 233px; }
+.how__svg [data-k="sl-r"] { transform-origin: 392px 233px; }
+.how__svg [data-k="low"] { transform-origin: 300px 310px; }
+.how__svg [data-k="tee"] { transform-origin: 300px 250px; }
+.how__svg [data-k="boxback"] { transform-origin: 300px 322px; }
+.how.is-live .how__bob { animation: howBob .16s ease-in-out infinite alternate; }
+@keyframes howBob { to { transform: translateY(-7px); } }
+
+@media (max-width: 1023px) {
+  .how { grid-template-columns: 1fr; gap: 20px; padding: 56px var(--gutter); }
+  .how__stage { order: -1; width: min(100%, 60vh); margin-top: 4px; }
+  .how__text { gap: 14px; }
+  .how__text .h-block { order: -1; }
+  .how__list { display: flex; justify-content: space-between; gap: 4px; }
+  .how__list button { font: 500 var(--fs-s) / 1 var(--font); min-height: 32px; color: var(--mute); }
+  .how__desc { max-width: none; font-size: var(--fs-s); line-height: var(--lh-s); min-height: calc(var(--fs-s) * var(--lh-s) * 2); }
+}

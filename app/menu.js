@@ -20,6 +20,7 @@ function render() {
       ${cats.map(([k, n]) => `<button type="button" data-cat="${k}">${n}</button>`).join('')}
     </div>
     <div class="menu__group menu__group--small">
+      <button type="button" data-go="how">Как это шьётся</button>
       <button type="button" data-go="print">Нанесение</button>
       <button type="button" data-go="sewing">Пошив под заказ</button>
       <button type="button" data-go="factory">Производство и шоурум</button>

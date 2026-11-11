@@ -1,5 +1,5 @@
 /* showroom.js — производство и шоурум (план §7.10), условия (§7.11). Пустые поля не показываются.
-   Пока нет кадра цеха, слот показывает ту же вещь, что первый экран. factoryMedia не придумываем. */
+   Кадр цеха (settings.factoryMedia) показывается, только когда файл есть. */
 import { esc } from './data.js';
 import { mountGarment } from './garment.js';
 import { $, $$, copy } from './ui.js';
@@ -69,7 +69,7 @@ function renderTerms() {
   terms.hidden = !rows.length;
 }
 
-/* Кадр цеха, если файл уже есть. Иначе — крупно та же вещь, что на первом экране. Схемы ниже не трогаем. */
+/* Кадр цеха, если файл уже есть. Иначе слот скрыт. */
 function paintFrame() {
   const frame = $('[data-factory-frame]', root);
   if (!frame) return;
@@ -82,34 +82,16 @@ function paintFrame() {
     frame.innerHTML = /\.(mp4|webm)(\?|$)/i.test(fm) ? `<video src="${esc(mediaUrl(fm))}" autoplay muted loop playsinline></video>` : `<img src="${esc(mediaUrl(fm))}" alt="">`;
     return;
   }
-  const hero = heroGarment();
-  if (!hero) {
-    frameView = null;
-    frameKey = '';
-    frame.hidden = true;
-    frame.innerHTML = '';
-    return;
-  }
-  const key = hero.p.id + ':' + hero.color;
-  frame.hidden = false;
-  frame.classList.add('is-garment');
-  if (frameView && frameView.id === hero.p.id && frame.querySelector('.gm')) {
-    frameView.view.setColor(hero.color);
-    frameKey = key;
-    return;
-  }
-  if (frameKey === key && frame.querySelector('.gm')) return;
-  frame.innerHTML = '<div class="gm"></div>';
-  frameView = { id: hero.p.id, view: mountGarment(frame.firstElementChild, hero.p, data, { color: hero.color, variant: 'fit', sizes: '(min-width:1024px) 56vw, 75vw' }) };
-  frameKey = key;
+  frameView = null;
+  frameKey = '';
+  frame.hidden = true;
+  frame.innerHTML = '';
 }
 
 /* схемы оживают, когда на экране */
 function live() {
   const io = new IntersectionObserver(es => es.forEach(x => x.target.classList.toggle('is-live', x.isIntersecting)), { threshold: .2 });
   $$('[data-live]', root).forEach(n => io.observe(n));
-  const hero = document.getElementById('hero');
-  hero?.addEventListener('click', e => { if (!data.settings.factoryMedia && e.target.closest('[data-color]')) paintFrame(); });
 }
 
 root.addEventListener('click', e => { const b = e.target.closest('[data-copy]'); if (b) copy(b.dataset.copy); });

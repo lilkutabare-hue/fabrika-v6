@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" class="is-loading">
+<html lang="ru" class="is-loading" data-view="home">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -21,30 +21,32 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/tokens.css?v=6">
-<link rel="stylesheet" href="styles/base.css?v=9">
-<link rel="stylesheet" href="styles/header.css?v=7">
-<link rel="stylesheet" href="styles/layers.css?v=6">
-<link rel="stylesheet" href="styles/menu.css?v=6">
-<link rel="stylesheet" href="styles/dock.css?v=7">
-<link rel="stylesheet" href="styles/garment.css?v=6">
-<link rel="stylesheet" href="styles/hero.css?v=8">
-<link rel="stylesheet" href="styles/catalog.css?v=7">
-<link rel="stylesheet" href="styles/product.css?v=9">
-<link rel="stylesheet" href="styles/print.css?v=9">
-<link rel="stylesheet" href="styles/cart.css?v=7">
-<link rel="stylesheet" href="styles/services.css?v=7">
-<link rel="stylesheet" href="styles/factory.css?v=6">
-<link rel="stylesheet" href="styles/admin.css?v=6">
+<link rel="stylesheet" href="styles/tokens.css?v=10">
+<link rel="stylesheet" href="styles/base.css?v=10">
+<link rel="stylesheet" href="styles/header.css?v=10">
+<link rel="stylesheet" href="styles/layers.css?v=10">
+<link rel="stylesheet" href="styles/menu.css?v=10">
+<link rel="stylesheet" href="styles/dock.css?v=10">
+<link rel="stylesheet" href="styles/garment.css?v=10">
+<link rel="stylesheet" href="styles/hero.css?v=10">
+<link rel="stylesheet" href="styles/catalog.css?v=10">
+<link rel="stylesheet" href="styles/product.css?v=10">
+<link rel="stylesheet" href="styles/print.css?v=10">
+<link rel="stylesheet" href="styles/cart.css?v=10">
+<link rel="stylesheet" href="styles/services.css?v=10">
+<link rel="stylesheet" href="styles/factory.css?v=10">
+<link rel="stylesheet" href="styles/how.css?v=10">
+<link rel="stylesheet" href="styles/admin.css?v=10">
 </head>
 <body>
 
 <header class="hdr" data-hdr>
-  <a class="hdr__left" href="#print" data-pick-file>Свой принт</a>
-  <a class="hdr__logo" href="#top" aria-label="Fabrika.market — на главную">Fabrika.market</a>
+  <a class="hdr__logo" href="./" data-home aria-label="Fabrika.market — на главную">Fabrika.market</a>
+  <div class="hdr__start">
+    <button type="button" class="hdr__cart" data-open-cart aria-label="Корзина, 0 товаров">Корзина (<span data-cart-count>0</span>)<span class="hdr__added" data-added aria-hidden="true">Добавлено</span></button>
+  </div>
   <div class="hdr__right">
     <button type="button" class="hdr__adm" data-adm-btn hidden>Управление <sup hidden></sup></button>
-    <button type="button" class="hdr__cart" data-open-cart aria-label="Корзина, 0 товаров">Корзина (<span data-cart-count>0</span>)<span class="hdr__added" data-added aria-hidden="true">Добавлено</span></button>
     <button type="button" class="hdr__menu" data-open-menu aria-haspopup="dialog">Меню
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 8h18M3 16h18"/></svg>
     </button>
@@ -53,32 +55,42 @@
 
 <main id="top">
   <!-- 1. Первый экран -->
-  <section class="hero" id="hero" data-hero data-tone="light" aria-labelledby="h1">
+  <section class="hero" id="hero" data-hero data-tone="light" data-in="home" aria-labelledby="h1">
     <div class="hero__stage" data-stage></div>
     <div class="hero__cap">
       <h1 id="h1">Бланки с фабрики</h1>
       <p>Нанесём ваш принт. Сошьём под заказ. От одной штуки.</p>
       <div class="hero__act">
-        <a class="is-catalog btn" href="#blanks" data-go="blanks">Каталог</a>
-        <a class="is-try btn btn--ghost" href="#print" data-pick-file>Примерить свой принт</a>
+        <a class="is-catalog btn" href="#catalog" data-go="catalog">Перейти в каталог</a>
       </div>
       <div class="sw hero__sw" data-swatches aria-label="Цвет"></div>
       <p class="hero__specs" data-specs></p>
     </div>
   </section>
 
-  <!-- 2. Бланки -->
-  <section class="blanks" id="blanks" aria-labelledby="h-blanks">
+  <!-- 2. Как это шьётся: одна вещь проходит цех от ткани до коробки (app/how.js) -->
+  <section class="how" id="how" data-in="home" data-how aria-labelledby="h-how">
+    <div class="how__text">
+      <h2 class="h-block" id="h-how">Как это шьётся</h2>
+      <div class="how__list" data-how-list role="tablist" aria-label="Этапы"></div>
+      <p class="how__desc" data-how-desc aria-live="off"></p>
+    </div>
+    <div class="how__stage" data-how-stage></div>
+  </section>
+
+  <!-- Каталог: отдельный экран (#catalog) -->
+  <section class="blanks" id="blanks" data-in="catalog" aria-labelledby="h-blanks">
     <div class="blanks__head">
-      <h2 class="h-block" id="h-blanks">Бланки</h2>
+      <h2 class="vh" id="h-blanks">Бланки</h2>
       <div class="cats" data-cats role="tablist" aria-label="Категории"></div>
+      <button type="button" class="blanks__try" data-pick-file="catalog" data-try-all>Примерить свой принт на всех вещах</button>
       <button type="button" class="blanks__mine" data-mine aria-pressed="false" hidden><i></i>С моим принтом</button>
     </div>
     <div class="tiles" data-tiles></div>
   </section>
 
   <!-- 3. Два крупных превью: Нанесение и Пошив под заказ -->
-  <section class="services" id="services" aria-label="Нанесение и пошив">
+  <section class="services" id="services" data-in="home" aria-label="Нанесение и пошив">
     <div class="duo">
       <article class="duo__item" id="print" data-which="print" aria-expanded="false">
         <div class="duo__media" data-demo></div>
@@ -150,33 +162,22 @@
   </section>
 
   <!-- 4. Производство и шоурум -->
-  <section class="factory" id="factory" aria-labelledby="h-factory">
+  <section class="factory" id="factory" data-in="home" aria-labelledby="h-factory">
     <div class="factory__head"><h2 class="h-block" id="h-factory">Производство и шоурум</h2></div>
-    <!-- Кадр цеха — settings.factoryMedia. Пока файла нет, слот показывает ту же вещь, что первый экран. «Как это шьётся» этим не заменяется. -->
+    <!-- Кадр цеха — settings.factoryMedia. Пока файла нет, слот скрыт. -->
     <div class="factory__frame" data-factory-frame hidden></div>
     <div class="factory__body">
       <div>
         <p class="addr" data-addr></p>
         <div class="addr-row" data-route></div>
         <div data-route-extra></div>
-        <div id="contact" data-contacts></div>
       </div>
-      <div>
-        <details class="rows__item" open>
-          <summary class="h-block" style="cursor:pointer;list-style:none">Как это шьётся</summary>
-          <div class="line4" data-live>
-            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><rect class="ln" x="20" y="120" width="200" height="50"/><path class="ln d" d="M40 145h160"/><path class="ln s cut" d="M44 70h150"/><g class="scis"><circle class="ln" cx="36" cy="60" r="7"/><circle class="ln" cx="36" cy="82" r="7"/><path class="ln" d="M42 64 62 72M42 78 62 70"/></g></svg></div><h3>Раскрой</h3><p>По своим лекалам — посадка одна и та же от первой штуки до тиража.</p></div>
-            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><path class="ln" d="M40 150V60h120v30"/><path class="ln" d="M160 60h36v44"/><rect class="ln" x="30" y="150" width="190" height="16"/><g class="needle"><path class="ln" d="M186 104v22"/><path class="ln s" d="M186 126v8"/></g><path class="ln s seam" d="M60 146h126"/></svg></div><h3>Пошив</h3><p>Свои швеи и оборудование, без посредников.</p></div>
-            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><path class="ln" d="M120 20v30"/><g class="press"><rect class="ln" x="60" y="50" width="120" height="22"/><path class="ln" d="M120 30v20"/></g><path class="ln" d="M80 110c10 8 70 8 80 0l24 10v60H56v-60z"/><g class="printed"><rect x="98" y="132" width="44" height="26" fill="#E8734A"/></g><path class="ln" d="M40 184h160"/></svg></div><h3>Нанесение</h3><p>DTF, плёнки и вышивка в том же цеху.</p></div>
-            <div class="st"><div class="st__ill"><svg viewBox="0 0 240 200"><path class="ln" d="M20 160h200"/><g class="box"><rect class="ln" x="80" y="90" width="80" height="70"/><path class="ln" d="M80 110h80"/><path class="ln s" d="M120 90v20"/><path class="ln s okm" d="M104 132l10 10 20-20"/></g></svg></div><h3>Контроль</h3><p>Проверяем каждую вещь и отдаём в шоуруме или отправляем.</p></div>
-          </div>
-        </details>
-      </div>
+      <div id="contact" data-contacts></div>
     </div>
   </section>
 
   <!-- 5. Условия -->
-  <section class="terms" id="terms" aria-labelledby="h-terms">
+  <section class="terms" id="terms" data-in="home" aria-labelledby="h-terms">
     <h2 class="h-block" id="h-terms">Условия</h2>
     <div class="rows" data-terms></div>
   </section>
@@ -232,7 +233,7 @@
 <div class="toast" data-toast role="status" aria-live="polite"></div>
 <input type="file" data-file-input accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf" hidden>
 
-<script type="module" src="app/main.js?v=6"></script>
+<script type="module" src="app/main.js?v=10"></script>
 <style id="hero-type">
 h1{font-family:Jost,sans-serif!important;font-weight:500!important;font-size:32px!important;letter-spacing:0!important}
 @media(max-width:1023px){h1{font-size:24px!important}}
