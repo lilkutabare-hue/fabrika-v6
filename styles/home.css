@@ -36,8 +36,9 @@
 .case__ph img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ---------- Отзывы с Яндекс Карт (app/extras.js) ---------- */
-.revs { padding: 96px var(--gutter) 0; }
-.revs__box { max-width: 760px; height: 640px; background: #F4F4F2; }
+/* виджет Яндекса не шире 760 px — блок целиком держим колонкой по центру, как каталог */
+.revs { padding: 96px var(--gutter) 0; max-width: calc(760px + 2 * var(--gutter)); margin-inline: auto; }
+.revs__box { height: 640px; background: #F4F4F2; }
 .revs__box iframe { width: 100%; height: 100%; border: 0; display: block; }
 
 .terms { padding-top: 96px; }
