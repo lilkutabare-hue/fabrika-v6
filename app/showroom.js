@@ -36,7 +36,7 @@ function render() {
   const extra = $('[data-route-extra]', root);
   const steps = (r.steps || []).filter(s => s.text || s.photo);
   extra.innerHTML = [
-    r.hours ? `<p><span class="t-mute">Часы</span> ${esc(r.hours)}</p>` : '',
+    r.hours ? `<p class="fmap__hours">${esc(r.hours)}</p>` : '',
     r.note ? `<p class="t-s">${esc(r.note)}</p>` : '',
     r.map ? `<div class="rmap"><img src="${mediaUrl(r.map)}" alt="Схема проезда" loading="lazy"></div>` : '',
     steps.length ? `<details class="rows__item"><summary class="t-s">Как пройти</summary><div class="walk">${steps.map((s, i) => `<figure><div class="ph">${s.photo ? `<img src="${mediaUrl(s.photo)}" alt="" loading="lazy">` : ''}</div><figcaption><span>${i + 1}</span>${esc(s.text)}</figcaption></figure>`).join('')}</div></details>` : '',

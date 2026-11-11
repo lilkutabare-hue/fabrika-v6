@@ -1,0 +1,79 @@
+/* Отдельные страницы: оферта, политика, производство для брендов (собирает tools/build_pages.py).
+   Тот же язык, что на главной: белый лист, три кегля, прямые углы, чёрная кнопка. */
+body.pg { font-family: Jost, system-ui, sans-serif; }
+.pg .hdr a { text-decoration: none; }
+.pg__main { padding-top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px)); }
+.pg .btn { border-radius: 0; background: #000; color: #fff; height: 48px; padding: 0 22px; font-size: 12px; font-weight: 700; }
+.pg .foot { margin-top: 96px; }
+
+.pg__top { padding: 72px var(--gutter) 56px; max-width: 1128px; margin-inline: auto; display: grid; gap: 14px; justify-items: start; }
+.pg__top h1 { font: 500 var(--fs-l) / var(--lh-l) var(--disp); max-width: 22ch; text-wrap: balance; }
+.pg__sub { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); max-width: 64ch; }
+.pg__lead { font-size: var(--fs-m); max-width: 44ch; }
+.pg__act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 10px; }
+.pg__link { font-size: var(--fs-m); text-decoration: underline; text-underline-offset: 4px; }
+
+/* ---------- Документ: оглавление слева, текст колонкой ---------- */
+.doc { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 0 72px; max-width: 1128px; margin-inline: auto; padding: 0 var(--gutter); align-items: start; }
+.toc { position: sticky; top: calc(var(--hdr-h) + 24px); display: grid; gap: 2px; max-height: calc(100vh - var(--hdr-h) - 48px); overflow-y: auto; scrollbar-width: none; }
+.toc::-webkit-scrollbar { display: none; }
+.toc a { display: grid; grid-template-columns: 26px 1fr; padding: 6px 0; font-size: 13px; line-height: 1.35; color: var(--mute); transition: color var(--dur-state); }
+.toc a:hover, .toc a[aria-current="true"] { color: var(--ink); }
+.toc a[aria-current="true"] { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.toc a span { font-variant-numeric: tabular-nums; text-decoration: none; display: inline-block; }
+.doc__body { max-width: 68ch; font-size: var(--fs-m); line-height: 1.6; }
+.doc__body section { padding: 0 0 44px; scroll-margin-top: calc(var(--hdr-h) + 20px); }
+.doc__body h2 { font: 500 var(--fs-m) / 1.3 var(--disp); text-transform: uppercase; display: grid; grid-template-columns: 44px 1fr; margin: 0 0 18px -44px; }
+.doc__body h2 span { color: var(--mute); }
+.doc__body p { margin: 0 0 12px; overflow-wrap: anywhere; }
+.doc__cl { position: relative; }
+.doc__cl span { position: absolute; left: -44px; top: 4px; width: 36px; font-size: var(--fs-s); line-height: 1.6; color: var(--mute); font-variant-numeric: tabular-nums; }
+.doc__list { display: grid; gap: 8px; margin: 0 0 14px; }
+.doc__list li { position: relative; padding-left: 18px; }
+.doc__list li::before { content: ""; position: absolute; left: 0; top: .8em; width: 8px; height: 1px; background: var(--ink); }
+.doc__body a { text-decoration: underline; text-underline-offset: 3px; }
+.doc__intro { padding-bottom: 32px; }
+
+/* ---------- Производство для брендов ---------- */
+.pg__top--wide { max-width: none; padding-bottom: 64px; }
+.pg__jump { display: flex; flex-wrap: wrap; gap: 6px 24px; margin-top: 28px; font-size: 13px; color: var(--mute); }
+.pg__jump a:hover { color: var(--ink); }
+.dirs { display: grid; }
+.dir { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; scroll-margin-top: var(--hdr-h); }
+.dir__ph { aspect-ratio: 1; display: grid; place-items: center; background: var(--paper); }
+.dir__ph img { width: 78%; height: 78%; object-fit: contain; }
+.dir:nth-child(even) .dir__ph { order: 2; }
+.dir__text { padding: 48px var(--gutter); max-width: 620px; justify-self: center; display: grid; gap: 14px; }
+.dir__text h2 { font: 500 var(--fs-l) / var(--lh-l) var(--disp); display: grid; gap: 10px; margin-bottom: 8px; }
+.dir__text h2 span { font: 400 var(--fs-s) / 1 var(--font); color: var(--mute); font-variant-numeric: tabular-nums; }
+.dir__text p { line-height: 1.6; }
+.pg__band { padding: 96px var(--gutter) 0; display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px 72px; max-width: 1128px; margin-inline: auto; }
+.pg__steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; counter-reset: st; }
+.pg__steps li { display: grid; gap: 8px; align-content: start; counter-increment: st; }
+.pg__steps li::before { content: counter(st, decimal-leading-zero); font-size: var(--fs-s); color: var(--mute); }
+.pg__steps b { font: 500 var(--fs-m) / 1.2 var(--disp); text-transform: uppercase; }
+.pg__steps span { font-size: var(--fs-s); line-height: var(--lh-s); color: var(--mute); }
+.pg__facts { grid-column: 2; display: flex; flex-wrap: wrap; gap: 20px 56px; margin: 28px 0 0; padding-top: 28px; border-top: 1px solid var(--tone-2); }
+.pg__facts div { display: grid; gap: 4px; }
+.pg__facts dt { font-size: var(--fs-s); color: var(--mute); }
+.pg__facts dd { margin: 0; font: 500 var(--fs-l) / 1.1 var(--disp); }
+.pg__cta { padding: 120px var(--gutter) 24px; display: grid; justify-items: center; text-align: center; gap: 20px; }
+.pg__cta .h-big { max-width: 24ch; }
+.pg__cta .pg__act { justify-content: center; }
+
+@media (max-width: 1023px) {
+  .pg__top { padding: 40px var(--gutter) 36px; }
+  .pg .foot { margin-top: 56px; }
+  .doc { grid-template-columns: 1fr; gap: 28px; }
+  .toc { position: static; max-height: none; padding-bottom: 20px; border-bottom: 1px solid var(--tone-2); }
+  .doc__body h2 { margin-left: 0; grid-template-columns: 32px 1fr; }
+  .doc__cl span { position: static; display: block; width: auto; margin-bottom: 2px; }
+  .dir { grid-template-columns: 1fr; }
+  .dir:nth-child(even) .dir__ph { order: 0; }
+  .dir__ph { aspect-ratio: 5 / 4; }
+  .dir__text { padding: 8px var(--gutter) 48px; justify-self: start; }
+  .pg__band { grid-template-columns: 1fr; padding-top: 24px; }
+  .pg__steps { grid-template-columns: 1fr; gap: 20px; }
+  .pg__facts { grid-column: 1; gap: 18px 32px; }
+  .pg__cta { padding-top: 72px; }
+}

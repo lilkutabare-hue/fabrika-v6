@@ -10,6 +10,9 @@ import * as sewing from './sewing.js';
 import * as showroom from './showroom.js';
 import * as admin from './admin.js';
 import * as how from './how.js';
+import * as fmap from './map.js';
+import * as channel from './channel.js';
+import * as extras from './extras.js';
 import { $, $$, toast } from './ui.js';
 import { mountHop } from './hop.js';
 
@@ -231,6 +234,7 @@ function initRoute(data) {
   const h = decodeURIComponent(location.hash.slice(1));
   if (!h) return;
   if (viewFromHash() === 'catalog') { setView('catalog', { push: false, instant: true }); return; }
+  if (['how', 'print', 'sewing', 'factory', 'contact', 'terms', 'channel'].includes(h)) { requestAnimationFrame(() => goTo(h)); return; }
   const [id, color] = h.split('/');
   if (data.products.some(p => p.id === id)) {
     setView('catalog', { push: false, instant: true });   /* товар по прямой ссылке открывается поверх каталога */
@@ -273,6 +277,9 @@ loadData()
     sewing.init(data, api);
     showroom.init(data);
     how.init();
+    fmap.init(data);
+    channel.init();
+    extras.init(data);
     cart.onCart(items => {
       const n = items.reduce((s, i) => s + i.qty, 0);
       $$('[data-cart-count]').forEach(x => { x.textContent = n; if (x.classList.contains('dock__n')) x.hidden = !n; });

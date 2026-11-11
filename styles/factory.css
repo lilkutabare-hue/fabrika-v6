@@ -119,3 +119,50 @@
   .terms { padding-bottom: 56px; }
   .foot { flex-direction: column; }
 }
+
+/* ---------- Карта производства (app/map.js) ----------
+   Карта от края до края, адрес и маршрут — белой панелью поверх. На телефоне панель уходит под карту. */
+.factory { padding-top: 0; }
+.fmap { position: relative; height: min(80vh, 760px); min-height: 540px; background: #F4F4F2; overflow: hidden; }
+/* двойной класс: стиль MapLibre ставит контейнеру position: relative, а нам нужен слой во весь блок */
+.fmap .fmap__canvas { position: absolute; inset: 0; opacity: 0; transition: opacity .6s var(--ease-out); }
+.fmap.is-ready .fmap__canvas { opacity: 1; }
+.fmap__panel {
+  position: absolute;
+  left: var(--gutter); bottom: var(--gutter);
+  width: min(440px, calc(100% - 2 * var(--gutter)));
+  padding: 28px 28px 30px;
+  background: var(--paper);
+  display: grid; gap: 14px; justify-items: start;
+}
+.fmap__panel .addr { margin-top: 6px; }
+.fmap__hours { color: var(--mute); }
+.fmap__extra:empty { display: none; }
+.fmap__extra { display: grid; gap: 10px; }
+.fmap__ctl { position: absolute; right: var(--gutter); top: calc(var(--gutter) + 8px); display: grid; gap: 1px; background: var(--tone-2); }
+.fmap__ctl button { width: 40px; height: 40px; display: grid; place-items: center; background: var(--paper); color: var(--ink); }
+.fmap__ctl button:hover { background: #F4F4F2; }
+.fmap__ctl svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; }
+/* Метка: подпись на чёрной плашке, под ней тонкая ножка и коралловый квадрат на самом здании */
+.fmap__pin { display: grid; justify-items: center; pointer-events: none; }
+.fmap__pin span { padding: 7px 10px 8px; background: var(--ink); color: #fff; font: 500 12px / 1 var(--font); letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; }
+.fmap__pin i { display: block; width: 1px; height: 34px; background: var(--ink); position: relative; }
+.fmap__pin i::after { content: ""; position: absolute; left: -6px; bottom: -6px; width: 13px; height: 13px; background: var(--sig); box-shadow: 0 0 0 2px #fff; }
+/* Служебное MapLibre — под сайт: без скруглений и теней, мелко и тихо */
+.fmap .maplibregl-ctrl-attrib { background: rgba(255, 255, 255, .86); font: 400 10px / 1.4 var(--font); color: var(--mute); border-radius: 0; }
+.fmap .maplibregl-ctrl-attrib a { color: inherit; }
+.fmap .maplibregl-ctrl-attrib-button { border-radius: 0; }
+.fmap .maplibregl-cooperative-gesture-screen { font: 500 var(--fs-m) / 1.4 var(--font); background: rgba(11, 11, 11, .5); }
+.fmap .maplibregl-canvas:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+
+.factory__contacts { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 40px; padding: 28px var(--gutter) 0; }
+.factory__contacts .contacts { display: flex; flex-wrap: wrap; gap: 8px 32px; }
+
+@media (max-width: 1023px) {
+  .fmap { height: auto; min-height: 0; overflow: visible; background: none; display: flex; flex-direction: column; }
+  .fmap .fmap__canvas { position: relative; inset: auto; height: 62vh; min-height: 360px; max-height: 520px; background: #F4F4F2; opacity: 1; }
+  .fmap__panel { position: static; width: auto; padding: 24px var(--gutter) 0; }
+  .fmap__ctl { top: 12px; right: 12px; }
+  .factory__contacts { flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 24px; }
+  .factory__contacts .contacts { flex-direction: column; gap: 4px; }
+}

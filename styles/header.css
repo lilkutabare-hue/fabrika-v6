@@ -41,7 +41,7 @@
   white-space: nowrap;
 }
 .hdr > * { grid-row: 1; }
-/* Левый край шапки: корзина. Класс не .hdr__left — на том висит волна букв «Свой принт» (hop.js), корзине она не нужна. */
+/* Левый край шапки: корзина. Класс не .hdr__left — на нём hop.js вешает волну букв, корзине она не нужна. */
 .hdr__start { justify-self: start; grid-column: 1; display: flex; align-items: center; }
 .hdr__logo {
   grid-column: 2;

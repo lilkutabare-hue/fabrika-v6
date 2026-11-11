@@ -1,0 +1,50 @@
+/* Блоки главной вокруг производства: канал в Telegram, отзывы, работы для клиентов. */
+
+/* ---------- Канал в Telegram (app/channel.js) ---------- */
+.chan { padding: 96px var(--gutter) 0; }
+.chan__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 28px; }
+.chan__go { font: 500 13px / 1 var(--font); letter-spacing: -.01em; text-decoration: underline; text-underline-offset: 4px; }
+.chan__feed { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.post { display: grid; align-content: start; gap: 8px; min-width: 0; font-size: var(--fs-s); line-height: var(--lh-s); }
+.post__ph { display: block; aspect-ratio: 4 / 5; background: #F4F4F2; overflow: hidden; }
+.post__ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease-big); }
+.post time { color: var(--mute); margin-top: 4px; }
+.post__text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; white-space: pre-line; }
+/* пост без картинки — крупный текст в той же клетке */
+.post--text { aspect-ratio: 4 / 5; padding: 20px; background: #F4F4F2; align-content: space-between; }
+.post--text time { order: 2; margin: 0; }
+.post--text .post__text { font-size: var(--fs-m); line-height: 1.4; -webkit-line-clamp: 9; line-clamp: 9; }
+@media (hover: hover) { .post:hover .post__ph img { transform: scale(1.03); } }
+/* пока постов нет: одна фраза канала и кнопка */
+.chan__empty { display: grid; justify-items: start; gap: 24px; }
+.chan__empty .h-big { max-width: 24ch; }
+
+@media (max-width: 1023px) {
+  .chan { padding-top: 56px; }
+  .chan__head { padding-bottom: 20px; }
+  .chan__feed { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); }
+  .chan__feed::-webkit-scrollbar { display: none; }
+  .post { flex: 0 0 68vw; max-width: 300px; scroll-snap-align: start; }
+}
+
+/* ---------- Работы для клиентов (app/extras.js) ---------- */
+.cases { padding: 0 var(--gutter) 96px; }
+.cases .h-block { margin-bottom: 28px; }
+.cases__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 20px; }
+.case { display: grid; align-content: start; gap: 4px; font-size: var(--fs-s); line-height: var(--lh-s); }
+.case__ph { display: block; aspect-ratio: 4 / 5; background: #F4F4F2; overflow: hidden; margin-bottom: 8px; }
+.case__ph img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- Отзывы с Яндекс Карт (app/extras.js) ---------- */
+.revs { padding: 96px var(--gutter) 0; }
+.revs__box { max-width: 760px; height: 640px; background: #F4F4F2; }
+.revs__box iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+.terms { padding-top: 96px; }
+@media (max-width: 1023px) {
+  .cases { padding-bottom: 56px; }
+  .cases__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
+  .revs { padding-top: 56px; }
+  .revs__box { height: 560px; }
+  .terms { padding-top: 56px; }
+}

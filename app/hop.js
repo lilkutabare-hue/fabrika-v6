@@ -1,4 +1,5 @@
-/* hop.js — волна букв только у «Свой принт» (.hdr__left).
+/* hop.js — волна букв только у «Свой принт»: ссылка «Примерить свой принт…» в каталоге ([data-hop-wave])
+   и прежняя ссылка в шапке (.hdr__left), если она вернётся.
    Как setupButtonAnimations у Wispr Flow, но через Web Animations API.
    Шаг буквы 1 с (gsap duration: 1) линейно делится на три кадра:
    y -20% / -5°, затем +20% / +5°, затем 0. Старт буквы — i * 0.06 с.
@@ -6,7 +7,7 @@
    На таче и при prefers-reduced-motion буквы не режем. */
 const FINE = '(hover: hover) and (pointer: fine)';
 const CALM = '(prefers-reduced-motion: reduce)';
-const TARGET = '.hdr__left';
+const TARGET = '.hdr__left, [data-hop-wave]';
 const SKIP = '.dock, .hdr__added, sup, .hop, .hop-run, [data-cart-count]';
 
 const LETTER_MS = 1000;

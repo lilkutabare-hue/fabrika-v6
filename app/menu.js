@@ -29,7 +29,7 @@ function render() {
     </div>
     <div class="menu__group menu__group--util">
       <a href="https://fabrika.market/sale">Распродажа</a>
-      <a href="https://fabrika.market/production">Производство для брендов</a>
+      <a href="production.html">Производство для брендов</a>
       <a href="https://t.me/${esc(data.settings.manager || 'trtmoscow')}" target="_blank" rel="noopener">Telegram</a>
     </div>`;
 }

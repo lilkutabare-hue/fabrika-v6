@@ -142,3 +142,12 @@ tools/                build_media.py · shots.mjs · тестовые макет
 10. Делаем ли бирки и упаковку под бренд как отдельную услугу.
 
 Товары без рендеров показаны эскизами: футболка классик, олимпийка, свитшот оверсайз. Бомберы, укороченные худи и широкие штаны есть на рендерах, но их нет в каталоге v5 — добавить товары в админке, затем дописать строки в `media-map.json`.
+
+## Главная и страницы, 11.11.2026
+
+- **Два экрана.** Главная и каталог живут в одном документе (`data-view` на `<html>`, каталог — `#catalog`). Адреса `#sewing`, `#factory`, `#channel` и т. п. открывают нужный блок главной.
+- **Карта** (`app/map.js`, стили в `styles/factory.css`). MapLibre с открытыми тайлами OpenStreetMap у OpenFreeMap, ключ не нужен. Вид карты — `data/map-style.json`, собирается `python3 tools/build_map_style.py`. Точка — `route.point` в `data/catalog.json` (долгота, широта; взята из OpenStreetMap для дома «1 с11, улица Мнёвники»). Часы — `route.hours`, взяты со страницы контактов fabrika.market.
+- **Канал в Telegram** (`app/channel.js`). Лента лежит в `data/channel.json` и `media/channel/`, собирает `python3 tools/fetch_channel.py`; по расписанию — `.github/workflows/channel.yml`. Пока постов нет, блок показывает приглашение подписаться.
+- **Отзывы и работы** (`app/extras.js`). Отзывы включаются номером организации Яндекс Карт в `settings.yandexOrg`; работы — списком в `data/cases.json` (`title`, `text`, `photo`, `url`). Пока данных нет, блоков на странице нет.
+- **Страницы** `production.html`, `oferta.html`, `privacy.html` собирает `python3 tools/build_pages.py`. Тексты оферты и политики — `pages/*.txt`, дословно с fabrika.market; править там и пересобирать.
+- **Сцена «Как это шьётся»** — `app/how.js`, одна шкала времени на все дорожки.
