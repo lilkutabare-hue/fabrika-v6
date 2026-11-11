@@ -78,7 +78,8 @@ function render() {
     } else {
       body.innerHTML = `<div class="cart__list">${items.map(it => {
         const p = data.products.find(x => x.id === it.product.id);
-        const pr = it.prints?.[0];
+        const pr = (it.prints || []).find(x => x.place !== 'label');
+        const lb = (it.prints || []).find(x => x.place === 'label');
         const m = pr && data.methods.find(x => x.id === pr.method);
         return `<div class="ci" data-key="${esc(it.key)}">
           <div class="ci__media" data-gm="${esc(it.product.id)}" data-color="${esc(it.color)}"></div>
@@ -86,6 +87,7 @@ function render() {
             <b>${esc(it.product.name)}</b>
             <span class="t-mute">${esc([colorName(data, it.color), it.size, it.gram].filter(Boolean).join(' · '))}</span>
             ${pr ? `<span>+ ${esc(m?.name || pr.method)}${pr.priceFrom ? ' от ' + rub(pr.priceFrom) : ''}${pr.file ? ' · ' + esc(pr.file.name) : ''}</span>` : ''}
+            ${lb ? `<span>+ Бирка${lb.file ? ' · ' + esc(lb.file.name) : ''}</span>` : ''}
             <span>${rub(it.unitPrice * it.qty)}</span>
           </div>
           <div class="ci__act">

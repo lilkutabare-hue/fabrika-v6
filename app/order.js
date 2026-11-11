@@ -40,7 +40,7 @@ export function buildOrder({ items = [], sewing = null, extras = {} }) {
   return order;
 }
 
-const NAMES = { chest: 'грудь слева', 'chest-r': 'грудь справа', center: 'центр', full: 'вся грудь', 'sleeve-l': 'левый рукав', 'sleeve-r': 'правый рукав', hem: 'низ', pocket: 'карман', nape: 'под воротом', back: 'спина', hoodie: 'капюшон', leg: 'бедро', 'leg-l': 'левая штанина', knee: 'колено', hip: 'пояс', custom: 'своё место' };
+const NAMES = { label: 'бирка (место и размер подтвердит менеджер)', chest: 'грудь слева', 'chest-r': 'грудь справа', center: 'центр', full: 'вся грудь', 'sleeve-l': 'левый рукав', 'sleeve-r': 'правый рукав', hem: 'низ', pocket: 'карман', nape: 'под воротом', back: 'спина', hoodie: 'капюшон', leg: 'бедро', 'leg-l': 'левая штанина', knee: 'колено', hip: 'пояс', custom: 'своё место' };
 const placeName = (side, place) => NAMES[place] || place;
 
 export function orderText(order, data) {
@@ -76,7 +76,7 @@ export function orderText(order, data) {
   for (const [k, n] of [['contact', 'Связь'], ['delivery', 'Доставка'], ['deadline', 'Срок'], ['comment', 'Комментарий']]) if (order[k] && !(order.sewing && k !== 'contact')) L.push(`${n}: ${order[k]}`);
   return L.join('\n');
 }
-const side = s => s === 'back' ? 'спина' : 'перёд';
+const side = s => s === 'back' ? 'спина' : s === 'inside' ? 'внутри' : 'перёд';
 
 /* Пустой settings.api: с вкладки уходит только текст. Файл остаётся у человека, его кладут в чат. */
 export const TEXT_ONLY_CAPTION = 'Уходит текст, файл надо приложить в чат';

@@ -76,6 +76,31 @@ export function presetsFor(product, side = 'front') {
   if (b === 'top') return back ? TOP_BACK : TOP_FRONT;
   return back ? TOPS_BACK : TOPS_FRONT;
 }
+/* Бирка: печать внутри вещи. Место — внутренняя сторона спинки под воротом (у штанов и шорт — пояс сзади),
+   на рендере спереди она видна в вырезе. Доли холста вещи: центр и ширина; замерено по рендерам.
+   Для отдельной вещи место можно задать в каталоге: "labelSpot": [cx, cy, w]. */
+/* [cx, dy, w]: dy — на сколько ниже верхнего края вещи по центру стоит середина бирки (доля высоты вещи).
+   Верхний край ищет сцена по самой картинке: у разных цветов одной вещи ворот на рендере стоит на разной высоте. */
+const LABEL = {
+  tee: [.50, .027, .07], long: [.50, .030, .07], sweat: [.50, .035, .07], olymp: [.50, .035, .07],
+  hood: [.50, .090, .08], zhood: [.50, .085, .08],
+};
+/* на этих рендерах внутренняя сторона не видна (топ — вырез без спинки, штаны и шорты — пояс закрыт):
+   бирка уходит в заказ, но на вещи её не рисуем, чтобы не показывать её снаружи */
+const LABEL_UNSEEN = /^(top|pants|shorts)$/;
+/* у эскизов (вещь без рендера) ворот нарисован ниже края кадра — высота от верха эскиза */
+const LABEL_SKETCH = { tops: .135, hood: .17 };
+export function labelSpot(product, sketch = false) {
+  const own = Array.isArray(product.labelSpot) && product.labelSpot.length === 3 ? product.labelSpot : null;
+  const base = BASE_TYPE[product.type] || product.type;
+  const waist = /pants|shorts/.test(product.type) || /pants|shorts/.test(base);
+  const where = waist ? 'внутри, на поясе сзади' : 'внутри, под воротом';
+  if (!own && (LABEL_UNSEEN.test(product.type) || LABEL_UNSEEN.test(base))) return { hidden: true, cx: .5, dy: 0, w: .07, where };
+  const [cx, dy, w] = own || LABEL[product.type] || LABEL[base] || LABEL.tee;
+  if (sketch) return { cx, w, where, cy: /hood/.test(product.type) ? LABEL_SKETCH.hood : LABEL_SKETCH.tops };
+  return { cx, dy, w, where };
+}
+
 export function placesFor(product, side) { return presetsFor(product, side).map(p => [p.k, p.name]); }
 export function preset(product, side, k) {
   const list = presetsFor(product, side);

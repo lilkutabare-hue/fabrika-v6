@@ -3,7 +3,7 @@
    карту смещения из самого рендера. Руки: тянуть, щипок, поворот двумя пальцами, ручки размера и поворота,
    колесо/щипок приближает вещь, стрелки двигают, отмена/повтор, «сравнить с чистым». */
 import { analyze, runChecks, dpiFor, setBg, revokeArt } from './preflight.js';
-import { preset, defaultPlace, presetsFor, garmentMm } from './zones.js';
+import { preset, defaultPlace, presetsFor, garmentMm, labelSpot } from './zones.js';
 import { artHTML, artClass, methodById, defaultFilm } from './methods.js';
 import { fileStore } from '../order.js';
 import { isDark } from '../garment.js';
@@ -24,6 +24,7 @@ export const state = {
   flip: false,
   folds: true,        /* складки ткани на макете */
   checks: [],
+  label: null,        /* бирка: { art, w } — отдельный файл, печатается внутри под воротом; w — ширина от ширины вещи */
 };
 const subs = new Set();
 export function subscribe(fn) { subs.add(fn); return () => subs.delete(fn); }
@@ -67,6 +68,70 @@ export function clearArt() {
   if (state.art) fileStore.delete(state.art.id);
   state.art = null; state.checks = []; emit();
 }
+/* Верхний край вещи по центру кадра (доля высоты картинки): первая непрозрачная точка в средней полосе.
+   Считается один раз на картинку; пока не посчитан — null, потом зовёт onReady. */
+const edgeCache = new Map();
+function topEdge(img, onReady) {
+  const src = img?.currentSrc || img?.src;
+  if (!src) return null;
+  if (edgeCache.has(src)) return edgeCache.get(src);
+  edgeCache.set(src, null);
+  const probe = new Image();
+  probe.onload = () => {
+    let edge = 0;
+    try {
+      const W = 60, H = Math.max(1, Math.round(60 * probe.naturalHeight / probe.naturalWidth));
+      const c = document.createElement('canvas'); c.width = W; c.height = H;
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(probe, 0, 0, W, H);
+      const d = ctx.getImageData(Math.round(W * .47), 0, Math.max(1, Math.round(W * .06)), H);
+      for (let y = 0; y < H && !edge; y++) for (let x = 0; x < d.width; x++) if (d.data[(y * d.width + x) * 4 + 3] > 128) { edge = y / H; break; }
+    } catch { edge = 0; }
+    edgeCache.set(src, edge);
+    onReady?.();
+  };
+  probe.onerror = () => { edgeCache.set(src, 0); onReady?.(); };
+  probe.src = src;
+  return null;
+}
+
+/* ---------- бирка ----------
+   Второй файл в том же заказе. Не двигается рукой: стоит на своём месте (zones.labelSpot), меняется только размер.
+   В отмену и повтор не входит, «Убрать макет» её не трогает. */
+export const LABEL_MIN = .04, LABEL_MAX = .14;
+export async function setLabelFile(file) {
+  if (!file) return;
+  const art = await analyze(file);
+  if (state.label) { revokeArt(state.label.art); fileStore.delete(state.label.art.id); }
+  fileStore.set(art.id, file);
+  state.label = { art, w: state.label?.w || null };
+  emit();
+  return art;
+}
+export function clearLabel() {
+  if (!state.label) return;
+  revokeArt(state.label.art); fileStore.delete(state.label.art.id);
+  state.label = null; emit();
+}
+export function setLabel(patch) { if (state.label) { Object.assign(state.label, patch); emit(); } }
+export function toggleLabelBg() { if (state.label?.art.bg) { setBg(state.label.art, !state.label.art.bg.on); emit(); } }
+export function labelSpec(product, data) {
+  const lb = state.label;
+  if (!lb) return null;
+  const sp = labelSpot(product), art = lb.art, m = methodById(data, 'dtf');
+  return {
+    method: m.id, film: null,
+    side: 'inside', place: 'label',
+    width_mm: null, height_mm: null, offset_mm: null,
+    center: null,                          /* место бирки не выбирают: оно одно, его подтверждает менеджер */
+    scale_pct: Math.round((lb.w || sp.w) * 100),
+    rotate_deg: 0, mirrored: false,
+    file: { id: art.id, name: art.name, type: art.type, px: art.bg ? art.bg.src.px : art.px, hasAlpha: art.bg ? art.bg.src.hasAlpha : art.hasAlpha, dpi: null, bgRemoved: !!art.bg?.on },
+    checks: runChecks(art, m, null),
+    priceFrom: 0,                          /* цену бирки сайт не знает — её назовёт менеджер */
+  };
+}
+
 export function set(patch, { history = true } = {}) { Object.assign(state, patch); if (history) commit(); else emit(); }
 
 /* Пресет: центр и размер прыгают, дальше человек двигает как хочет */
@@ -156,7 +221,7 @@ function ensureFilter() {
 export function mountStage(box, product, data, opts) {
   /* не innerHTML += : он пересоздал бы уже смонтированную вещь и потерял её обработчики */
   box.insertAdjacentHTML('beforeend', `
-    <div class="zone"><div class="art" hidden><div class="art__body"></div><div class="art__shadeclip"><img class="art__shade" alt="" aria-hidden="true"></div></div></div>
+    <div class="zone"><div class="tag art--asis" hidden></div><div class="art" hidden><div class="art__body"></div><div class="art__shadeclip"><img class="art__shade" alt="" aria-hidden="true"></div></div></div>
     <div class="zone-ui"><i class="zone__axis zone__axis--x" aria-hidden="true"></i><i class="zone__axis zone__axis--y" aria-hidden="true"></i>
       <div class="art-ui" hidden><i class="art__rotate" aria-hidden="true"></i><i class="art__handle" aria-hidden="true"></i></div></div>
     <button type="button" class="zone__empty"><span>Положите макет на вещь</span></button>`);
@@ -197,12 +262,50 @@ export function mountStage(box, product, data, opts) {
     }
   }
 
+  /* бирка: свой слой под макетом, на своём месте; видна только спереди, в вырезе */
+  const tag = zone.querySelector('.tag');
+  function layoutTag() {
+    const lb = state.label, show = !!lb && state.side === 'front';
+    tag.hidden = !show;
+    if (!show) return;
+    /* место бирки задано в долях самой вещи, а вещь вписана в квадрат сцены по contain — находим её рамку внутри зоны */
+    const zw = zone.clientWidth || 1, zh = zone.clientHeight || 1;
+    const zr = zone.getBoundingClientRect(), k = zw / (zr.width || 1);
+    const img = box.querySelector('.gm .gm__img.is-on'), svg = box.querySelector('.gm svg.is-on');
+    let gx = 0, gy = 0, gw = zw, gh = zh, sketch = false;
+    if (img && img.naturalWidth) {
+      const gr = img.getBoundingClientRect(), r = Math.min(gr.width / img.naturalWidth, gr.height / img.naturalHeight);
+      gw = img.naturalWidth * r * k; gh = img.naturalHeight * r * k;
+      gx = (gr.left - zr.left) * k + (gr.width * k - gw) / 2; gy = (gr.top - zr.top) * k + (gr.height * k - gh) / 2;
+    } else if (svg) {
+      const sr = svg.getBoundingClientRect();
+      gx = (sr.left - zr.left) * k; gy = (sr.top - zr.top) * k; gw = sr.width * k; gh = sr.height * k; sketch = true;
+    }
+    const sp = labelSpot(product, sketch);
+    if (sp.hidden) { tag.hidden = true; return; }
+    /* середина бирки: у эскиза — готовая доля, у рендера — верхний край вещи по центру плюс отступ */
+    let cy = sp.cy;
+    if (cy == null) {
+      const edge = topEdge(img, () => layoutTag());
+      if (edge == null) { tag.hidden = true; return; }      /* край ещё считается — покажем, когда посчитается */
+      cy = edge + sp.dy;
+    }
+    const ratio = lb.art.px ? lb.art.px[1] / lb.art.px[0] : .5;
+    const w = (lb.w || sp.w) * gw, h = w * ratio;
+    tag.style.width = w + 'px'; tag.style.height = h + 'px';
+    tag.style.left = (gx + sp.cx * gw - w / 2) + 'px'; tag.style.top = (gy + cy * gh - h / 2) + 'px';
+    const key = lb.art.id + '|' + lb.art.url;
+    if (tag.dataset.key !== key) { tag.dataset.key = key; tag.innerHTML = artHTML(lb.art, { preview: 'asis' }, null); }
+  }
+
   function layout() {
     ensurePlace(product);
     applyMask();
     const a = state.art;
     box.classList.toggle('has-art', !!a);
+    box.classList.toggle('has-tag', !!state.label);
     art.hidden = artUi.hidden = !a;
+    layoutTag();
     if (!a) return;
     const ratio = a.px ? a.px[1] / a.px[0] : 1;
     const zw = zone.clientWidth || 1, zh = zone.clientHeight || 1;

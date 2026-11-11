@@ -6,7 +6,7 @@ import { mountGarment, hasSide, isDark, mediaFor } from './garment.js';
 import * as layers from './layers.js';
 import * as cart from './cart.js';
 import * as print from './print/stage.js';
-import { presetsFor, garmentMm } from './print/zones.js';
+import { presetsFor, garmentMm, labelSpot } from './print/zones.js';
 import { methodById, publicMethods, defaultFilm, methodLine, artHTML, artClass } from './print/methods.js';
 import { $, $$, toast, reduced } from './ui.js';
 import { renderMockup } from './print/mockup.js';
@@ -152,12 +152,53 @@ function itemPanel() {
 function printPanel(m) {
   const st = print.state, a = st.art;
   if (S.more) return morePanel();
-  const tabs = [['art', 'Макет'], ['place', 'Где и как'], ['item', 'Вещь']];
-  if (!a) S.tab = 'art';
+  const tabs = [['art', 'Макет'], ['place', 'Где и как'], ['label', 'Бирка'], ['item', 'Вещь']];
+  /* без макета открыты «Макет» и «Бирка»; с одной биркой — ещё и «Вещь», чтобы выбрать цвет и размер */
+  if (!a && S.tab !== 'label' && !(S.tab === 'item' && print.state.label)) S.tab = 'art';
   return `
-    <div class="seg pv__subtabs" role="tablist">${tabs.map(([k, n]) => `<button type="button" role="tab" data-tab="${k}" aria-pressed="${S.tab === k}" ${k !== 'art' && !a ? 'disabled' : ''}>${n}</button>`).join('')}</div>
-    <div class="pt" data-pt>${S.tab === 'art' ? artTab(m) : S.tab === 'place' ? placeTab(m) : itemPanel()}</div>`;
+    <div class="seg pv__subtabs" role="tablist">${tabs.map(([k, n]) => `<button type="button" role="tab" data-tab="${k}" aria-pressed="${S.tab === k}" ${(k === 'place' && !a) || (k === 'item' && !a && !print.state.label) ? 'disabled' : ''}>${n}</button>`).join('')}</div>
+    <div class="pt" data-pt>${S.tab === 'art' ? artTab(m) : S.tab === 'place' ? placeTab(m) : S.tab === 'label' ? labelTab() : itemPanel()}</div>`;
 }
+
+/* Бирка: второй файл в том же заказе. Печатается внутри; на примерке стоит на своём месте, двигать её не нужно. */
+function labelTab() {
+  const lb = print.state.label, a = lb?.art;
+  const sp = labelSpot(S.product);
+  const pct = lb ? Math.round((lb.w || sp.w) * 100) : 0;
+  const checks = a ? print.labelSpec(S.product, data).checks : [];
+  return `
+    <div class="pv__grp">
+      <div class="pt__upload">
+        <div class="pt__file">${a ? `<b>${esc(a.name)}</b><span class="t-mute">${a.px ? a.px.join('×') + ' px' : (a.pdf ? 'PDF' : 'вектор')}${a.bg ? (a.bg.on ? ' · фон убран' : ' · с фоном') : ''}</span>` : `<b>Бирка не выбрана</b><span class="t-mute">Логотип или размерная бирка отдельным файлом. Печатаем ${esc(sp.where)}.</span>`}</div>
+        <button type="button" class="btn ${a ? 'btn--ghost' : ''}" style="height:40px;padding:0 16px" data-label-pick>${a ? 'Заменить' : 'Загрузить'}</button>
+      </div>
+      ${checks.length ? `<ul class="pt__checks">${checks.map(c => `<li data-level="${c.level}">${esc(c.text)}</li>`).join('')}</ul>` : ''}
+    </div>
+    ${a ? `<div class="pv__grp">
+      <div class="pv__gh"><span>Размер</span><b>${pct} % ширины вещи</b></div>
+      <input type="range" class="pt__range" min="${Math.round(print.LABEL_MIN * 100)}" max="${Math.round(print.LABEL_MAX * 100)}" value="${pct}" data-label-scale aria-label="Размер бирки">
+      <p class="pt__hint">${sp.hidden ? `На этой вещи бирку снаружи не видно: она стоит ${esc(sp.where)}. В заказ она попадёт.` : `Бирка стоит ${esc(sp.where)}.`} Точное место, размер и цену подтвердит менеджер.</p>
+    </div>
+    <div class="pv__grp">
+      <div class="chips">
+        ${a.bg ? `<button type="button" data-label-bg aria-pressed="${a.bg.on}">Без фона</button>` : ''}
+        <button type="button" data-label-clear>Убрать бирку</button>
+      </div>
+    </div>` : ''}`;
+}
+
+/* свой выбор файла для бирки: общий (data-file-input) занят макетом */
+const labelInput = Object.assign(document.createElement('input'), { type: 'file', accept: 'image/png,image/jpeg,image/webp,image/svg+xml,application/pdf', hidden: true });
+document.body.append(labelInput);
+labelInput.addEventListener('change', async () => {
+  const f = labelInput.files[0];
+  labelInput.value = '';
+  if (!f || !S) return;
+  await print.setLabelFile(f);
+  if (S.side !== 'front') await setSide('front');   /* бирку видно в вырезе спереди */
+  S.tab = 'label';
+  renderPanel();
+});
 
 function artTab(m) {
   const st = print.state, a = st.art;
@@ -280,6 +321,9 @@ el.addEventListener('click', e => {
   if (t.closest('[data-flip]')) { print.set({ flip: !print.state.flip }); renderPanel(); return; }
   if (t.closest('[data-rot0]')) { print.set({ rot: 0 }); renderPanel(); return; }
   if (t.closest('[data-bg]')) { print.toggleBg(); renderStage(); renderPanel(); return; }
+  if (t.closest('[data-label-pick]')) { labelInput.click(); return; }
+  if (t.closest('[data-label-clear]')) { print.clearLabel(); renderPanel(); return; }
+  if (t.closest('[data-label-bg]')) { print.toggleLabelBg(); renderPanel(); return; }
   if (t.closest('[data-folds]')) { print.set({ folds: !print.state.folds }, { history: false }); renderStage(); renderPanel(); return; }
   if (t.closest('[data-undo]')) { print.undo(); renderPanel(); return; }
   if (t.closest('[data-redo]')) { print.redo(); renderPanel(); return; }
@@ -290,6 +334,8 @@ el.addEventListener('click', e => {
 /* «Без принта»: держишь — макет спрятан */
 el.addEventListener('pointerdown', e => { const b = e.target.closest('[data-compare]'); if (!b) return; e.preventDefault(); stage?.setCompare(true); const up = () => { stage?.setCompare(false); removeEventListener('pointerup', up); removeEventListener('pointercancel', up); }; addEventListener('pointerup', up); addEventListener('pointercancel', up); });
 el.addEventListener('input', e => {
+  const lr = e.target.closest('[data-label-scale]');
+  if (lr) { print.setLabel({ w: +lr.value / 100 }); const b = lr.closest('.pv__grp').querySelector('.pv__gh b'); if (b) b.textContent = `${lr.value} % ширины вещи`; return; }
   const r = e.target.closest('[data-scale]');
   if (r) { print.set({ scale: +r.value / 100 }, { history: false }); const b = r.closest('.pv__grp').querySelector('.pv__gh b'); const W = garmentMm(S.product, S.size); if (b) b.textContent = W ? `${Math.round(W * print.state.scale)} мм по ширине` : `${r.value} % ширины вещи`; }
 });
@@ -324,13 +370,18 @@ function addToCart(silent) {
   const p = S.product;
   const item = { product: { id: p.id, code: p.code, name: p.name }, color: S.color, size: S.size, gram: S.gram, qty: S.qty, unitPrice: p.price, prints: [] };
   if (S.mode === 'print') {
-    if (!print.state.art) { toast('Сначала загрузите макет — или добавьте чистый бланк'); return false; }
-    const spec = print.printSpec(p, data, colorHex(p, data, S.color), S.size);
-    item.prints.push(spec);
-    /* картинка вещи с макетом — менеджеру и печатнику, клиенту не отдаётся */
-    const mid = 'mockup-' + Math.random().toString(36).slice(2, 8);
-    spec.mockup = mid;
-    renderMockup($('.pv__box', el), data, print.state, colorHex(p, data, S.color)).then(b => { if (b) fileStore.set(mid, b); }).catch(() => {});
+    if (!print.state.art && !print.state.label) { toast('Сначала загрузите макет или бирку — или добавьте чистый бланк'); return false; }
+    if (print.state.art) {
+      const spec = print.printSpec(p, data, colorHex(p, data, S.color), S.size);
+      item.prints.push(spec);
+      /* картинка вещи с макетом — менеджеру и печатнику, клиенту не отдаётся */
+      const mid = 'mockup-' + Math.random().toString(36).slice(2, 8);
+      spec.mockup = mid;
+      renderMockup($('.pv__box', el), data, print.state, colorHex(p, data, S.color)).then(b => { if (b) fileStore.set(mid, b); }).catch(() => {});
+    }
+    /* бирка едет в том же заказе отдельной строкой нанесения */
+    const lb = print.labelSpec(p, data);
+    if (lb) item.prints.push(lb);
   }
   cart.add(item);
   if (silent) toast(`Добавлено: ${p.name} ${S.size}`);

@@ -56,6 +56,10 @@
 .art__body { position: absolute; inset: 0; display: grid; place-items: center; }
 /* складки: карта смещения из рендера; во время движения выключены, чтобы не тормозить */
 .art__body.has-folds:not(.is-moving) { filter: url(#fold-f); }
+/* Бирка: отдельный слой под макетом, стоит внутри ворота (stage.js → layoutTag). Рукой не двигается. */
+.tag { position: absolute; pointer-events: none; }
+.tag .art__img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
 /* Тени ткани поверх макета. Обёртка обрезана по прозрачности самого макета (--amask ставит stage.js),
    поэтому у макета без фона тени лежат только на рисунке, а не прямоугольником вокруг него. */
 .art__shadeclip {
